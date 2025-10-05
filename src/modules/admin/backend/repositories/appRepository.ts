@@ -1,13 +1,14 @@
 import { prismaMain } from "@/lib/prisma";
 import { IAppRepository } from ".";
-import { AppDTO } from "../dtos/app";
+import { AppDatasDTOSchema } from "../dtos/app";
+import { OperationError } from "../../../shared/errors/commonError";
 
 export class AppRepository implements IAppRepository {
   constructor() {}
 
   async getApps() {
     try {
-      const appsData = await prismaMain.app.findMany({
+      const appDatas = await prismaMain.app.findMany({
         include: {
           _count: {
             select: {
@@ -20,10 +21,19 @@ export class AppRepository implements IAppRepository {
 
       const total = await prismaMain.app.count();
 
-      const data = AppDTO.getAppDatasFromDb(appsData, total);
+      const data = AppDatasDTOSchema.parse({
+        appDatas,
+        total,
+      });
       return data;
-    } catch (err) {
-      throw new Error("Failed to get apps", { cause: err });
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+
+      throw new OperationError("An unexpected erorr occurred", {
+        cause: error,
+      });
     }
   }
 }

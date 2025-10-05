@@ -1,6 +1,6 @@
 import { App } from "../../../../../prisma/generated/main-database";
 
-export type TApp = App;
+export type TApp = Omit<App, "updatedAt">;
 
 export type TAppData = TApp & {
   _count: {

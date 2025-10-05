@@ -1,6 +1,6 @@
-import { AppDTO } from "../dtos/app";
+import { AppDatasDTO } from "../dtos/app";
 
 export interface IAppRepository {
-  getApps(): Promise<AppDTO>;
+  getApps(): Promise<AppDatasDTO>;
   // createApp()
 }

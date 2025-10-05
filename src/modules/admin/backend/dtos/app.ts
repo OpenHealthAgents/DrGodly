@@ -1,35 +1,33 @@
-import { TAppData } from "../types/app-types";
+import z from "zod";
 
-export class AppDTO {
-  constructor(private _appDatas: TAppData[], private _total: number) {}
+export const AppDTOSchema = z.object({
+  name: z.string(),
+  id: z.string(),
+  description: z.string(),
+  slug: z.string(),
+  imageUrl: z.string().nullable(),
+  type: z.enum(["custom", "platform"]),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
 
-  public toJSON() {
-    return JSON.stringify({
-      appDatas: this._appDatas?.map((app) => ({
-        ...app,
-      })),
-      total: this._total,
-    });
-  }
+export const AppMenuActionCountDTOSchema = z.object({
+  _count: z.object({
+    appMenuItems: z.number(),
+    appActions: z.number(),
+  }),
+});
 
-  public get appDatas() {
-    return this._appDatas;
-  }
+export const AppsWithMenuActionCountDTOSchema = z.array(
+  AppDTOSchema.merge(AppMenuActionCountDTOSchema)
+);
 
-  public get total() {
-    return this._total;
-  }
+export const AppDatasDTOSchema = z.object({
+  appDatas: AppsWithMenuActionCountDTOSchema,
+  total: z.number(),
+});
 
-  static getAppDatasFromDb(data: TAppData[], total: number) {
-    return new AppDTO(data, total);
-  }
-
-  public appDatasToPlainObject() {
-    return {
-      appDatas: this._appDatas?.map((app) => ({
-        ...app,
-      })),
-      total: this._total,
-    };
-  }
-}
+export type AppsWithMenuActionCountDTO = z.infer<
+  typeof AppsWithMenuActionCountDTOSchema
+>;
+export type AppDatasDTO = z.infer<typeof AppDatasDTOSchema>;
