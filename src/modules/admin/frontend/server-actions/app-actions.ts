@@ -4,11 +4,15 @@ import { ServiceLocator } from "../../backend/services/serviceLocator";
 import { ZSAError } from "zsa";
 import { adminAuthenticatedProcedure } from "./admin-zsa-procedures";
 import { AppDatasDTO } from "../../backend/dtos/app";
+import { container } from "../../backend/di/container";
+import { DI_TYPES } from "../../backend/di/types";
+import { AppService } from "../../backend/services/appService";
 
 export const getAllAppsData = adminAuthenticatedProcedure
   .createServerAction()
   .handler(async () => {
-    const appServices = ServiceLocator.getService("AppService");
+    // const appServices = ServiceLocator.getService("AppService");
+    const appServices = container.get<AppService>(DI_TYPES.AppService);
 
     let appDatas: AppDatasDTO;
 

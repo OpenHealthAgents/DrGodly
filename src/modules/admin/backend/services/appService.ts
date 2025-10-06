@@ -1,12 +1,14 @@
+import { inject, injectable } from "inversify";
 import { AppDatasDTO } from "../dtos/app";
-import { IAppRepository } from "../repositories";
+import type { IAppRepository } from "../repositories";
+import { DI_TYPES } from "../di/types";
 
+@injectable()
 export class AppService {
-  // private _appsRepository: IAppRepository;
-
-  constructor(private _appsRepository: IAppRepository) {
-    // this._appsRepository = appsRepository;
-  }
+  constructor(
+    @inject(DI_TYPES.AppRepository)
+    private _appsRepository: IAppRepository
+  ) {}
 
   async getApps(): Promise<AppDatasDTO> {
     const appDatas = await this._appsRepository.getApps();

@@ -3,7 +3,7 @@ import { getAllAppsData } from "@/modules/admin/frontend/server-actions/app-acti
 
 const ManageAppsPage = async () => {
   const [data, error] = await getAllAppsData();
-  // console.log(error);
+
   return (
     <div className="space-y-8 mx-auto">
       <AppsListTable appDatas={data} error={error} />

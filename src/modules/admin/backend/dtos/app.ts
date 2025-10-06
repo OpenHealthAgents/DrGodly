@@ -27,6 +27,7 @@ export const AppDatasDTOSchema = z.object({
   total: z.number(),
 });
 
+export type AppDTO = z.infer<typeof AppDTOSchema>;
 export type AppsWithMenuActionCountDTO = z.infer<
   typeof AppsWithMenuActionCountDTOSchema
 >;

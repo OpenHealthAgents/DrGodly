@@ -8,3 +8,9 @@ export type TAppData = TApp & {
     appActions: number;
   };
 };
+
+export type AppInsert = Pick<App, "name" | "slug" | "description" | "type">;
+export type AppUpdate = Pick<
+  App,
+  "id" | "name" | "slug" | "description" | "type"
+>;
