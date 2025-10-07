@@ -1,18 +1,22 @@
 "use server";
 
-import { ServiceLocator } from "../../backend/services/serviceLocator";
 import { ZSAError } from "zsa";
 import { adminAuthenticatedProcedure } from "./admin-zsa-procedures";
-import { AppDatasDTO } from "../../backend/dtos/app";
-import { container } from "../../backend/di/container";
+import { AppDatasDTO, AppDTO } from "../../backend/dtos/app";
+import { getAppInjection } from "../../backend/di/container";
 import { DI_TYPES } from "../../backend/di/types";
-import { AppService } from "../../backend/services/appService";
+import type { AppService } from "../../backend/services/appService";
+import {
+  createAppFormSchema,
+  deleteAppSchema,
+  editAppFormSchema,
+} from "../zod-schemas/app/app-schemas";
+import { revalidatePath } from "next/cache";
 
 export const getAllAppsData = adminAuthenticatedProcedure
   .createServerAction()
   .handler(async () => {
-    // const appServices = ServiceLocator.getService("AppService");
-    const appServices = container.get<AppService>(DI_TYPES.AppService);
+    const appServices = getAppInjection<AppService>(DI_TYPES.AppService);
 
     let appDatas: AppDatasDTO;
 
@@ -23,6 +27,60 @@ export const getAllAppsData = adminAuthenticatedProcedure
     }
 
     return appDatas;
+  });
+
+export const createApp = adminAuthenticatedProcedure
+  .createServerAction()
+  .input(createAppFormSchema)
+  .handler(async ({ input }) => {
+    const appServices = getAppInjection<AppService>(DI_TYPES.AppService);
+
+    let appData: AppDTO;
+
+    try {
+      appData = await appServices.createApp({ ...input });
+    } catch (err) {
+      throw new ZSAError("ERROR", err);
+    }
+
+    revalidatePath("/bezs/admin/manage-apps");
+    return appData;
+  });
+
+export const editApp = adminAuthenticatedProcedure
+  .createServerAction()
+  .input(editAppFormSchema)
+  .handler(async ({ input }) => {
+    const appServices = getAppInjection<AppService>(DI_TYPES.AppService);
+
+    let appData: AppDTO;
+
+    try {
+      appData = await appServices.updateApp({ ...input });
+    } catch (err) {
+      throw new ZSAError("ERROR", err);
+    }
+
+    revalidatePath("/bezs/admin/manage-apps");
+    return appData;
+  });
+
+export const deleteApp = adminAuthenticatedProcedure
+  .createServerAction()
+  .input(deleteAppSchema)
+  .handler(async ({ input }) => {
+    const appServices = getAppInjection<AppService>(DI_TYPES.AppService);
+
+    let appData: AppDTO;
+
+    try {
+      appData = await appServices.deleteApp(input.id);
+    } catch (err) {
+      throw new ZSAError("ERROR", err);
+    }
+
+    revalidatePath("/bezs/admin/manage-apps");
+    return appData;
   });
 
 /*

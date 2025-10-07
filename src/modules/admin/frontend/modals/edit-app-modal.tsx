@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { AppType } from "../../../../../prisma/generated/main-database";
 import { Form } from "@/components/ui/form";
 import {
   Dialog,
@@ -11,34 +12,46 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { useAdminModalStore } from "../stores/admin-modal-store";
+import { useSession } from "@/modules/auth/betterauth/auth-client";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { useSession } from "../../../auth/betterauth/auth-client";
-import { useAdminModalStore } from "../stores/admin-modal-store";
-import { AppType } from "../../../../../prisma/generated/main-database";
-import { TCreateAppFormSchema } from "../zod-schemas/app/app-schemas-type";
-import { createAppFormSchema } from "../zod-schemas/app/app-schemas";
+import { TCreateAppFormSchema as TEditAppFormSchemaType } from "../zod-schemas/app/app-schemas-type";
+import { createAppFormSchema as editAppFormSchema } from "../zod-schemas/app/app-schemas";
 import { CustomInput } from "@/modules/shared/components/custom-input";
+import { useEffect } from "react";
+import { editApp } from "../server-actions/app-actions";
 import { useServerAction } from "zsa-react";
-import { createApp } from "../server-actions/app-actions";
 
-export const CreateAppModal = () => {
+export const EditAppModal = () => {
   const session = useSession();
   const closeModal = useAdminModalStore((state) => state.onClose);
   const modalType = useAdminModalStore((state) => state.type);
   const isOpen = useAdminModalStore((state) => state.isOpen);
+  const appData = useAdminModalStore((state) => state.appData);
 
-  const isModalOpen = isOpen && modalType === "addApp";
+  const isModalOpen = isOpen && modalType === "editApp";
 
-  const form = useForm<TCreateAppFormSchema>({
-    resolver: zodResolver(createAppFormSchema),
+  const form = useForm<TEditAppFormSchemaType>({
+    resolver: zodResolver(editAppFormSchema),
     defaultValues: {
-      name: "",
-      slug: "",
-      description: "",
-      type: "platform",
+      name: appData?.name,
+      slug: appData?.slug,
+      description: appData?.description,
+      type: appData?.type,
     },
   });
+
+  useEffect(() => {
+    if (isModalOpen && appData) {
+      form.reset({
+        name: appData.name,
+        slug: appData.slug,
+        description: appData.description,
+        type: appData.type,
+      });
+    }
+  }, [appData, form, isModalOpen]);
 
   const {
     formState: { isSubmitting },
@@ -49,9 +62,9 @@ export const CreateAppModal = () => {
     value: type,
   }));
 
-  const { execute } = useServerAction(createApp, {
+  const { execute } = useServerAction(editApp, {
     onSuccess({ data }) {
-      toast.success(`${data?.name ?? ""} app created.`);
+      toast.success(`${data?.name ?? ""} app Edited.`);
       handleCloseModal();
     },
     onError({ err }) {
@@ -61,12 +74,22 @@ export const CreateAppModal = () => {
     },
   });
 
-  async function handleCreateApp(values: TCreateAppFormSchema) {
+  async function handleEditUser(values: TEditAppFormSchemaType) {
     if (!session) {
       return;
     }
 
-    await execute({ ...values });
+    if (!appData || !appData?.id) {
+      toast.warning("No app data found.");
+      return;
+    }
+
+    const data = {
+      id: appData?.id,
+      ...values,
+    };
+
+    await execute({ ...data });
   }
 
   function handleCloseModal() {
@@ -78,13 +101,13 @@ export const CreateAppModal = () => {
     <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="">Create App</DialogTitle>
+          <DialogTitle className="">Edit App</DialogTitle>
           <DialogDescription>Apps are used by consumers.</DialogDescription>
         </DialogHeader>
         <div>
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(handleCreateApp)}
+              onSubmit={form.handleSubmit(handleEditUser)}
               className="grid w-full items-center gap-3"
             >
               <CustomInput
@@ -132,10 +155,10 @@ export const CreateAppModal = () => {
                 >
                   {isSubmitting ? (
                     <>
-                      Create <Loader2 className="animate-spin" />
+                      Edit <Loader2 className="animate-spin" />
                     </>
                   ) : (
-                    "Create"
+                    "Edit"
                   )}
                 </Button>
               </div>

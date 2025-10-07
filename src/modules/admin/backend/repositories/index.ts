@@ -4,6 +4,10 @@ import { AppInsert, AppUpdate } from "../types/app-types";
 export interface IAppRepository {
   getApps(): Promise<AppDatasDTO>;
   getAppById(appId: string): Promise<AppDTO>;
+  getAppByUniqueFields(
+    appName: string,
+    appSlug: string
+  ): Promise<AppDTO | null>;
   createApp(app: AppInsert): Promise<AppDTO>;
   updateApp(app: AppUpdate): Promise<AppDTO>;
   deleteApp(appId: string): Promise<AppDTO>;

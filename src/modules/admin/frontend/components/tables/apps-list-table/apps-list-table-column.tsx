@@ -141,6 +141,7 @@ export const appsListTableColumn: ColumnDef<TAppDataType>[] = [
       const openModal = adminModalStore.getState().onOpen;
 
       const appId: string | undefined = row.original.id;
+      const appData = row.original;
       const joinedDate: Date = row.getValue("createdAt");
       return (
         <div className="flex items-center justify-between gap-4">
@@ -156,7 +157,7 @@ export const appsListTableColumn: ColumnDef<TAppDataType>[] = [
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer"
-                onClick={() => openModal({ type: "editApp", appId })}
+                onClick={() => openModal({ type: "editApp", appData })}
               >
                 <PencilLine />
                 Edit

@@ -1,14 +1,17 @@
 import "reflect-metadata";
 import { Container } from "inversify";
-import { DI_TYPES } from "./types";
+import { AppModule } from "./modules/app.module";
 
-import { AppRepository } from "../repositories/appRepository";
-import { AppService } from "../services/appService";
-import { IAppRepository } from "../repositories";
+const AdminContainer = new Container({ defaultScope: "Singleton" });
 
-const container = new Container({ defaultScope: "Singleton" });
+const initializeContainer = () => {
+  AdminContainer.load(AppModule);
+};
 
-container.bind<IAppRepository>(DI_TYPES.AppRepository).to(AppRepository);
-container.bind<AppService>(DI_TYPES.AppService).to(AppService);
+initializeContainer();
 
-export { container };
+export const getAppInjection = <T>(symbol: symbol) => {
+  return AdminContainer.get<T>(symbol);
+};
+
+export { AdminContainer };

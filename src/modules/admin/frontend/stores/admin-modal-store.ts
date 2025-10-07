@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { App } from "../../../../../prisma/generated/main-database";
 
 export type ModalType =
   | "addUser"
@@ -34,6 +35,7 @@ interface AdminStore {
   appId?: string;
   appMenuItemId?: string;
   appActionId?: string;
+  appData?: App;
   trigger: number;
   triggerInModal: number;
   incrementTrigger: () => void;
@@ -46,6 +48,7 @@ interface AdminStore {
     appId?: string;
     appActionId?: string;
     appMenuItemId?: string;
+    appData?: App;
   }) => void;
   onClose: () => void;
 }
@@ -63,6 +66,7 @@ const _useAdminModalStore = create<AdminStore>((set) => ({
     appId = "",
     appMenuItemId = "",
     appActionId = "",
+    appData = undefined,
   }) =>
     set({
       isOpen: true,
@@ -73,6 +77,7 @@ const _useAdminModalStore = create<AdminStore>((set) => ({
       appId,
       appMenuItemId,
       appActionId,
+      appData,
     }),
   onClose: () =>
     set({
@@ -84,6 +89,7 @@ const _useAdminModalStore = create<AdminStore>((set) => ({
       appId: "",
       appMenuItemId: "",
       appActionId: "",
+      appData: undefined,
     }),
   incrementTrigger: () => set((state) => ({ trigger: state.trigger + 1 })),
   incrementInModalTrigger: () =>

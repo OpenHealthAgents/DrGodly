@@ -4,9 +4,6 @@ import { AppDatasDTOSchema, AppDTO, AppDTOSchema } from "../dtos/app";
 import { OperationError } from "../../../shared/errors/commonError";
 import { AppInsert, AppUpdate } from "../types/app-types";
 
-import { injectable } from "inversify";
-
-@injectable()
 export class AppRepository implements IAppRepository {
   constructor() {}
 
@@ -20,6 +17,9 @@ export class AppRepository implements IAppRepository {
               appActions: true,
             },
           },
+        },
+        orderBy: {
+          updatedAt: "desc",
         },
       });
 
@@ -50,6 +50,30 @@ export class AppRepository implements IAppRepository {
       });
 
       return AppDTOSchema.parse(data);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+
+      throw new OperationError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async getAppByUniqueFields(
+    appName: string,
+    appSlug: string
+  ): Promise<AppDTO | null> {
+    try {
+      const data = await prismaMain.app.findUnique({
+        where: {
+          name: appName,
+          slug: appSlug,
+        },
+      });
+
+      return AppDTOSchema.nullable().parse(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
