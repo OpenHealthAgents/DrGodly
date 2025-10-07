@@ -2,26 +2,26 @@
 
 import { ZSAError } from "zsa";
 import { adminAuthenticatedProcedure } from "./admin-zsa-procedures";
-import { AppDatasDTO, AppDTO } from "../../backend/dtos/app";
+import { AppDatas, App } from "../../backend/entities/models/app";
 import { getAppInjection } from "../../backend/di/container";
 import { DI_TYPES } from "../../backend/di/types";
-import type { AppService } from "../../backend/services/appService";
 import {
   createAppFormSchema,
   deleteAppSchema,
   editAppFormSchema,
 } from "../zod-schemas/app/app-schemas";
 import { revalidatePath } from "next/cache";
+import type { AppUseCases } from "../../backend/application/use-cases/appUseCases";
 
 export const getAllAppsData = adminAuthenticatedProcedure
   .createServerAction()
   .handler(async () => {
-    const appServices = getAppInjection<AppService>(DI_TYPES.AppService);
+    const appUseCases = getAppInjection<AppUseCases>(DI_TYPES.AppUseCases);
 
-    let appDatas: AppDatasDTO;
+    let appDatas: AppDatas;
 
     try {
-      appDatas = await appServices.getApps();
+      appDatas = await appUseCases.getApps();
     } catch (err) {
       throw new ZSAError("ERROR", err);
     }
@@ -33,12 +33,12 @@ export const createApp = adminAuthenticatedProcedure
   .createServerAction()
   .input(createAppFormSchema)
   .handler(async ({ input }) => {
-    const appServices = getAppInjection<AppService>(DI_TYPES.AppService);
+    const appUseCases = getAppInjection<AppUseCases>(DI_TYPES.AppUseCases);
 
-    let appData: AppDTO;
+    let appData: App;
 
     try {
-      appData = await appServices.createApp({ ...input });
+      appData = await appUseCases.createApp({ ...input });
     } catch (err) {
       throw new ZSAError("ERROR", err);
     }
@@ -51,12 +51,12 @@ export const editApp = adminAuthenticatedProcedure
   .createServerAction()
   .input(editAppFormSchema)
   .handler(async ({ input }) => {
-    const appServices = getAppInjection<AppService>(DI_TYPES.AppService);
+    const appUseCases = getAppInjection<AppUseCases>(DI_TYPES.AppUseCases);
 
-    let appData: AppDTO;
+    let appData: App;
 
     try {
-      appData = await appServices.updateApp({ ...input });
+      appData = await appUseCases.updateApp({ ...input });
     } catch (err) {
       throw new ZSAError("ERROR", err);
     }
@@ -69,12 +69,12 @@ export const deleteApp = adminAuthenticatedProcedure
   .createServerAction()
   .input(deleteAppSchema)
   .handler(async ({ input }) => {
-    const appServices = getAppInjection<AppService>(DI_TYPES.AppService);
+    const appUseCases = getAppInjection<AppUseCases>(DI_TYPES.AppUseCases);
 
-    let appData: AppDTO;
+    let appData: App;
 
     try {
-      appData = await appServices.deleteApp(input.id);
+      appData = await appUseCases.deleteApp(input.id);
     } catch (err) {
       throw new ZSAError("ERROR", err);
     }

@@ -1,13 +1,21 @@
 import { prismaMain } from "@/lib/prisma";
-import { IAppRepository } from ".";
-import { AppDatasDTOSchema, AppDTO, AppDTOSchema } from "../dtos/app";
-import { OperationError } from "../../../shared/errors/commonError";
-import { AppInsert, AppUpdate } from "../types/app-types";
+import { IAppRepository } from "../../application/repositories/appRepository.interface";
+import { OperationError } from "@/modules/shared/entities/errors/commonError";
+import {
+  App,
+  AppDatas,
+  AppDatasSchema,
+  AppInsert,
+  AppSchema,
+  AppUpdate,
+} from "@/modules/admin/backend/entities/models/app";
+import { injectable } from "inversify";
 
+@injectable()
 export class AppRepository implements IAppRepository {
   constructor() {}
 
-  async getApps() {
+  async getApps(): Promise<AppDatas> {
     try {
       const appDatas = await prismaMain.app.findMany({
         include: {
@@ -25,7 +33,7 @@ export class AppRepository implements IAppRepository {
 
       const total = await prismaMain.app.count();
 
-      const data = AppDatasDTOSchema.parse({
+      const data = AppDatasSchema.parse({
         appDatas,
         total,
       });
@@ -41,7 +49,7 @@ export class AppRepository implements IAppRepository {
     }
   }
 
-  async getAppById(appId: string): Promise<AppDTO> {
+  async getAppById(appId: string): Promise<App> {
     try {
       const data = await prismaMain.app.findUnique({
         where: {
@@ -49,7 +57,7 @@ export class AppRepository implements IAppRepository {
         },
       });
 
-      return AppDTOSchema.parse(data);
+      return AppSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -64,7 +72,7 @@ export class AppRepository implements IAppRepository {
   async getAppByUniqueFields(
     appName: string,
     appSlug: string
-  ): Promise<AppDTO | null> {
+  ): Promise<App | null> {
     try {
       const data = await prismaMain.app.findUnique({
         where: {
@@ -73,7 +81,7 @@ export class AppRepository implements IAppRepository {
         },
       });
 
-      return AppDTOSchema.nullable().parse(data);
+      return AppSchema.nullable().parse(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -93,7 +101,7 @@ export class AppRepository implements IAppRepository {
         },
       });
 
-      return AppDTOSchema.parse(data);
+      return AppSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -105,7 +113,7 @@ export class AppRepository implements IAppRepository {
     }
   }
 
-  async updateApp(app: AppUpdate): Promise<AppDTO> {
+  async updateApp(app: AppUpdate): Promise<App> {
     const { id, ...appDatas } = app;
 
     try {
@@ -118,7 +126,7 @@ export class AppRepository implements IAppRepository {
         },
       });
 
-      return AppDTOSchema.parse(data);
+      return AppSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -130,7 +138,7 @@ export class AppRepository implements IAppRepository {
     }
   }
 
-  async deleteApp(appId: string): Promise<AppDTO> {
+  async deleteApp(appId: string): Promise<App> {
     try {
       const data = await prismaMain.app.delete({
         where: {
@@ -138,7 +146,7 @@ export class AppRepository implements IAppRepository {
         },
       });
 
-      return AppDTOSchema.parse(data);
+      return AppSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
