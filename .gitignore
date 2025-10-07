@@ -13,6 +13,10 @@
 # prisma generate and migrate
 /prisma/generated
 
+
+# vs code stuff
+.vscode
+
 # testing
 /coverage
 
