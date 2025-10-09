@@ -8,6 +8,12 @@ const AppListingLayout = async ({
   children: React.ReactNode;
 }) => {
   const session = await getServerSession();
+  const user = {
+    name: session.user.name,
+    email: session.user.email,
+    image: session.user.image,
+    username: session.user.username,
+  };
 
   if (!session) {
     redirect("/signin");
@@ -15,7 +21,7 @@ const AppListingLayout = async ({
 
   return (
     <>
-      <AppNavbar session={session} />
+      <AppNavbar user={user} />
       {/* <BreadCrumb /> */}
       <main>{children}</main>
     </>

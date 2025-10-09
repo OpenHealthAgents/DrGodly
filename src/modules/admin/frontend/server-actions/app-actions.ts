@@ -1,15 +1,15 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { ZSAError } from "zsa";
-import { adminAuthenticatedProcedure } from "./admin-zsa-procedures";
-import { AppDatas, App } from "../../backend/entities/models/app";
-import { getAppInjection } from "../../backend/di/container";
+import { adminAuthenticatedProcedure } from "@/modules/admin/frontend/server-actions/admin-zsa-procedures";
+import { AppDatas, App } from "@/modules/admin/backend/entities/models/app";
+import { getAppInjection } from "@/modules/admin/backend/di/container";
 import {
   createAppFormSchema,
   deleteAppSchema,
   editAppFormSchema,
-} from "../zod-schemas/app/app-schemas";
-import { revalidatePath } from "next/cache";
+} from "@/modules/admin/frontend/zod-schemas/app/app-schemas";
 import { OperationError } from "@/modules/shared/entities/errors/commonError";
 
 export const getAllAppsData = adminAuthenticatedProcedure
@@ -23,6 +23,7 @@ export const getAllAppsData = adminAuthenticatedProcedure
       appDatas = await appUseCases.getApps();
     } catch (err) {
       if (err instanceof OperationError) {
+        // TODO report error to sentry
         throw new ZSAError("ERROR", "Cannot get app datas.");
       }
       throw new ZSAError("ERROR", err);
@@ -43,6 +44,7 @@ export const createApp = adminAuthenticatedProcedure
       appData = await appUseCases.createApp({ ...input });
     } catch (err) {
       if (err instanceof OperationError) {
+        console.log(err);
         throw new ZSAError("ERROR", "Cannot create app.");
       }
       throw new ZSAError("ERROR", err);

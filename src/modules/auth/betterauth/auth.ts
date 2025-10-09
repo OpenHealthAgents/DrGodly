@@ -143,17 +143,19 @@ export const auth = betterAuth({
         where: { userId },
         select: { providerId: true, accountId: true },
       });
-      const role = await prismaMain.user.findUnique({
+      const userDetails = await prismaMain.user.findUnique({
         where: { id: userId },
         select: {
           role: true,
+          username: true,
         },
       });
 
       return {
         session,
         user: {
-          role: role?.role,
+          role: userDetails?.role,
+          username: userDetails?.username,
           accountDetails: providers,
           ...user,
         },

@@ -30,14 +30,19 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { authClient } from "@/modules/auth/betterauth/auth-client";
 
-const AppNavbar = ({ session }: { session: Session }) => {
+type TUser = {
+  name: string;
+  email: string;
+  image: string | null | undefined;
+  username: string | null | undefined;
+};
+
+const AppNavbar = ({ user }: { user: TUser }) => {
   // const t = useTranslations("bezs");
 
   const router = useRouter();
 
-  const {
-    user: { name, email, image, username },
-  } = session;
+  const { name, email, image, username } = user;
 
   async function handleLogout() {
     await authClient.signOut({
