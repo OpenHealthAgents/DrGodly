@@ -71,7 +71,7 @@ const TwoFaForm = () => {
     <Card>
       <CardHeader>
         <CardTitle>2FA Authentication</CardTitle>
-        <CardDescription>ENter your OTP to verify yourself</CardDescription>
+        <CardDescription>Enter your OTP to verify yourself</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>

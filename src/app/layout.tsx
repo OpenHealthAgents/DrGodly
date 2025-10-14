@@ -3,6 +3,7 @@ import { DM_Sans } from "next/font/google";
 import "@/app/globals.css";
 import { Toaster } from "sonner";
 import NextTopLoader from "nextjs-toploader";
+import { ThemeProvider } from "@/theme/theme-provider";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -21,9 +22,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${dmSans.className} antialiased`}>
-        {children}
-        <Toaster />
-        <NextTopLoader showSpinner={false} />
+        <ThemeProvider
+          attribute="data-theme"
+          defaultTheme="zinc-light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster />
+          <NextTopLoader showSpinner={false} />
+        </ThemeProvider>
       </body>
     </html>
   );

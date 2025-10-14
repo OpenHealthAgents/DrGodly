@@ -5,9 +5,9 @@ import {
   App,
   AppDatas,
   AppDatasSchema,
-  AppInsert,
+  CreateApp,
   AppSchema,
-  AppUpdate,
+  UpdateApp,
 } from "@/modules/admin/backend/entities/models/app";
 import { injectable } from "inversify";
 
@@ -74,10 +74,9 @@ export class AppRepository implements IAppRepository {
     appSlug: string
   ): Promise<App | null> {
     try {
-      const data = await prismaMain.app.findUnique({
+      const data = await prismaMain.app.findFirst({
         where: {
-          name: appName,
-          slug: appSlug,
+          OR: [{ name: appName }, { slug: appSlug }],
         },
       });
 
@@ -93,7 +92,7 @@ export class AppRepository implements IAppRepository {
     }
   }
 
-  async createApp(app: AppInsert) {
+  async createApp(app: CreateApp) {
     try {
       const data = await prismaMain.app.create({
         data: {
@@ -113,7 +112,7 @@ export class AppRepository implements IAppRepository {
     }
   }
 
-  async updateApp(app: AppUpdate): Promise<App> {
+  async updateApp(app: UpdateApp): Promise<App> {
     const { id, ...appDatas } = app;
 
     try {

@@ -22,16 +22,30 @@ export const auth = betterAuth({
     window: 10,
     max: 100,
   },
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 60 * 2,
+    },
+  },
+  advanced: {},
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: false,
-    sendResetPassword: async ({ user, url, token }, request) => {
+    requireEmailVerification: true,
+    sendResetPassword: async ({ user, url }) => {
       try {
-        await axios.post(`${process.env.APP_URL}/api/send-email`, {
-          to: user.email,
-          subject: "Reset your password",
-          text: `Click the link to reset your password: ${url}`,
-        });
+        await axios.post(
+          `${
+            (process.env.NODE_ENV === "development" &&
+              process.env.DEV_APP_URL) ||
+            (process.env.NODE_ENV === "production" && process.env.PROD_APP_URL)
+          }/api/send-email`,
+          {
+            to: user.email,
+            subject: "Reset your password",
+            text: `Click the link to reset your password: ${url}`,
+          }
+        );
       } catch (error: any) {
         throw new error(error);
       }
@@ -51,14 +65,21 @@ export const auth = betterAuth({
 
   emailVerification: {
     autoSignInAfterVerification: true,
-    sendOnSignUp: false,
-    sendVerificationEmail: async ({ user, url, token }, request) => {
+    sendOnSignUp: true,
+    sendVerificationEmail: async ({ user, url }) => {
       try {
-        await axios.post(`${process.env.APP_URL}/api/send-email`, {
-          to: user.email,
-          subject: "Verify your email address",
-          text: `Click the link to verify your email: ${url}`,
-        });
+        await axios.post(
+          `${
+            (process.env.NODE_ENV === "development" &&
+              process.env.DEV_APP_URL) ||
+            (process.env.NODE_ENV === "production" && process.env.PROD_APP_URL)
+          }/api/send-email`,
+          {
+            to: user.email,
+            subject: "Verify your email address",
+            text: `Click the link to verify your email: ${url}`,
+          }
+        );
       } catch (error: any) {
         throw new error(error);
       }
@@ -68,16 +89,21 @@ export const auth = betterAuth({
   user: {
     changeEmail: {
       enabled: true,
-      sendChangeEmailVerification: async (
-        { user, newEmail, url, token },
-        request
-      ) => {
+      sendChangeEmailVerification: async ({ user, url }) => {
         try {
-          await axios.post(`${process.env.APP_URL}/api/send-email`, {
-            to: user.email,
-            subject: "Approve email change",
-            text: `Click the link to approve the change: ${url}`,
-          });
+          await axios.post(
+            `${
+              (process.env.NODE_ENV === "development" &&
+                process.env.DEV_APP_URL) ||
+              (process.env.NODE_ENV === "production" &&
+                process.env.PROD_APP_URL)
+            }/api/send-email`,
+            {
+              to: user.email,
+              subject: "Approve email change",
+              text: `Click the link to approve the change: ${url}`,
+            }
+          );
         } catch (error: any) {
           throw new error(error);
         }
@@ -85,13 +111,21 @@ export const auth = betterAuth({
     },
     deleteUser: {
       enabled: true,
-      sendDeleteAccountVerification: async ({ user, url, token }, request) => {
+      sendDeleteAccountVerification: async ({ user, url }) => {
         try {
-          await axios.post(`${process.env.APP_URL}/api/send-email`, {
-            to: user.email,
-            subject: "Confirm your account delection",
-            text: `Click the link to approve your account delection: ${url}`,
-          });
+          await axios.post(
+            `${
+              (process.env.NODE_ENV === "development" &&
+                process.env.DEV_APP_URL) ||
+              (process.env.NODE_ENV === "production" &&
+                process.env.PROD_APP_URL)
+            }/api/send-email`,
+            {
+              to: user.email,
+              subject: "Confirm your account delection",
+              text: `Click the link to approve your account delection: ${url}`,
+            }
+          );
         } catch (error: any) {
           throw new error(error);
         }
@@ -104,20 +138,28 @@ export const auth = betterAuth({
   plugins: [
     openAPI(),
     twoFactor({
-      skipVerificationOnEnable: true,
       otpOptions: {
-        async sendOTP({ user, otp }, request) {
+        async sendOTP({ user, otp }) {
           try {
-            await axios.post(`${process.env.APP_URL}/api/send-email`, {
-              to: user.email,
-              subject: "2 FA OTP",
-              text: `Your 2 FA OTP: ${otp}`,
-            });
+            await axios.post(
+              `${
+                (process.env.NODE_ENV === "development" &&
+                  process.env.DEV_APP_URL) ||
+                (process.env.NODE_ENV === "production" &&
+                  process.env.PROD_APP_URL)
+              }/api/send-email`,
+              {
+                to: user.email,
+                subject: "2 FA OTP",
+                text: `Your 2 FA OTP: ${otp}`,
+              }
+            );
           } catch (error: any) {
             throw new error(error);
           }
         },
       },
+      skipVerificationOnEnable: true,
     }),
     admin({
       defaultRole: "guest",

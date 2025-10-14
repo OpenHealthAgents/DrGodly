@@ -1,6 +1,7 @@
+import { send2FaOTPController } from "@/modules/auth/backend/interface-adapters/controllers/auth/send2FaOTP.controller";
 import TwoFaForm from "@/modules/auth/components/auth/two-fa-form";
 
-const TwoFaPage = () => {
+const TwoFaPage = async () => {
   return (
     <>
       <TwoFaForm />

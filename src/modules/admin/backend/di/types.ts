@@ -1,20 +1,11 @@
 import { IAppRepository } from "@/modules/admin/backend/application/repositories/appRepository.interface";
-import type { AppUseCases } from "../application/useCases/app.useCases";
 
 export const DI_SYMBOLS = {
-  // Repository
+  // Repositorys
   IAppRepository: Symbol.for("IAppRepository"),
-  IMockAppRepository: Symbol.for("IMockAppRepository"),
-
-  // UseCases
-  AppUseCases: Symbol.for("AppUseCases"),
 };
 
 export interface DI_RETURN_TYPES {
-  // Repository
+  // Repositorys
   IAppRepository: IAppRepository;
-  IMockAppRepository: IAppRepository;
-
-  // UseCases
-  AppUseCases: AppUseCases;
 }

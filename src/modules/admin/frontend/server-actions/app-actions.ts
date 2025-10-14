@@ -1,52 +1,57 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { ZSAError } from "zsa";
-import { adminAuthenticatedProcedure } from "@/modules/admin/frontend/server-actions/admin-zsa-procedures";
+import { createServerAction, ZSAError } from "zsa";
 import { AppDatas, App } from "@/modules/admin/backend/entities/models/app";
-import { getAppInjection } from "@/modules/admin/backend/di/container";
 import {
   createAppFormSchema,
   deleteAppSchema,
   editAppFormSchema,
 } from "@/modules/admin/frontend/zod-schemas/app/app-schemas";
-import { OperationError } from "@/modules/shared/entities/errors/commonError";
+import {
+  InputParseError,
+  OperationError,
+} from "@/modules/shared/entities/errors/commonError";
+import {
+  getAppsController,
+  createAppController,
+  deleteAppController,
+  updateAppController,
+} from "../../backend/interface-adapters/controllers/app";
 
-export const getAllAppsData = adminAuthenticatedProcedure
-  .createServerAction()
-  .handler(async () => {
-    const appUseCases = getAppInjection("AppUseCases");
+export const getAllAppsData = createServerAction().handler(async () => {
+  let appDatas: AppDatas;
 
-    let appDatas: AppDatas;
-
-    try {
-      appDatas = await appUseCases.getApps();
-    } catch (err) {
-      if (err instanceof OperationError) {
-        // TODO report error to sentry
-        throw new ZSAError("ERROR", "Cannot get app datas.");
-      }
-      throw new ZSAError("ERROR", err);
+  try {
+    appDatas = await getAppsController();
+  } catch (err) {
+    if (err instanceof OperationError) {
+      // TODO report error to sentry
+      throw new ZSAError("ERROR", "Cannot get app datas.");
     }
+    throw new ZSAError("ERROR", err);
+  }
 
-    return appDatas;
-  });
+  return appDatas;
+});
 
-export const createApp = adminAuthenticatedProcedure
-  .createServerAction()
-  .input(createAppFormSchema)
+export const createApp = createServerAction()
+  .input(createAppFormSchema, { skipInputParsing: true })
   .handler(async ({ input }) => {
-    const appUseCases = getAppInjection("AppUseCases");
-
     let appData: App;
 
     try {
-      appData = await appUseCases.createApp({ ...input });
+      appData = await createAppController(input);
     } catch (err) {
+      if (err instanceof InputParseError) {
+        throw new ZSAError("INPUT_PARSE_ERROR", err.message);
+      }
+
       if (err instanceof OperationError) {
         console.log(err);
         throw new ZSAError("ERROR", "Cannot create app.");
       }
+
       throw new ZSAError("ERROR", err);
     }
 
@@ -54,16 +59,13 @@ export const createApp = adminAuthenticatedProcedure
     return appData;
   });
 
-export const editApp = adminAuthenticatedProcedure
-  .createServerAction()
-  .input(editAppFormSchema)
+export const editApp = createServerAction()
+  .input(editAppFormSchema, { skipInputParsing: true })
   .handler(async ({ input }) => {
-    const appUseCases = getAppInjection("AppUseCases");
-
     let appData: App;
 
     try {
-      appData = await appUseCases.updateApp({ ...input });
+      appData = await updateAppController(input);
     } catch (err) {
       if (err instanceof OperationError) {
         throw new ZSAError("ERROR", "Cannot update app.");
@@ -75,16 +77,13 @@ export const editApp = adminAuthenticatedProcedure
     return appData;
   });
 
-export const deleteApp = adminAuthenticatedProcedure
-  .createServerAction()
-  .input(deleteAppSchema)
+export const deleteApp = createServerAction()
+  .input(deleteAppSchema, { skipInputParsing: true })
   .handler(async ({ input }) => {
-    const appUseCases = getAppInjection("AppUseCases");
-
     let appData: App;
 
     try {
-      appData = await appUseCases.deleteApp(input.id);
+      appData = await deleteAppController(input);
     } catch (err) {
       if (err instanceof OperationError) {
         throw new ZSAError("ERROR", "Cannot delete app.");

@@ -1,6 +1,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getServerSession } from "@/modules/auth/betterauth/auth-server";
+import { ThemeSwitcher } from "@/theme/theme-switcher";
 // import { useSession } from "@/modules/auth/services/better-auth/auth-client";
 // import { LangSwitcherBtn } from "@/shared/langSwitch/lang-switcher-btn";
 // import { ThemeSwitcher } from "@/theme/theme-switcher";
@@ -21,7 +22,9 @@ const RootNavBarPage = async () => {
         </div>
         <ul className="flex items-center gap-2">
           <li>{/* <LangSwitcherBtn /> */}</li>
-          <li>{/* <ThemeSwitcher /> */}</li>
+          <li>
+            <ThemeSwitcher />
+          </li>
           <li className="flex items-center gap-2">
             {!session ? (
               <>

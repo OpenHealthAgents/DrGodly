@@ -37,8 +37,17 @@ export const CommonSideBar = ({ label }: { label: string }) => {
   const pathname = usePathname();
   const { resolvedTheme } = useTheme();
   const appSlug = pathname?.split("/")[2];
-  const [menuItems, setMenuItems] = useState<MenuItemsStateType>([]);
+  const [menuItems, setMenuItems] = useState<MenuItemsStateType>([
+    {
+      name: "Manage Apps",
+      slug: "/bezs/admin/manage-apps",
+      description: "addwef",
+      icon: "Dashboard",
+    },
+  ]);
   const [error, setError] = useState<string | null>(null);
+
+  console.log(resolvedTheme);
 
   //   useEffect(() => {
   //     if (!isPending) {

@@ -33,15 +33,20 @@ export type AppsWithMenuActionCount = z.infer<
 >;
 export type AppDatas = z.infer<typeof AppDatasSchema>;
 
-export const AppInsertSchema = AppSchema.pick({
+export const CreateAppSchema = AppSchema.pick({
   name: true,
   slug: true,
   description: true,
   type: true,
 });
-export type AppInsert = z.infer<typeof AppInsertSchema>;
+export type CreateApp = z.infer<typeof CreateAppSchema>;
 
-export const AppUpdateSchema = AppInsertSchema.merge(
+export const UpdateAppSchema = CreateAppSchema.merge(
   AppSchema.pick({ id: true })
 );
-export type AppUpdate = z.infer<typeof AppUpdateSchema>;
+export type UpdateApp = z.infer<typeof UpdateAppSchema>;
+
+export const DeleteAppSchema = z.object({
+  id: z.string(),
+});
+export type AppDelete = z.infer<typeof DeleteAppSchema>;

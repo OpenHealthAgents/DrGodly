@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { z } from "zod";
@@ -29,6 +28,13 @@ import OauthButton from "./oauth-button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { authClient } from "../../betterauth/auth-client";
+import { useServerAction } from "zsa-react";
+import {
+  sendTwoFa,
+  signInWithEmail,
+  signInWithUsername,
+} from "../../frontend/server-actions/auth-actions";
+import { send2FaOTPController } from "../../backend/interface-adapters/controllers/auth/send2FaOTP.controller";
 
 const usernameOrEmailSchema = z.string().refine(
   (value) => {
@@ -68,51 +74,54 @@ export function SignInForm() {
     formState: { isSubmitting },
   } = form;
 
+  const { execute: emailSignIn, isPending: emailSignInIsPending } =
+    useServerAction(signInWithEmail, {
+      onError({ err }) {
+        toast.error("Error!", {
+          description: err.message,
+        });
+      },
+    });
+
+  const { execute: usernameSignIn, isPending: usernameSignInIsPending } =
+    useServerAction(signInWithUsername, {
+      onError({ err }) {
+        toast.error("Error!", {
+          description: err.message,
+        });
+      },
+    });
+
+  const { execute: send2Fa } = useServerAction(sendTwoFa, {
+    onError({ err }) {
+      toast.error("Error!", {
+        description: err.message,
+      });
+    },
+  });
+
   async function onSubmit(values: SignInForm) {
     const { usernameOrEmail, password } = values;
 
     const isEmailLogin = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usernameOrEmail);
 
     if (isEmailLogin) {
-      await authClient.signIn.email(
-        {
-          email: usernameOrEmail,
-          password,
-          callbackURL: "/bezs",
-        },
-        {
-          onSuccess: async () => {
-            toast("Success!");
-            await authClient.twoFactor.sendOtp();
-            router.push("/2fa-verification");
-          },
-          onError(ctx) {
-            toast("Error!", {
-              description: ctx.error.message,
-            });
-          },
-        }
-      );
+      const [data] = await emailSignIn({ email: usernameOrEmail, password });
+
+      if (data?.twoFa) {
+        send2Fa();
+        router.push(data.redirectUrl);
+      }
     } else {
-      await authClient.signIn.username(
-        {
-          username: usernameOrEmail,
-          password,
-          callbackURL: "/bezs",
-        },
-        {
-          onSuccess: async () => {
-            toast("Success!");
-            await authClient.twoFactor.sendOtp();
-            router.push("/2fa-verification");
-          },
-          onError(ctx: any) {
-            toast("Error!", {
-              description: ctx.error.message,
-            });
-          },
-        }
-      );
+      const [data] = await usernameSignIn({
+        username: usernameOrEmail,
+        password,
+      });
+
+      if (data?.twoFa) {
+        send2Fa();
+        router.push(data.redirectUrl);
+      }
     }
   }
 
@@ -200,12 +209,18 @@ export function SignInForm() {
               </p>
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={
+                  isSubmitting ||
+                  emailSignInIsPending ||
+                  usernameSignInIsPending
+                }
                 className="w-full text-md cursor-pointer"
               >
-                {isSubmitting ? (
+                {isSubmitting ||
+                emailSignInIsPending ||
+                usernameSignInIsPending ? (
                   <>
-                    <Loader2 className="animate-spin" />
+                    <Loader2 className="animate-spin" /> Login
                   </>
                 ) : (
                   "Login"
@@ -218,12 +233,16 @@ export function SignInForm() {
             <OauthButton
               oauthName="google"
               label="Google"
-              isFormSubmitting={isSubmitting}
+              isFormSubmitting={
+                isSubmitting || emailSignInIsPending || usernameSignInIsPending
+              }
             />
             <OauthButton
               oauthName="github"
               label="GitHub"
-              isFormSubmitting={isSubmitting}
+              isFormSubmitting={
+                isSubmitting || emailSignInIsPending || usernameSignInIsPending
+              }
             />
           </div>
         </CardContent>

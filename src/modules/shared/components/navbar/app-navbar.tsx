@@ -29,6 +29,9 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { authClient } from "@/modules/auth/betterauth/auth-client";
+import { ThemeSwitcher } from "@/theme/theme-switcher";
+import { useServerAction } from "zsa-react";
+import { signOut } from "@/modules/auth/frontend/server-actions/auth-actions";
 
 type TUser = {
   name: string;
@@ -44,20 +47,29 @@ const AppNavbar = ({ user }: { user: TUser }) => {
 
   const { name, email, image, username } = user;
 
+  const { execute } = useServerAction(signOut, {
+    onError(ctx) {
+      toast("Error!", {
+        description: ctx.err.message,
+      });
+    },
+  });
+
   async function handleLogout() {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess() {
-          toast("Success!");
-          router.push("/");
-        },
-        onError(ctx) {
-          toast("Error!", {
-            description: ctx.error.message,
-          });
-        },
-      },
-    });
+    // await authClient.signOut({
+    //   fetchOptions: {
+    //     onSuccess() {
+    //       toast("Success!");
+    //       router.push("/");
+    //     },
+    //     onError(ctx) {
+    //       toast("Error!", {
+    //         description: ctx.error.message,
+    //       });
+    //     },
+    //   },
+    // });
+    await execute();
   }
 
   return (
@@ -118,7 +130,7 @@ const AppNavbar = ({ user }: { user: TUser }) => {
 
               {/* First element */}
               <DropdownMenuItem className="p-0 cursor-pointer w-full">
-                {/* <ThemeSwitcher isAppNav /> */}
+                <ThemeSwitcher isAppNav />
               </DropdownMenuItem>
 
               {/* Second element */}

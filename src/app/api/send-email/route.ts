@@ -15,19 +15,12 @@ export async function POST(req: Request) {
       },
     });
 
-    const { rejected } = await transporter.sendMail({
+    await transporter.sendMail({
       from: "bezs <gnvv2002@gmail.com>",
       to,
       subject,
       text,
     });
-
-    if (rejected) {
-      console.log(rejected);
-      throw new Error(
-        typeof rejected === "string" ? rejected[0] : rejected[0]?.toString()
-      );
-    }
 
     return NextResponse.json(
       { message: "Email sent successfully!" },

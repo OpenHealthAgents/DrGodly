@@ -4,3 +4,10 @@ export class OperationError extends Error {
     this.name = "OperationError";
   }
 }
+
+export class InputParseError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options);
+    this.name = "InputParseError";
+  }
+}
