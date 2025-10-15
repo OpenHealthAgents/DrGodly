@@ -4,7 +4,6 @@ import {
   TSignInWithUsername,
   SignInWithUsernameSchema,
 } from "../../../entities/models/auth";
-import { signInWithEmailUseCase } from "../../../application/useCases/auth/signInWithEmail.useCase";
 import { getAuthInjection } from "../../../di/container";
 
 function presenter(data: TUsernameAuthRes) {
@@ -16,7 +15,9 @@ export type TSignInWithUsernameControllerOutput = ReturnType<typeof presenter>;
 export async function signInWithUsernameController(
   input: TSignInWithUsername
 ): Promise<TSignInWithUsernameControllerOutput> {
-  const authenticationService = getAuthInjection("IAuthenticationService");
+  const authenticationService = getAuthInjection(
+    "IBetterauthAuthenticationService"
+  );
   const { data, error: inputParseError } =
     SignInWithUsernameSchema.safeParse(input);
 

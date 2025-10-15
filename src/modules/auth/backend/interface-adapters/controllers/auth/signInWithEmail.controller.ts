@@ -15,7 +15,9 @@ export type TSignInWithEmailControllerOutput = ReturnType<typeof presenter>;
 export async function signInWithEmailController(
   input: TSignInWithEmail
 ): Promise<TSignInWithEmailControllerOutput> {
-  const authenticationService = getAuthInjection("IAuthenticationService");
+  const authenticationService = getAuthInjection(
+    "IBetterauthAuthenticationService"
+  );
   const { data, error: inputParseError } =
     SignInWithEmailSchema.safeParse(input);
 

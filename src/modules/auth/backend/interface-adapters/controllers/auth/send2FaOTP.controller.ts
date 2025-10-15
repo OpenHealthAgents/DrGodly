@@ -8,7 +8,9 @@ function presenter(data: T2Fa) {
 export type Tsend2FaOTPControllerOutput = ReturnType<typeof presenter>;
 
 export async function send2FaOTPController(): Promise<Tsend2FaOTPControllerOutput> {
-  const authenticationService = getAuthInjection("IAuthenticationService");
+  const authenticationService = getAuthInjection(
+    "IBetterauthAuthenticationService"
+  );
 
   const data = await authenticationService.send2FaOTP();
 

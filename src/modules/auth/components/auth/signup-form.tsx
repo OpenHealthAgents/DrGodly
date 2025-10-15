@@ -4,7 +4,13 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -91,9 +97,12 @@ export function SignUpForm() {
   }
 
   return (
-    <Card className="w-[400px]">
+    <Card className="w-[380px]">
       <CardHeader>
         <CardTitle className="text-xl">Sign Up</CardTitle>
+        <CardDescription className="text-xs">
+          Enter your information to create an account
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -105,7 +114,7 @@ export function SignUpForm() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="@username" {...field} />
+                    <Input placeholder="username" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -169,15 +178,6 @@ export function SignUpForm() {
                 </FormItem>
               )}
             />
-            <p>
-              Already have an account?{" "}
-              <Link
-                href="/signin"
-                className="text-blue-400 underline-offset-4 hover:underline"
-              >
-                Sign In
-              </Link>
-            </p>
             <Button
               type="submit"
               className="w-full text-md cursor-pointer"
@@ -193,19 +193,36 @@ export function SignUpForm() {
             </Button>
           </form>
         </Form>
-        <p className="text-center my-3">or</p>
-        <div className="space-y-1">
-          <OauthButton
-            oauthName="google"
-            label="Google"
-            isFormSubmitting={isSubmitting}
-          />
-          <OauthButton
-            oauthName="github"
-            label="GitHub"
-            isFormSubmitting={isSubmitting}
-          />
+        <div className="space-y-6 mt-6">
+          <div className="flex items-center gap-2">
+            <div className="h-[1px] bg-white/20 w-full" />
+            <p className="text-nowrap w-fit text-center text-sm text-zinc-500 dark:text-white/70">
+              Or continue with
+            </p>
+            <div className="h-[1px] bg-white/20 w-full" />
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            <OauthButton
+              oauthName="google"
+              label="Google"
+              isFormSubmitting={isSubmitting}
+            />
+            <OauthButton
+              oauthName="github"
+              label="GitHub"
+              isFormSubmitting={isSubmitting}
+            />
+          </div>
         </div>
+        <p className="text-center mt-6 text-sm text-zinc-500 dark:text-white/70">
+          Already have an account?{" "}
+          <Link
+            href="/signin"
+            className="text-black dark:text-white underline-offset-4 underline"
+          >
+            Sign In
+          </Link>
+        </p>
       </CardContent>
     </Card>
   );

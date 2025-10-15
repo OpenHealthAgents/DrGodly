@@ -12,14 +12,36 @@ import {
   TUpdatePassword,
   TSuccessRes,
   TUsernameAuthRes,
+  TSignInKeycloak,
 } from "../../entities/models/auth";
 import { headers } from "next/headers";
 
 @injectable()
-export class AuthenticationService implements IAuthenticationService {
+export class KeyCloakAuthenticationService implements IAuthenticationService {
   private _providers = ["github", "google"];
 
   constructor() {}
+
+  async signIn(): Promise<TSignInKeycloak> {
+    try {
+      const data = await auth.api.signInWithOAuth2({
+        body: {
+          providerId: "keycloak",
+          callbackURL: "/bezs",
+        },
+      });
+
+      return data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new UnauthenticatedError(error.message, { cause: error });
+      }
+
+      throw new UnauthenticatedError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
 
   async signInWithProvider(provider: string): Promise<void> {
     if (!this._providers.some((p) => p === provider)) {
@@ -229,4 +251,6 @@ export class AuthenticationService implements IAuthenticationService {
       });
     }
   }
+
+  async requestPasswordReset(data: TResetPassword): Promise<void> {}
 }

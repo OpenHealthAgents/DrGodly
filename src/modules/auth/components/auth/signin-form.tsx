@@ -4,7 +4,13 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -22,7 +28,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { toast } from "sonner";
 import OauthButton from "./oauth-button";
 import { useRouter } from "next/navigation";
@@ -34,7 +40,6 @@ import {
   signInWithEmail,
   signInWithUsername,
 } from "../../frontend/server-actions/auth-actions";
-import { send2FaOTPController } from "../../backend/interface-adapters/controllers/auth/send2FaOTP.controller";
 
 const usernameOrEmailSchema = z.string().refine(
   (value) => {
@@ -133,19 +138,22 @@ export function SignInForm() {
 
   return (
     <>
-      <Card className="w-[400px]">
+      <Card className="w-[380px]">
         <CardHeader>
           <CardTitle className="text-xl">Sign In</CardTitle>
+          <CardDescription className="text-xs">
+            Enter your email below to login to your account
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="usernameOrEmail"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username or Email</FormLabel>
+                    <FormLabel>Email or Username</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="@username or example@gmail.com"
@@ -165,7 +173,7 @@ export function SignInForm() {
                     <FormControl>
                       <div className="relative">
                         <Input
-                          placeholder="******"
+                          placeholder="password"
                           {...field}
                           type={inputType}
                           maxLength={16}
@@ -189,24 +197,15 @@ export function SignInForm() {
                       <Button
                         variant="link"
                         type="button"
-                        className="cursor-pointer"
+                        className="cursor-pointer text-zinc-500 dark:text-white/70 p-0 h-fit pr-1"
                         onClick={() => setIsForgetClick(true)}
                       >
-                        Forget Password
+                        Forget Password?
                       </Button>
                     </div>
                   </FormItem>
                 )}
               />
-              <p>
-                Don&apos;t have an account?{" "}
-                <Link
-                  href="/signup"
-                  className="text-blue-400 underline-offset-4 hover:underline"
-                >
-                  Sign Up
-                </Link>
-              </p>
               <Button
                 type="submit"
                 disabled={
@@ -228,23 +227,44 @@ export function SignInForm() {
               </Button>
             </form>
           </Form>
-          <p className="text-center my-3">or</p>
-          <div className="space-y-1">
-            <OauthButton
-              oauthName="google"
-              label="Google"
-              isFormSubmitting={
-                isSubmitting || emailSignInIsPending || usernameSignInIsPending
-              }
-            />
-            <OauthButton
-              oauthName="github"
-              label="GitHub"
-              isFormSubmitting={
-                isSubmitting || emailSignInIsPending || usernameSignInIsPending
-              }
-            />
+          <div className="space-y-6 mt-6">
+            <div className="flex items-center gap-2">
+              <div className="h-[1px] bg-white/20 w-full" />
+              <p className="text-nowrap w-fit text-center text-sm text-zinc-500 dark:text-white/70">
+                Or continue with
+              </p>
+              <div className="h-[1px] bg-white/20 w-full" />
+            </div>
+            <div className="flex gap-2 flex-wrap w-full">
+              <OauthButton
+                oauthName="google"
+                label="Google"
+                isFormSubmitting={
+                  isSubmitting ||
+                  emailSignInIsPending ||
+                  usernameSignInIsPending
+                }
+              />
+              <OauthButton
+                oauthName="github"
+                label="GitHub"
+                isFormSubmitting={
+                  isSubmitting ||
+                  emailSignInIsPending ||
+                  usernameSignInIsPending
+                }
+              />
+            </div>
           </div>
+          <p className="text-center mt-6 text-sm text-zinc-500 dark:text-white/70">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/signup"
+              className="text-black dark:text-white underline-offset-4 underline"
+            >
+              Sign Up
+            </Link>
+          </p>
         </CardContent>
       </Card>
       <ForgetPasswordAlert
@@ -284,7 +304,7 @@ export function ForgetPasswordAlert({
   async function onSubmit(values: ForgetPasswordForm) {
     const { email } = values;
 
-    await authClient.forgetPassword(
+    await authClient.requestPasswordReset(
       {
         email,
         redirectTo: "/reset-password",
@@ -292,9 +312,7 @@ export function ForgetPasswordAlert({
       {
         onSuccess() {
           toast("Success!", {
-            description: (
-              <span className="">{"Check your mail to change password."}</span>
-            ),
+            description: "Check your mail to change password.",
           });
           setIsForgetClick(false);
         },

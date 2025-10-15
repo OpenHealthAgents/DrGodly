@@ -2,10 +2,14 @@ import { IAuthenticationService } from "../application/services/authenticationSe
 
 export const DI_SYMBOLS = {
   // Services
-  IAuthenticationService: Symbol.for("IAuthenticationService"),
+  IBetterauthAuthenticationService: Symbol.for(
+    "IBetterauthAuthenticationService"
+  ),
+  IKeycloakAuthenticationService: Symbol.for("IKeycloakAuthenticationService"),
 };
 
 export interface DI_RETURN_TYPES {
   // Services
-  IAuthenticationService: IAuthenticationService;
+  IBetterauthAuthenticationService: IAuthenticationService;
+  IKeycloakAuthenticationService: IAuthenticationService;
 }

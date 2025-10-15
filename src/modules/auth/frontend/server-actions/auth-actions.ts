@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import { send2FaOTPController } from "../../backend/interface-adapters/controllers/auth/send2FaOTP.controller";
 import { signOutController } from "../../backend/interface-adapters/controllers/auth/signOut.controller";
 import { signInWithUsernameController } from "../../backend/interface-adapters/controllers/auth/signInWithUsername.controller";
+import { signInWithKeycloakController } from "../../backend/interface-adapters/controllers/auth/signInWithKeycloak.controller";
 
 const signInWithEmailSchema = z.object({
   email: z.string().email(),
@@ -122,6 +123,24 @@ export const signOut = createServerAction().handler(async () => {
 export const sendTwoFa = createServerAction().handler(async () => {
   try {
     await send2FaOTPController();
+  } catch (err) {
+    if (err instanceof InputParseError) {
+      throw new ZSAError("INPUT_PARSE_ERROR", "Invalid input");
+    }
+
+    if (err instanceof AuthenticationError) {
+      throw new ZSAError("ERROR", err.message);
+    }
+
+    throw new ZSAError("ERROR", err);
+  }
+});
+
+export const signInWithKeycloak = createServerAction().handler(async () => {
+  try {
+    const data = await signInWithKeycloakController();
+
+    return data;
   } catch (err) {
     if (err instanceof InputParseError) {
       throw new ZSAError("INPUT_PARSE_ERROR", "Invalid input");

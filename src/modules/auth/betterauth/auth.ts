@@ -12,6 +12,7 @@ import {
   twoFactor,
   username,
   organization,
+  createAuthMiddleware,
 } from "better-auth/plugins";
 
 export const auth = betterAuth({
@@ -31,7 +32,7 @@ export const auth = betterAuth({
   advanced: {},
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
+    requireEmailVerification: false,
     sendResetPassword: async ({ user, url }) => {
       try {
         await axios.post(
@@ -51,7 +52,6 @@ export const auth = betterAuth({
       }
     },
   },
-  trustedOrigins: ["http://localhost:5000"],
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -84,6 +84,15 @@ export const auth = betterAuth({
         throw new error(error);
       }
     },
+  },
+
+  hooks: {
+    after: createAuthMiddleware(async (ctx) => {
+      if (ctx.path === "/oauth2/callback/:providerId") {
+        console.log({ ctx });
+        const newSession = ctx.context.newSession;
+      }
+    }),
   },
 
   user: {

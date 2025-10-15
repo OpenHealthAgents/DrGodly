@@ -82,3 +82,10 @@ export type T2Fa = {
 export type TSuccessRes = {
   success: boolean;
 };
+
+// Keycloak
+
+export type TSignInKeycloak = {
+  url: string;
+  redirect: boolean;
+};
