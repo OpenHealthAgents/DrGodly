@@ -1,16 +1,36 @@
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { getServerSession } from "@/modules/auth/betterauth/auth-server";
-import { ThemeSwitcher } from "@/theme/theme-switcher";
-// import { useSession } from "@/modules/auth/services/better-auth/auth-client";
-// import { LangSwitcherBtn } from "@/shared/langSwitch/lang-switcher-btn";
-// import { ThemeSwitcher } from "@/theme/theme-switcher";
-// import { getTranslations } from "next-intl/server";
-// import { useTranslations } from "next-intl";
-import Link from "next/link";
+"use client";
 
-const RootNavBarPage = async () => {
-  const session = await getServerSession();
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { useSession } from "@/modules/auth/betterauth/auth-client";
+import { signInWithKeycloak } from "@/modules/auth/frontend/server-actions/auth-actions";
+import { ThemeSwitcher } from "@/theme/theme-switcher";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useServerAction } from "zsa-react";
+
+const RootNavBarPage = () => {
+  const session = useSession();
+  const router = useRouter();
+  const { execute, isPending } = useServerAction(signInWithKeycloak);
+
+  async function handleSignIn(url: string) {
+    const authProvider = process.env.NEXT_PUBLIC_AUTH_PROVIDER;
+
+    if (authProvider === "keycloak") {
+      const [data, error] = await execute();
+
+      if (error) {
+        toast.error("Failed to do signin");
+      }
+
+      if (data && data.redirect) {
+        window.location.href = data.url;
+      }
+    }
+    router.push(url);
+  }
 
   return (
     <>
@@ -26,34 +46,26 @@ const RootNavBarPage = async () => {
             <ThemeSwitcher />
           </li>
           <li className="flex items-center gap-2">
-            {!session ? (
+            {!session.data ? (
               <>
-                <Link
-                  href="signin"
-                  className={cn(
-                    "cursor-pointer",
-                    buttonVariants({
-                      variant: "link",
-                      size: "sm",
-                      className: "!no-underline",
-                    })
-                  )}
+                <Button
+                  variant="link"
+                  size="sm"
+                  onClick={() => handleSignIn("/signin")}
+                  disabled={isPending || session.isPending}
+                  className="!no-underline cursor-pointer"
                 >
                   Sign In
-                </Link>
-                <Link
-                  href="signup"
-                  className={cn(
-                    "cursor-pointer",
-                    buttonVariants({
-                      variant: "default",
-                      size: "sm",
-                      className: "!no-underline",
-                    })
-                  )}
+                </Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => handleSignIn("/signup")}
+                  disabled={isPending || session.isPending}
+                  className="!no-underline cursor-pointer"
                 >
-                  Sign up
-                </Link>
+                  Sign Up
+                </Button>
               </>
             ) : (
               <Link

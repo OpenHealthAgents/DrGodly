@@ -15,6 +15,8 @@ import {
   TSignInKeycloak,
 } from "../../entities/models/auth";
 import { headers } from "next/headers";
+import { getServerSession } from "@/modules/auth/betterauth/auth-server";
+import axios from "axios";
 
 @injectable()
 export class KeyCloakAuthenticationService implements IAuthenticationService {
@@ -172,11 +174,34 @@ export class KeyCloakAuthenticationService implements IAuthenticationService {
 
   async signOut(): Promise<TSuccessRes> {
     try {
-      const data = await auth.api.signOut({
-        headers: await headers(),
+      const session = await getServerSession();
+      const refreshToken = session?.keycloak.refreshToken;
+
+      if (!refreshToken) {
+        throw new Error("No refresh token found");
+      }
+
+      const data = new URLSearchParams({
+        client_id: process.env.KEYCLOAK_CLIENT_ID!,
+        client_secret: process.env.KEYCLOAK_CLIENT_SECRET!,
+        refresh_token: refreshToken,
       });
 
-      return data;
+      const res = await axios.post(
+        "http://localhost:8080/realms/bezs/protocol/openid-connect/logout",
+        data.toString(),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+
+      console.log(res.data);
+
+      return {
+        success: true,
+      };
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new UnauthenticatedError(error.message, { cause: error });

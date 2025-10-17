@@ -10,6 +10,7 @@ import { send2FaOTPController } from "../../backend/interface-adapters/controlle
 import { signOutController } from "../../backend/interface-adapters/controllers/auth/signOut.controller";
 import { signInWithUsernameController } from "../../backend/interface-adapters/controllers/auth/signInWithUsername.controller";
 import { signInWithKeycloakController } from "../../backend/interface-adapters/controllers/auth/signInWithKeycloak.controller";
+import { revalidatePath } from "next/cache";
 
 const signInWithEmailSchema = z.object({
   email: z.string().email(),
@@ -96,14 +97,15 @@ export const signInWithUsername = createServerAction()
   });
 
 export const signOut = createServerAction().handler(async () => {
-  let isSuccess: boolean = false;
+  // let isSuccess: boolean = false;
 
   try {
     const data = await signOutController();
     if (data.success) {
-      isSuccess = true;
+      return { success: true };
     }
   } catch (err) {
+    console.log(err);
     if (err instanceof InputParseError) {
       throw new ZSAError("INPUT_PARSE_ERROR", "Invalid input");
     }
@@ -115,9 +117,9 @@ export const signOut = createServerAction().handler(async () => {
     throw new ZSAError("ERROR", err);
   }
 
-  if (isSuccess) {
-    redirect("/");
-  }
+  // if (isSuccess) {
+  //   redirect("/");
+  // }
 });
 
 export const sendTwoFa = createServerAction().handler(async () => {
@@ -139,7 +141,6 @@ export const sendTwoFa = createServerAction().handler(async () => {
 export const signInWithKeycloak = createServerAction().handler(async () => {
   try {
     const data = await signInWithKeycloakController();
-
     return data;
   } catch (err) {
     if (err instanceof InputParseError) {

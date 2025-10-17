@@ -10,7 +10,8 @@
     "betterauth-generate": "npx @better-auth/cli generate --config ./src/modules/auth/betterauth/auth.ts",
     "main-generate": "npx prisma generate --schema ./prisma/main-database/schema.prisma",
     "main-db-push": "npx prisma db push --schema ./prisma/main-database/schema.prisma",
-    "main-studio": "npx prisma studio --schema ./prisma/main-database/schema.prisma"
+    "main-studio": "npx prisma studio --schema ./prisma/main-database/schema.prisma",
+    "auth:generate": "npx @better-auth/cli@latest generate --config ./src/modules/auth/betterauth/auth.ts --output ./prisma/new-auth.prisma --yes"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -52,6 +53,7 @@
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
     "inversify": "^7.10.2",
+    "jose": "^6.1.0",
     "lucide-react": "^0.544.0",
     "next": "15.5.3",
     "next-themes": "^0.4.6",

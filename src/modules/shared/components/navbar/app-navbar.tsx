@@ -1,6 +1,5 @@
 "use client";
 
-import { Session } from "@/modules/auth/types/auth-types";
 import {
   Bell,
   Check,
@@ -28,7 +27,6 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
-import { authClient } from "@/modules/auth/betterauth/auth-client";
 import { ThemeSwitcher } from "@/theme/theme-switcher";
 import { useServerAction } from "zsa-react";
 import { signOut } from "@/modules/auth/frontend/server-actions/auth-actions";
@@ -69,7 +67,11 @@ const AppNavbar = ({ user }: { user: TUser }) => {
     //     },
     //   },
     // });
-    await execute();
+    const [data] = await execute();
+
+    if (data?.success) {
+      window.location.href = "/";
+    }
   }
 
   return (

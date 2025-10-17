@@ -14,6 +14,10 @@ import {
   organization,
   createAuthMiddleware,
 } from "better-auth/plugins";
+import { createRemoteJWKSet, decodeJwt, jwtVerify } from "jose";
+import { cookies } from "next/headers";
+import { setKeycloakCookie } from "./setKeyCloakCookie";
+import { keycloakProvider } from "./customPlugins/keycloak-plugin";
 
 export const auth = betterAuth({
   database: prismaAdapter(prismaMain, {
@@ -86,14 +90,14 @@ export const auth = betterAuth({
     },
   },
 
-  hooks: {
-    after: createAuthMiddleware(async (ctx) => {
-      if (ctx.path === "/oauth2/callback/:providerId") {
-        console.log({ ctx });
-        const newSession = ctx.context.newSession;
-      }
-    }),
-  },
+  // hooks: {
+  //   after: createAuthMiddleware(async (ctx) => {
+  //     if (ctx.path === "/oauth2/callback/:providerId") {
+  //       console.log({ ctx });
+  //       const newSession = ctx.context.newSession;
+  //     }
+  //   }),
+  // },
 
   user: {
     changeEmail: {
@@ -140,12 +144,24 @@ export const auth = betterAuth({
         }
       },
     },
+    additionalFields: {
+      preferred_username: {
+        type: "string",
+        required: false,
+      },
+    },
   },
 
   appName: "Bezs",
 
   plugins: [
     openAPI(),
+    keycloakProvider({
+      baseUrl: process.env.KEYCLOAK_BASE_URL!,
+      clientId: process.env.KEYCLOAK_CLIENT_ID!,
+      clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
+      realm: process.env.KEYCLOAK_REALM!,
+    }),
     twoFactor({
       otpOptions: {
         async sendOTP({ user, otp }) {
@@ -190,9 +206,14 @@ export const auth = betterAuth({
     }),
     customSession(async ({ session, user }) => {
       const userId = user.id;
-      const providers = await prismaMain.account.findMany({
-        where: { userId },
-        select: { providerId: true, accountId: true },
+      const providers = await prismaMain.account.findFirst({
+        where: { userId, providerId: "keycloak" },
+        select: {
+          providerId: true,
+          accountId: true,
+          accessToken: true,
+          refreshToken: true,
+        },
       });
       const userDetails = await prismaMain.user.findUnique({
         where: { id: userId },
@@ -202,13 +223,59 @@ export const auth = betterAuth({
         },
       });
 
+      let keycloakSession: unknown = null;
+
+      if (
+        providers?.accessToken &&
+        providers?.refreshToken &&
+        providers.providerId === "keycloak"
+      ) {
+        /*
+        const JWKS = createRemoteJWKSet(
+          new URL(
+            "http://localhost:8080/realms/bezs/protocol/openid-connect/certs"
+          )
+        );
+
+        const { payload } = await jwtVerify(providers?.accessToken, JWKS, {
+          issuer: "http://localhost:8080/realms/bezs",
+        });
+
+        console.log(payload);
+        */
+
+        // await setKeycloakCookie(providers.refreshToken, providers.accessToken);
+
+        const claims: any = decodeJwt(providers?.accessToken);
+
+        keycloakSession = {
+          id: claims?.sub,
+          name: claims?.name,
+          email: claims?.email,
+          username: claims?.preferred_username,
+          emailVerified: claims.email_verified,
+          roles: {
+            realmAccess: claims?.realm_access?.roles ?? [],
+            resourceAccess: claims?.resource_access?.account?.roles ?? [],
+          },
+        };
+      }
+
       return {
         session,
         user: {
           role: userDetails?.role,
           username: userDetails?.username,
-          accountDetails: providers,
+          accountDetails: {
+            providerId: providers?.providerId,
+            accountId: providers?.accountId,
+          },
           ...user,
+          keycloakSession,
+        },
+        keycloak: {
+          refreshToken: providers?.refreshToken ?? null,
+          accessToken: providers?.accessToken ?? null,
         },
       };
     }),
@@ -218,6 +285,7 @@ export const auth = betterAuth({
         {
           providerId: "keycloak",
           clientId: process.env.KEYCLOAK_CLIENT_ID!,
+          clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
           discoveryUrl: `${process.env.KEYCLOAK_BASE_URL}/realms/${process.env.KEYCLOAK_REALM}/.well-known/openid-configuration`,
           scopes: ["openid", "email", "profile", "roles"],
           pkce: true,
