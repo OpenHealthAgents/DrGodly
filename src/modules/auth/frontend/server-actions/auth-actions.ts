@@ -10,7 +10,7 @@ import { send2FaOTPController } from "../../backend/interface-adapters/controlle
 import { signOutController } from "../../backend/interface-adapters/controllers/auth/signOut.controller";
 import { signInWithUsernameController } from "../../backend/interface-adapters/controllers/auth/signInWithUsername.controller";
 import { signInWithKeycloakController } from "../../backend/interface-adapters/controllers/auth/signInWithKeycloak.controller";
-import { revalidatePath } from "next/cache";
+import { signInController } from "../../backend/interface-adapters/controllers/auth/signIn.controller";
 
 const signInWithEmailSchema = z.object({
   email: z.string().email(),
@@ -27,6 +27,56 @@ const signInWithUsernameSchema = z.object({
     .min(8, "Password must have atleast two characters")
     .max(16, "Password must have atmost 16 characters"),
 });
+
+const usernameOrEmailSchema = z.string().refine(
+  (value) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const usernameRegex = /^[a-zA-Z0-9._]{3,15}$/;
+    return emailRegex.test(value) || usernameRegex.test(value);
+  },
+  {
+    message: "Enter a valid username or email",
+  }
+);
+
+const signInSchema = z.object({
+  usernameOrEmail: usernameOrEmailSchema,
+  password: z
+    .string()
+    .min(8, "Password must have atleast two characters")
+    .max(16, "Password must have atmost 16 characters"),
+});
+
+export const signIn = createServerAction()
+  .input(signInSchema, { skipInputParsing: true })
+  .handler(async ({ input }) => {
+    let redirectUrl: string | null = null;
+
+    try {
+      const data = await signInController({
+        usernameorEmail: input.usernameOrEmail,
+        password: input.password,
+      });
+
+      if (data && data.redirect && data.url) {
+        redirectUrl = data.url;
+      }
+    } catch (err) {
+      if (err instanceof InputParseError) {
+        throw new ZSAError("INPUT_PARSE_ERROR", "Invalid input");
+      }
+
+      if (err instanceof AuthenticationError) {
+        throw new ZSAError("ERROR", err.message);
+      }
+
+      throw new ZSAError("ERROR", err);
+    }
+
+    if (redirectUrl) {
+      redirect(redirectUrl);
+    }
+  });
 
 export const signInWithEmail = createServerAction()
   .input(signInWithEmailSchema, { skipInputParsing: true })

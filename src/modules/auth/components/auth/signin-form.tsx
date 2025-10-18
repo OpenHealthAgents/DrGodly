@@ -28,18 +28,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "sonner";
 import OauthButton from "./oauth-button";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { authClient } from "../../betterauth/auth-client";
 import { useServerAction } from "zsa-react";
-import {
-  sendTwoFa,
-  signInWithEmail,
-  signInWithUsername,
-} from "../../frontend/server-actions/auth-actions";
+import { signIn } from "../../frontend/server-actions/auth-actions";
 
 const usernameOrEmailSchema = z.string().refine(
   (value) => {
@@ -63,7 +58,6 @@ const signInFormSchema = z.object({
 type SignInForm = z.infer<typeof signInFormSchema>;
 
 export function SignInForm() {
-  const router = useRouter();
   const [isForgetClick, setIsForgetClick] = useState(false);
   const [inputType, setInputType] = useState("password");
 
@@ -79,25 +73,7 @@ export function SignInForm() {
     formState: { isSubmitting },
   } = form;
 
-  const { execute: emailSignIn, isPending: emailSignInIsPending } =
-    useServerAction(signInWithEmail, {
-      onError({ err }) {
-        toast.error("Error!", {
-          description: err.message,
-        });
-      },
-    });
-
-  const { execute: usernameSignIn, isPending: usernameSignInIsPending } =
-    useServerAction(signInWithUsername, {
-      onError({ err }) {
-        toast.error("Error!", {
-          description: err.message,
-        });
-      },
-    });
-
-  const { execute: send2Fa } = useServerAction(sendTwoFa, {
+  const { execute, isPending } = useServerAction(signIn, {
     onError({ err }) {
       toast.error("Error!", {
         description: err.message,
@@ -107,27 +83,7 @@ export function SignInForm() {
 
   async function onSubmit(values: SignInForm) {
     const { usernameOrEmail, password } = values;
-
-    const isEmailLogin = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usernameOrEmail);
-
-    if (isEmailLogin) {
-      const [data] = await emailSignIn({ email: usernameOrEmail, password });
-
-      if (data?.twoFa) {
-        send2Fa();
-        router.push(data.redirectUrl);
-      }
-    } else {
-      const [data] = await usernameSignIn({
-        username: usernameOrEmail,
-        password,
-      });
-
-      if (data?.twoFa) {
-        send2Fa();
-        router.push(data.redirectUrl);
-      }
-    }
+    await execute({ usernameOrEmail, password });
   }
 
   function handleInputTypeChange() {
@@ -208,16 +164,10 @@ export function SignInForm() {
               />
               <Button
                 type="submit"
-                disabled={
-                  isSubmitting ||
-                  emailSignInIsPending ||
-                  usernameSignInIsPending
-                }
+                disabled={isSubmitting || isPending}
                 className="w-full text-md cursor-pointer"
               >
-                {isSubmitting ||
-                emailSignInIsPending ||
-                usernameSignInIsPending ? (
+                {isSubmitting || isPending ? (
                   <>
                     <Loader2 className="animate-spin" /> Login
                   </>
@@ -239,20 +189,12 @@ export function SignInForm() {
               <OauthButton
                 oauthName="google"
                 label="Google"
-                isFormSubmitting={
-                  isSubmitting ||
-                  emailSignInIsPending ||
-                  usernameSignInIsPending
-                }
+                isFormSubmitting={isSubmitting || isPending}
               />
               <OauthButton
                 oauthName="github"
                 label="GitHub"
-                isFormSubmitting={
-                  isSubmitting ||
-                  emailSignInIsPending ||
-                  usernameSignInIsPending
-                }
+                isFormSubmitting={isSubmitting || isPending}
               />
             </div>
           </div>

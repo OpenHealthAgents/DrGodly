@@ -1,6 +1,5 @@
 import axios from "axios";
 import { TAuthTokenResponse, TUserInfo } from "../models/keycloak/keycloak";
-import { hashPassword } from "better-auth/crypto";
 import { setSessionCookie } from "better-auth/cookies";
 
 // Utility to format errors safely
@@ -17,7 +16,7 @@ export const parseKeycloakError = (err: any): string => {
 };
 
 // Helper for creating sessions and syncing with BetterAuth
-const createAndSyncSession = async (
+export const createAndSyncSession = async (
   ctx: any,
   tokenData: TAuthTokenResponse,
   userData: TUserInfo,
@@ -35,7 +34,8 @@ const createAndSyncSession = async (
 
   // Check if user exists
   const existing = await ctx.context.internalAdapter.findUserByEmail(
-    userData.email
+    userData.email,
+    { includeAccounts: true }
   );
 
   let user;
@@ -64,6 +64,8 @@ const createAndSyncSession = async (
   const account =
     existing?.accounts.find((a: any) => a.providerId === providerId) || null;
 
+  // console.log({ existing, account, userData });
+
   if (account) {
     await ctx.context.internalAdapter.updateAccount(
       account.id,
@@ -72,7 +74,7 @@ const createAndSyncSession = async (
         refreshToken: tokenData.refresh_token,
         idToken: tokenData.id_token,
         scope: tokenData.scope,
-        password: await hashPassword(password),
+        password: await ctx.context.password.hash(password),
         accessTokenExpiresAt: new Date(
           Date.now() + tokenData.expires_in * 1000
         ),
@@ -98,7 +100,7 @@ const createAndSyncSession = async (
         ),
         idToken: tokenData.id_token,
         scope: tokenData.scope,
-        password: await hashPassword(password),
+        password: await ctx.context.password.hash(password),
       },
       ctx
     );
@@ -121,6 +123,7 @@ const createAndSyncSession = async (
 
   // Set cookies
   await setSessionCookie(ctx, { session, user });
+  console.log("Set Session");
 
   return user;
 };

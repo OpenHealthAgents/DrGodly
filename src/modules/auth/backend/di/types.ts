@@ -1,4 +1,7 @@
-import { IAuthenticationService } from "../application/services/authenticationService.interface";
+import {
+  IAuthenticationService,
+  IKeycloakAuthenticationService,
+} from "../application/services/authenticationService.interface";
 
 export const DI_SYMBOLS = {
   // Services
@@ -11,5 +14,5 @@ export const DI_SYMBOLS = {
 export interface DI_RETURN_TYPES {
   // Services
   IBetterauthAuthenticationService: IAuthenticationService;
-  IKeycloakAuthenticationService: IAuthenticationService;
+  IKeycloakAuthenticationService: IKeycloakAuthenticationService;
 }

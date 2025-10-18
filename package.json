@@ -11,7 +11,7 @@
     "main-generate": "npx prisma generate --schema ./prisma/main-database/schema.prisma",
     "main-db-push": "npx prisma db push --schema ./prisma/main-database/schema.prisma",
     "main-studio": "npx prisma studio --schema ./prisma/main-database/schema.prisma",
-    "auth:generate": "npx @better-auth/cli@latest generate --config ./src/modules/auth/betterauth/auth.ts --output ./prisma/new-auth.prisma --yes"
+    "auth:generate": "npx @better-auth/cli@latest generate --config ./src/modules/auth/betterauth/auth.ts --output ./prisma/auth.prisma --yes"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -54,6 +54,7 @@
     "input-otp": "^1.4.2",
     "inversify": "^7.10.2",
     "jose": "^6.1.0",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.544.0",
     "next": "15.5.3",
     "next-themes": "^0.4.6",
@@ -77,6 +78,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/nodemailer": "^7.0.1",
     "@types/react": "^19",

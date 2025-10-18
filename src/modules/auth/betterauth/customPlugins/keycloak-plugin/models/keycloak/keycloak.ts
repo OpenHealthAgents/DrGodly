@@ -19,3 +19,13 @@ export type TUserInfo = {
   family_name: string;
   email: string;
 };
+
+export type TAuthClientToken = Pick<
+  TAuthTokenResponse,
+  | "access_token"
+  | "expires_in"
+  | "refresh_expires_in"
+  | "token_type"
+  | "not-before-policy"
+  | "scope"
+>;

@@ -32,10 +32,9 @@ export const UpdatePasswordSchema = z.object({
 });
 export type TUpdatePassword = z.infer<typeof UpdatePasswordSchema>;
 
-type TAuthEmailSuccessRes = {
-  type: "success";
+export type TAuthEmailSuccessRes = {
   redirect: boolean;
-  token: string;
+  // token: string;
   url: string | undefined;
   user: {
     id: string;
@@ -53,10 +52,9 @@ type TAuth2FARes = {
 };
 export type TEmailAuthRes = TAuthEmailSuccessRes | TAuth2FARes;
 
-type TAuthUsernameSuccessRes = {
-  type: "success";
+export type TAuthUsernameSuccessRes = {
   redirect: boolean;
-  token: string;
+  // token: string;
   url: string | undefined;
   user: {
     id: string;
@@ -84,8 +82,43 @@ export type TSuccessRes = {
 };
 
 // Keycloak
+export const SignInSchema = z.object({
+  usernameorEmail: z.string(),
+  password: z.string(),
+});
+export type TSignIn = z.infer<typeof SignInSchema>;
 
 export type TSignInKeycloak = {
-  url: string;
+  success: boolean;
+  user: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    email: string;
+    emailVerified: boolean;
+    name: string;
+    image?: string | null;
+  };
   redirect: boolean;
+  url: string;
 };
+
+export type TSignInKeycloakRes = {
+  success: boolean;
+  user: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    email: string;
+    emailVerified: boolean;
+    name: string;
+    image?: string | null;
+  };
+  redirect: boolean;
+  callbackURL: string;
+};
+
+export type TSignOutKeycloak = Pick<
+  TSignInKeycloak,
+  "success" | "redirect" | "url"
+>;

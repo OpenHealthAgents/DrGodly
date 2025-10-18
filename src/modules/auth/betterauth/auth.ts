@@ -33,7 +33,6 @@ export const auth = betterAuth({
       maxAge: 60 * 2,
     },
   },
-  advanced: {},
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,
@@ -144,12 +143,6 @@ export const auth = betterAuth({
         }
       },
     },
-    additionalFields: {
-      preferred_username: {
-        type: "string",
-        required: false,
-      },
-    },
   },
 
   appName: "Bezs",
@@ -157,10 +150,16 @@ export const auth = betterAuth({
   plugins: [
     openAPI(),
     keycloakProvider({
+      appUrl:
+        process.env.NODE_ENV === "production"
+          ? process.env.PROD_APP_URL!
+          : process.env.DEV_APP_URL!,
       baseUrl: process.env.KEYCLOAK_BASE_URL!,
       clientId: process.env.KEYCLOAK_CLIENT_ID!,
       clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
       realm: process.env.KEYCLOAK_REALM!,
+      emailUser: process.env.SMTP_EMAIL!,
+      emailPass: process.env.SMTP_PASS!,
     }),
     twoFactor({
       otpOptions: {

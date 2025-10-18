@@ -12,7 +12,8 @@ import {
   TUpdatePassword,
   TSuccessRes,
   TUsernameAuthRes,
-  TSignInKeycloak,
+  TAuthEmailSuccessRes,
+  TAuthUsernameSuccessRes,
 } from "../../entities/models/auth";
 import { headers } from "next/headers";
 
@@ -21,10 +22,6 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
   private _providers = ["github", "google"];
 
   constructor() {}
-
-  signIn(): Promise<TSignInKeycloak> {
-    throw new Error("Service not available");
-  }
 
   async signInWithProvider(provider: string): Promise<void> {
     if (!this._providers.some((p) => p === provider)) {
@@ -53,7 +50,7 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
   async signInWithEmail({
     email,
     password,
-  }: TSignInWithEmail): Promise<TEmailAuthRes> {
+  }: TSignInWithEmail): Promise<TAuthEmailSuccessRes> {
     try {
       const response = await auth.api.signInEmail({
         body: {
@@ -64,16 +61,15 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
         },
       });
 
-      if ((response as any)?.twoFactorRedirect) {
-        return {
-          type: "2fa",
-          twoFactorRedirect: true,
-          ...response,
-        };
-      }
+      // if ((response as any)?.twoFactorRedirect) {
+      //   return {
+      //     type: "2fa",
+      //     twoFactorRedirect: true,
+      //     ...response,
+      //   };
+      // }
 
       return {
-        type: "success",
         ...response,
       };
     } catch (error) {
@@ -90,7 +86,7 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
   async signInWithUsername({
     username,
     password,
-  }: TSignInWithUsername): Promise<TUsernameAuthRes> {
+  }: TSignInWithUsername): Promise<TAuthUsernameSuccessRes | null> {
     try {
       const response = await auth.api.signInUsername({
         body: {
@@ -101,24 +97,25 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
         },
       });
 
-      console.log({ response });
+      // console.log({ response });
 
-      if ((response as any)?.twoFactorRedirect) {
-        return {
-          type: "2fa",
-          twoFactorRedirect: true,
-          ...response,
-        };
-      }
+      // if ((response as any)?.twoFactorRedirect) {
+      //   return {
+      //     type: "2fa",
+      //     twoFactorRedirect: true,
+      //     ...response,
+      //   };
+      // }
 
       if (response) {
         return {
-          type: "success",
           redirect: true,
           url: "/bezs",
           ...response,
         };
       }
+
+      return null;
     } catch (error) {
       console.log({ error });
       if (error instanceof Error) {

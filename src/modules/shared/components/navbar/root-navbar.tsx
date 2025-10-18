@@ -1,36 +1,29 @@
-"use client";
-
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useSession } from "@/modules/auth/betterauth/auth-client";
-import { signInWithKeycloak } from "@/modules/auth/frontend/server-actions/auth-actions";
+import { getServerSession } from "@/modules/auth/betterauth/auth-server";
 import { ThemeSwitcher } from "@/theme/theme-switcher";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { useServerAction } from "zsa-react";
 
-const RootNavBarPage = () => {
-  const session = useSession();
-  const router = useRouter();
-  const { execute, isPending } = useServerAction(signInWithKeycloak);
+const RootNavBarPage = async () => {
+  const session = await getServerSession();
+  // const { execute, isPending } = useServerAction(signInWithKeycloak);
 
-  async function handleSignIn(url: string) {
-    const authProvider = process.env.NEXT_PUBLIC_AUTH_PROVIDER;
+  // async function handleSignIn(url: string) {
+  //   const authProvider = process.env.NEXT_PUBLIC_AUTH_PROVIDER;
 
-    if (authProvider === "keycloak") {
-      const [data, error] = await execute();
+  //   if (authProvider === "keycloak") {
+  //     const [data, error] = await execute();
 
-      if (error) {
-        toast.error("Failed to do signin");
-      }
+  //     if (error) {
+  //       toast.error("Failed to do signin");
+  //     }
 
-      if (data && data.redirect) {
-        window.location.href = data.url;
-      }
-    }
-    router.push(url);
-  }
+  //     if (data && data.redirect) {
+  //       window.location.href = data.url;
+  //     }
+  //   }
+  //   router.push(url);
+  // }
 
   return (
     <>
@@ -46,9 +39,9 @@ const RootNavBarPage = () => {
             <ThemeSwitcher />
           </li>
           <li className="flex items-center gap-2">
-            {!session.data ? (
+            {!session ? (
               <>
-                <Button
+                {/* <Button
                   variant="link"
                   size="sm"
                   onClick={() => handleSignIn("/signin")}
@@ -65,7 +58,33 @@ const RootNavBarPage = () => {
                   className="!no-underline cursor-pointer"
                 >
                   Sign Up
-                </Button>
+                </Button> */}
+                <Link
+                  href="/signin"
+                  className={cn(
+                    "cursor-pointer",
+                    buttonVariants({
+                      variant: "link",
+                      size: "sm",
+                      className: "!no-underline",
+                    })
+                  )}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  className={cn(
+                    "cursor-pointer",
+                    buttonVariants({
+                      variant: "default",
+                      size: "sm",
+                      className: "!no-underline",
+                    })
+                  )}
+                >
+                  Sign Up
+                </Link>
               </>
             ) : (
               <Link

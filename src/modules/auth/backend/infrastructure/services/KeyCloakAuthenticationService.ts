@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { IAuthenticationService } from "../../application/services/authenticationService.interface";
+import { IKeycloakAuthenticationService } from "../../application/services/authenticationService.interface";
 import { auth } from "@/modules/auth/betterauth/auth";
 import { UnauthenticatedError } from "@/modules/shared/entities/errors/authError";
 import {
@@ -10,198 +10,167 @@ import {
   TSignUp,
   T2Fa,
   TUpdatePassword,
-  TSuccessRes,
   TUsernameAuthRes,
   TSignInKeycloak,
+  TSignIn,
+  TSignOutKeycloak,
+  TSignInKeycloakRes,
 } from "../../entities/models/auth";
-import { headers } from "next/headers";
-import { getServerSession } from "@/modules/auth/betterauth/auth-server";
-import axios from "axios";
+import { headers, cookies } from "next/headers";
+import axios, { AxiosError } from "axios";
 
 @injectable()
-export class KeyCloakAuthenticationService implements IAuthenticationService {
+export class KeyCloakAuthenticationService
+  implements IKeycloakAuthenticationService
+{
   private _providers = ["github", "google"];
 
   constructor() {}
 
-  async signIn(): Promise<TSignInKeycloak> {
-    try {
-      const data = await auth.api.signInWithOAuth2({
-        body: {
-          providerId: "keycloak",
-          callbackURL: "/bezs",
-        },
-      });
-
-      return data;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new UnauthenticatedError(error.message, { cause: error });
-      }
-
-      throw new UnauthenticatedError("An unexpected erorr occurred", {
-        cause: error,
-      });
-    }
-  }
-
-  async signInWithProvider(provider: string): Promise<void> {
-    if (!this._providers.some((p) => p === provider)) {
-      // TODO: move provider validation in Controller
-      throw new Error("Provider not supported");
-    }
-
-    try {
-      await auth.api.signInSocial({
-        body: {
-          provider,
-          callbackURL: "/bezs",
-        },
-      });
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new UnauthenticatedError(error.message, { cause: error });
-      }
-
-      throw new UnauthenticatedError("An unexpected erorr occurred", {
-        cause: error,
-      });
-    }
-  }
-
-  async signInWithEmail({
-    email,
+  async signIn({
+    usernameorEmail,
     password,
-  }: TSignInWithEmail): Promise<TEmailAuthRes> {
+  }: TSignIn): Promise<TSignInKeycloak> {
+    const cookieStore = await cookies();
+
     try {
-      const response = await auth.api.signInEmail({
-        body: {
-          email,
-          password,
-          rememberMe: false,
-          callbackURL: "/bezs",
-        },
-      });
-
-      if ((response as any)?.twoFactorRedirect) {
-        return {
-          type: "2fa",
-          twoFactorRedirect: true,
-          ...response,
-        };
-      }
-
-      return {
-        type: "success",
-        ...response,
-      };
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new UnauthenticatedError(error.message, { cause: error });
-      }
-
-      throw new UnauthenticatedError("An unexpected erorr occurred", {
-        cause: error,
-      });
-    }
-  }
-
-  async signInWithUsername({
-    username,
-    password,
-  }: TSignInWithUsername): Promise<TUsernameAuthRes> {
-    try {
-      const response = await auth.api.signInUsername({
-        body: {
-          username,
-          password,
-          rememberMe: false,
-          callbackURL: "/bezs",
-        },
-      });
-
-      console.log({ response });
-
-      if ((response as any)?.twoFactorRedirect) {
-        return {
-          type: "2fa",
-          twoFactorRedirect: true,
-          ...response,
-        };
-      }
-
-      if (response) {
-        return {
-          type: "success",
-          redirect: true,
-          url: "/bezs",
-          ...response,
-        };
-      }
-    } catch (error) {
-      console.log({ error });
-      if (error instanceof Error) {
-        throw new UnauthenticatedError(error.message, { cause: error });
-      }
-
-      throw new UnauthenticatedError("An unexpected erorr occurred", {
-        cause: error,
-      });
-    }
-  }
-
-  async signUp({ email, name, password, username }: TSignUp): Promise<void> {
-    try {
-      await auth.api.signUpEmail({
-        body: {
-          username,
-          name,
-          email,
-          password,
-          callbackURL: "/bezs",
-        },
-      });
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new UnauthenticatedError(error.message, { cause: error });
-      }
-
-      throw new UnauthenticatedError("An unexpected erorr occurred", {
-        cause: error,
-      });
-    }
-  }
-
-  async signOut(): Promise<TSuccessRes> {
-    try {
-      const session = await getServerSession();
-      const refreshToken = session?.keycloak.refreshToken;
-
-      if (!refreshToken) {
-        throw new Error("No refresh token found");
-      }
-
-      const data = new URLSearchParams({
-        client_id: process.env.KEYCLOAK_CLIENT_ID!,
-        client_secret: process.env.KEYCLOAK_CLIENT_SECRET!,
-        refresh_token: refreshToken,
-      });
-
-      const res = await axios.post(
-        "http://localhost:8080/realms/bezs/protocol/openid-connect/logout",
-        data.toString(),
+      const res = await axios.post<TSignInKeycloakRes>(
+        "http://localhost:3000/api/auth/keycloakProvider/signin",
         {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
+          usernameorEmail,
+          password,
+          callbackURL: "/bezs",
         }
       );
 
-      console.log(res.data);
+      /*
+      // not working
+      const setCookieHeader = res.headers["set-cookie"];
+
+      if (setCookieHeader) {
+        setCookieHeader.forEach((cookieString) => {
+          // Parse cookie attributes
+          const [cookiePair, ...attributes] = cookieString.split("; ");
+          const [name, value] = cookiePair.split("=");
+
+          // Default attributes
+          let maxAge: number | undefined;
+          let path = "/";
+          let httpOnly = false;
+          let sameSite: "lax" | "strict" | "none" = "lax";
+          let secure = process.env.NODE_ENV === "production";
+
+          // Parse attributes
+          attributes.forEach((attr) => {
+            const [key, val] = attr.split("=");
+            if (key.toLowerCase() === "max-age") {
+              maxAge = parseInt(val, 10);
+            } else if (key.toLowerCase() === "path") {
+              path = val;
+            } else if (key.toLowerCase() === "httponly") {
+              httpOnly = true;
+            } else if (key.toLowerCase() === "samesite") {
+              sameSite = val.toLowerCase() as "lax" | "strict" | "none";
+            } else if (key.toLowerCase() === "secure") {
+              secure = true;
+            }
+          });
+
+          // Set the cookie in the Next.js cookie store
+          cookieStore.set({
+            name,
+            value,
+            maxAge: 604800,
+            path,
+            httpOnly,
+            sameSite,
+            secure,
+          });
+        });
+      }
+        */
 
       return {
-        success: true,
+        url: res.data.callbackURL,
+        redirect: res.data.redirect,
+        success: res.data.success,
+        user: res.data.user,
       };
+    } catch (error: unknown) {
+      console.log(error);
+      if (error instanceof AxiosError) {
+        throw new UnauthenticatedError(
+          error.response?.data.message || "Unable to login",
+          { cause: error }
+        );
+      }
+
+      throw new UnauthenticatedError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async signUp({
+    email,
+    name,
+    password,
+    username,
+  }: TSignUp): Promise<TSignInKeycloak> {
+    const nameArr = name.trim().split(/\s+/);
+    let firstName: string = "";
+    let lastName: string | undefined = undefined;
+    if (nameArr.length > 1) {
+      lastName = nameArr.pop();
+    }
+    firstName = nameArr.join(" ");
+
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/auth/keycloakProvider/signup",
+        {
+          username,
+          password,
+          email,
+          firstName,
+          lastName,
+          callbackURL: "/bezs",
+        }
+      );
+
+      return {
+        url: res.data.redirectURL,
+        redirect: res.data.redirect,
+        success: res.data.success,
+        user: res.data.user,
+      };
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw new UnauthenticatedError(
+          error.response?.data.message || "Unable to create account",
+          { cause: error }
+        );
+      }
+
+      throw new UnauthenticatedError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async signOut(refreshToken: string): Promise<TSignOutKeycloak> {
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/auth/keycloakProvider/logout",
+        {
+          refreshToken,
+          callbackURL: "/",
+        }
+      );
+
+      const data = res.data;
+
+      return data;
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new UnauthenticatedError(error.message, { cause: error });
