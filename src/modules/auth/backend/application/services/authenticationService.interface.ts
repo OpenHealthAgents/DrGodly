@@ -13,6 +13,7 @@ import {
   TSignOutKeycloak,
   TAuthEmailSuccessRes,
   TAuthUsernameSuccessRes,
+  TSignInWithKeycloakGenericOAuth,
 } from "../../entities/models/auth";
 
 export interface IAuthenticationService {
@@ -31,8 +32,10 @@ export interface IAuthenticationService {
 
 export interface IKeycloakAuthenticationService {
   signIn(data: TSignIn): Promise<TSignInKeycloak>;
+  signInWithKeycloakGenericOAuth(): Promise<TSignInWithKeycloakGenericOAuth>;
   signUp(data: TSignUp): Promise<TSignInKeycloak>;
   signOut(refreshToken: string): Promise<TSignOutKeycloak>;
+  signOutWithKeycloakGenericOAuth(refreshToken: string): Promise<TSuccessRes>;
   resetPassword(data: TResetPassword): Promise<void>;
   requestPasswordReset(data: TResetPassword): Promise<void>;
   updatePassword(data: TUpdatePassword): Promise<void>;

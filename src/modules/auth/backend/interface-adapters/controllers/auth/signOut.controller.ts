@@ -1,7 +1,14 @@
+import { InputParseError } from "@/modules/shared/entities/errors/commonError";
 import { getAuthInjection } from "../../../di/container";
-import { TSuccessRes } from "../../../entities/models/auth";
+import {
+  SignOutWithKeycloakGenericOAuthSchema,
+  TSuccessRes,
+} from "../../../entities/models/auth";
+import { getAuthProvider } from "@/modules/auth/utils/getAuthProvider";
 
-export async function signOutController(): Promise<TSuccessRes> {
+export async function signOutController(
+  refreshToken?: string
+): Promise<TSuccessRes> {
   const betterAuthAuthenticationService = getAuthInjection(
     "IBetterauthAuthenticationService"
   );
@@ -9,13 +16,25 @@ export async function signOutController(): Promise<TSuccessRes> {
     "IKeycloakAuthenticationService"
   );
 
-  const authProvider = process.env.NEXT_PUBLIC_AUTH_PROVIDER;
+  const { isKeycloak } = getAuthProvider();
 
   let data;
 
-  if (authProvider === "keycloak") {
+  if (isKeycloak) {
+    const {
+      success,
+      data: refreshTokenData,
+      error,
+    } = SignOutWithKeycloakGenericOAuthSchema.safeParse({ refreshToken });
+
+    if (error && !success) {
+      throw new InputParseError(error.name, { cause: error });
+    }
+
     const [keycloakRes, betterauthRes] = await Promise.all([
-      await keyCloakAuthenticationService.signOut(),
+      await keyCloakAuthenticationService.signOutWithKeycloakGenericOAuth(
+        refreshTokenData.refreshToken
+      ),
       await betterAuthAuthenticationService.signOut(),
     ]);
 

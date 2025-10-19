@@ -47,7 +47,11 @@ const signUpFormSchema = z.object({
 
 type SignUpForm = z.infer<typeof signUpFormSchema>;
 
-export function SignUpForm() {
+export function SignUpForm({
+  isAuthCheckPending,
+}: {
+  isAuthCheckPending: boolean;
+}) {
   const router = useRouter();
   const [inputType, setInputType] = useState("password");
 
@@ -181,7 +185,7 @@ export function SignUpForm() {
             <Button
               type="submit"
               className="w-full text-md cursor-pointer"
-              disabled={isSubmitting}
+              disabled={isSubmitting || isAuthCheckPending}
             >
               {isSubmitting ? (
                 <>
@@ -205,12 +209,12 @@ export function SignUpForm() {
             <OauthButton
               oauthName="google"
               label="Google"
-              isFormSubmitting={isSubmitting}
+              isFormSubmitting={isSubmitting || isAuthCheckPending}
             />
             <OauthButton
               oauthName="github"
               label="GitHub"
-              isFormSubmitting={isSubmitting}
+              isFormSubmitting={isSubmitting || isAuthCheckPending}
             />
           </div>
         </div>

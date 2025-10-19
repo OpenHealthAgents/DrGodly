@@ -15,9 +15,12 @@ import {
   TSignIn,
   TSignOutKeycloak,
   TSignInKeycloakRes,
+  TSignInWithKeycloakGenericOAuth,
+  TSuccessRes,
 } from "../../entities/models/auth";
 import { headers, cookies } from "next/headers";
 import axios, { AxiosError } from "axios";
+import { getServerSession } from "@/modules/auth/betterauth/auth-server";
 
 @injectable()
 export class KeyCloakAuthenticationService
@@ -44,7 +47,7 @@ export class KeyCloakAuthenticationService
       );
 
       /*
-      // not working
+      // not working (custom cookies handler)
       const setCookieHeader = res.headers["set-cookie"];
 
       if (setCookieHeader) {
@@ -111,6 +114,27 @@ export class KeyCloakAuthenticationService
     }
   }
 
+  async signInWithKeycloakGenericOAuth(): Promise<TSignInWithKeycloakGenericOAuth> {
+    try {
+      const data = await auth.api.signInWithOAuth2({
+        body: {
+          providerId: "keycloak",
+          callbackURL: "http://localhost:3000/bezs",
+        },
+      });
+
+      return data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new UnauthenticatedError(error.message, { cause: error });
+      }
+
+      throw new UnauthenticatedError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
+
   async signUp({
     email,
     name,
@@ -168,9 +192,45 @@ export class KeyCloakAuthenticationService
         }
       );
 
-      const data = res.data;
+      return res.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new UnauthenticatedError(error.message, { cause: error });
+      }
 
-      return data;
+      throw new UnauthenticatedError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async signOutWithKeycloakGenericOAuth(
+    refreshToken: string
+  ): Promise<TSuccessRes> {
+    try {
+      if (!refreshToken) {
+        throw new Error("No refresh token found");
+      }
+
+      const data = new URLSearchParams({
+        client_id: process.env.KEYCLOAK_CLIENT_ID!,
+        client_secret: process.env.KEYCLOAK_CLIENT_SECRET!,
+        refresh_token: refreshToken,
+      });
+
+      const res = await axios.post(
+        "http://localhost:8080/realms/bezs/protocol/openid-connect/logout",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+
+      return {
+        success: true,
+      };
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new UnauthenticatedError(error.message, { cause: error });

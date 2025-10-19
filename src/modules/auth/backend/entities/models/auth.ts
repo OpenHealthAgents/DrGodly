@@ -88,6 +88,13 @@ export const SignInSchema = z.object({
 });
 export type TSignIn = z.infer<typeof SignInSchema>;
 
+export const SignOutWithKeycloakGenericOAuthSchema = z.object({
+  refreshToken: z.string(),
+});
+export type TSignOutWithKeycloakGenericOAuth = z.infer<
+  typeof SignOutWithKeycloakGenericOAuthSchema
+>;
+
 export type TSignInKeycloak = {
   success: boolean;
   user: {
@@ -122,3 +129,8 @@ export type TSignOutKeycloak = Pick<
   TSignInKeycloak,
   "success" | "redirect" | "url"
 >;
+
+export type TSignInWithKeycloakGenericOAuth = {
+  url: string;
+  redirect: boolean;
+};
