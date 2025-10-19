@@ -44,7 +44,7 @@ export class KeyCloakAuthenticationService
       );
 
       /*
-      // not working
+      // not working (custom cookies handler)
       const setCookieHeader = res.headers["set-cookie"];
 
       if (setCookieHeader) {
