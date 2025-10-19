@@ -57,7 +57,11 @@ const signInFormSchema = z.object({
 
 type SignInForm = z.infer<typeof signInFormSchema>;
 
-export function SignInForm() {
+export function SignInForm({
+  isAuthCheckPending,
+}: {
+  isAuthCheckPending: boolean;
+}) {
   const [isForgetClick, setIsForgetClick] = useState(false);
   const [inputType, setInputType] = useState("password");
 
@@ -164,12 +168,17 @@ export function SignInForm() {
               />
               <Button
                 type="submit"
-                disabled={isSubmitting || isPending}
+                disabled={isSubmitting || isPending || isAuthCheckPending}
                 className="w-full text-md cursor-pointer"
               >
-                {isSubmitting || isPending ? (
+                {isSubmitting || isPending || !isAuthCheckPending ? (
                   <>
                     <Loader2 className="animate-spin" /> Login
+                  </>
+                ) : isAuthCheckPending ? (
+                  <>
+                    <Loader2 className="animate-spin" />
+                    Checking Auth Provider
                   </>
                 ) : (
                   "Login"
@@ -189,12 +198,16 @@ export function SignInForm() {
               <OauthButton
                 oauthName="google"
                 label="Google"
-                isFormSubmitting={isSubmitting || isPending}
+                isFormSubmitting={
+                  isSubmitting || isPending || isAuthCheckPending
+                }
               />
               <OauthButton
                 oauthName="github"
                 label="GitHub"
-                isFormSubmitting={isSubmitting || isPending}
+                isFormSubmitting={
+                  isSubmitting || isPending || isAuthCheckPending
+                }
               />
             </div>
           </div>

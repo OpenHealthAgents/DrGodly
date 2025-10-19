@@ -9,10 +9,10 @@ const AppListingLayout = async ({
 }) => {
   const session = await getServerSession();
   const user = {
-    name: session.user.name,
-    email: session.user.email,
-    image: session.user.image,
-    username: session.user.username,
+    name: session?.user.name,
+    email: session?.user.email,
+    image: session?.user.image,
+    username: session?.user.username,
   };
 
   if (!session) {

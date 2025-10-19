@@ -9,8 +9,9 @@ import { redirect } from "next/navigation";
 import { send2FaOTPController } from "../../backend/interface-adapters/controllers/auth/send2FaOTP.controller";
 import { signOutController } from "../../backend/interface-adapters/controllers/auth/signOut.controller";
 import { signInWithUsernameController } from "../../backend/interface-adapters/controllers/auth/signInWithUsername.controller";
-import { signInWithKeycloakController } from "../../backend/interface-adapters/controllers/auth/signInWithKeycloak.controller";
+import { signInWithKeycloakGenericOAuthController } from "../../backend/interface-adapters/controllers/auth/signInWithKeycloakGenericOAuth.controller";
 import { signInController } from "../../backend/interface-adapters/controllers/auth/signIn.controller";
+import { getServerSession } from "../../betterauth/auth-server";
 
 const signInWithEmailSchema = z.object({
   email: z.string().email(),
@@ -147,10 +148,14 @@ export const signInWithUsername = createServerAction()
   });
 
 export const signOut = createServerAction().handler(async () => {
-  // let isSuccess: boolean = false;
+  const session = await getServerSession();
 
   try {
-    const data = await signOutController();
+    if (!session || !session.keycloak || !session.keycloak.refreshToken) {
+      throw new Error("Unauthenticated");
+    }
+
+    const data = await signOutController(session.keycloak.refreshToken);
     if (data.success) {
       return { success: true };
     }
@@ -188,19 +193,21 @@ export const sendTwoFa = createServerAction().handler(async () => {
   }
 });
 
-export const signInWithKeycloak = createServerAction().handler(async () => {
-  try {
-    const data = await signInWithKeycloakController();
-    return data;
-  } catch (err) {
-    if (err instanceof InputParseError) {
-      throw new ZSAError("INPUT_PARSE_ERROR", "Invalid input");
-    }
+export const signInWithKeycloakGenericOAuth = createServerAction().handler(
+  async () => {
+    try {
+      const data = await signInWithKeycloakGenericOAuthController();
+      return data;
+    } catch (err) {
+      if (err instanceof InputParseError) {
+        throw new ZSAError("INPUT_PARSE_ERROR", "Invalid input");
+      }
 
-    if (err instanceof AuthenticationError) {
-      throw new ZSAError("ERROR", err.message);
-    }
+      if (err instanceof AuthenticationError) {
+        throw new ZSAError("ERROR", err.message);
+      }
 
-    throw new ZSAError("ERROR", err);
+      throw new ZSAError("ERROR", err);
+    }
   }
-});
+);

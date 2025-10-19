@@ -12,12 +12,8 @@ import {
   twoFactor,
   username,
   organization,
-  createAuthMiddleware,
 } from "better-auth/plugins";
-import { createRemoteJWKSet, decodeJwt, jwtVerify } from "jose";
-import { cookies } from "next/headers";
-import { setKeycloakCookie } from "./setKeyCloakCookie";
-import { keycloakProvider } from "./customPlugins/keycloak-plugin";
+import { decodeJwt } from "jose";
 
 export const auth = betterAuth({
   database: prismaAdapter(prismaMain, {
@@ -89,15 +85,6 @@ export const auth = betterAuth({
     },
   },
 
-  // hooks: {
-  //   after: createAuthMiddleware(async (ctx) => {
-  //     if (ctx.path === "/oauth2/callback/:providerId") {
-  //       console.log({ ctx });
-  //       const newSession = ctx.context.newSession;
-  //     }
-  //   }),
-  // },
-
   user: {
     changeEmail: {
       enabled: true,
@@ -143,24 +130,30 @@ export const auth = betterAuth({
         }
       },
     },
+    additionalFields: {
+      keycloakUserid: {
+        type: "string",
+        required: false,
+      },
+    },
   },
 
   appName: "Bezs",
 
   plugins: [
     openAPI(),
-    keycloakProvider({
-      appUrl:
-        process.env.NODE_ENV === "production"
-          ? process.env.PROD_APP_URL!
-          : process.env.DEV_APP_URL!,
-      baseUrl: process.env.KEYCLOAK_BASE_URL!,
-      clientId: process.env.KEYCLOAK_CLIENT_ID!,
-      clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
-      realm: process.env.KEYCLOAK_REALM!,
-      emailUser: process.env.SMTP_EMAIL!,
-      emailPass: process.env.SMTP_PASS!,
-    }),
+    // keycloakProvider({
+    //   appUrl:
+    //     process.env.NODE_ENV === "production"
+    //       ? process.env.PROD_APP_URL!
+    //       : process.env.DEV_APP_URL!,
+    //   baseUrl: process.env.KEYCLOAK_BASE_URL!,
+    //   clientId: process.env.KEYCLOAK_CLIENT_ID!,
+    //   clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
+    //   realm: process.env.KEYCLOAK_REALM!,
+    //   emailUser: process.env.SMTP_EMAIL!,
+    //   emailPass: process.env.SMTP_PASS!,
+    // }),
     twoFactor({
       otpOptions: {
         async sendOTP({ user, otp }) {
@@ -214,6 +207,7 @@ export const auth = betterAuth({
           refreshToken: true,
         },
       });
+      /*
       const userDetails = await prismaMain.user.findUnique({
         where: { id: userId },
         select: {
@@ -229,22 +223,6 @@ export const auth = betterAuth({
         providers?.refreshToken &&
         providers.providerId === "keycloak"
       ) {
-        /*
-        const JWKS = createRemoteJWKSet(
-          new URL(
-            "http://localhost:8080/realms/bezs/protocol/openid-connect/certs"
-          )
-        );
-
-        const { payload } = await jwtVerify(providers?.accessToken, JWKS, {
-          issuer: "http://localhost:8080/realms/bezs",
-        });
-
-        console.log(payload);
-        */
-
-        // await setKeycloakCookie(providers.refreshToken, providers.accessToken);
-
         const claims: any = decodeJwt(providers?.accessToken);
 
         keycloakSession = {
@@ -259,19 +237,21 @@ export const auth = betterAuth({
           },
         };
       }
+        */
 
       return {
         session,
-        user: {
-          role: userDetails?.role,
-          username: userDetails?.username,
-          accountDetails: {
-            providerId: providers?.providerId,
-            accountId: providers?.accountId,
-          },
-          ...user,
-          keycloakSession,
-        },
+        // user: {
+        //   role: userDetails?.role,
+        //   username: userDetails?.username,
+        //   accountDetails: {
+        //     providerId: providers?.providerId,
+        //     accountId: providers?.accountId,
+        //   },
+        //   ...user,
+        //   keycloakSession,
+        // },
+        user,
         keycloak: {
           refreshToken: providers?.refreshToken ?? null,
           accessToken: providers?.accessToken ?? null,
@@ -288,24 +268,58 @@ export const auth = betterAuth({
           discoveryUrl: `${process.env.KEYCLOAK_BASE_URL}/realms/${process.env.KEYCLOAK_REALM}/.well-known/openid-configuration`,
           scopes: ["openid", "email", "profile", "roles"],
           pkce: true,
+          async getUserInfo(tokens): Promise<any> {
+            let keycloakSession = null;
+            if (tokens?.accessToken) {
+              const claims: any = decodeJwt(tokens.accessToken);
+              keycloakSession = {
+                id: claims?.sub,
+                name: claims?.name,
+                email: claims?.email,
+                username: claims?.preferred_username,
+                emailVerified: claims.email_verified,
+                roles: {
+                  realmAccess: claims?.realm_access?.roles ?? [],
+                  resourceAccess: claims?.resource_access?.account?.roles ?? [],
+                },
+              };
+            }
+
+            if (keycloakSession) {
+              return {
+                id: keycloakSession.id,
+                email: keycloakSession.email,
+                name: keycloakSession.name,
+                emailVerified: keycloakSession.emailVerified,
+                username: keycloakSession.username,
+                keycloakUserid: keycloakSession.id,
+              };
+            }
+
+            return null;
+          },
+          mapProfileToUser(profile) {
+            return {
+              id: profile?.id ?? profile?.keycloakUserid ?? undefined,
+              email: profile?.email ?? undefined,
+              name: profile?.name ?? undefined,
+              emailVerified:
+                typeof profile?.emailVerified === "boolean"
+                  ? profile.emailVerified
+                  : undefined,
+              image: profile?.image ?? undefined,
+              username: profile?.username ?? undefined,
+              keycloakUserid:
+                profile?.id ?? profile?.keycloakUserid ?? undefined,
+            };
+          },
         },
       ],
     }),
     oidcProvider({
       loginPage: "/signin",
       allowDynamicClientRegistration: true,
-      trustedClients: [
-        {
-          clientId: "AeIBMpjAgdncCzAeCIPsKrQbZkLqcUsc",
-          clientSecret: "IlMAAPugFnegukmlIlXazdcWrkBbywDq",
-          name: "Test client app",
-          type: "web",
-          redirectURLs: ["http://localhost:5000"],
-          disabled: false,
-          skipConsent: true,
-          metadata: { internal: true },
-        },
-      ],
+      trustedClients: [],
     }),
     nextCookies(),
   ],

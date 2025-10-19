@@ -32,10 +32,10 @@ import { useServerAction } from "zsa-react";
 import { signOut } from "@/modules/auth/frontend/server-actions/auth-actions";
 
 type TUser = {
-  name: string;
-  email: string;
-  image: string | null | undefined;
-  username: string | null | undefined;
+  name?: string;
+  email?: string;
+  image?: string | null | undefined;
+  username?: string | null | undefined;
 };
 
 const AppNavbar = ({ user }: { user: TUser }) => {
@@ -54,19 +54,6 @@ const AppNavbar = ({ user }: { user: TUser }) => {
   });
 
   async function handleLogout() {
-    // await authClient.signOut({
-    //   fetchOptions: {
-    //     onSuccess() {
-    //       toast("Success!");
-    //       router.push("/");
-    //     },
-    //     onError(ctx) {
-    //       toast("Error!", {
-    //         description: ctx.error.message,
-    //       });
-    //     },
-    //   },
-    // });
     const [data] = await execute();
 
     if (data?.success) {
