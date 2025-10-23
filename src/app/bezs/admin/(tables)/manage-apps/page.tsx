@@ -1,5 +1,5 @@
-import { AppsListTable } from "@/modules/admin/frontend/components/tables/apps-list-table/apps-list-table";
-import { getAllAppsData } from "@/modules/admin/frontend/server-actions/app-actions";
+import { AppsListTable } from "@/modules/client/admin/components/tables/apps-list-table/apps-list-table";
+import { getAllAppsData } from "@/modules/client/admin/server-actions/app-actions";
 
 const ManageAppsPage = async () => {
   const [data, error] = await getAllAppsData();

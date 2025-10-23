@@ -29,7 +29,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { ThemeSwitcher } from "@/theme/theme-switcher";
 import { useServerAction } from "zsa-react";
-import { signOut } from "@/modules/auth/frontend/server-actions/auth-actions";
+import { signOut } from "@/modules/client/auth/server-actions/auth-actions";
 
 type TUser = {
   name?: string;

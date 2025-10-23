@@ -1,4 +1,4 @@
-import EmailVerificationComp from "@/modules/auth/components/auth/email-verification-comp";
+import EmailVerificationComp from "@/modules/client/auth/components/auth/email-verification-comp";
 import { redirect } from "next/navigation";
 
 const EmailVerification = async ({

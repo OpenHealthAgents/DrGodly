@@ -1,4 +1,4 @@
-import { getServerSession } from "@/modules/auth/betterauth/auth-server";
+import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
 import AppNavbar from "@/modules/shared/components/navbar/app-navbar";
 import { redirect } from "next/navigation";
 

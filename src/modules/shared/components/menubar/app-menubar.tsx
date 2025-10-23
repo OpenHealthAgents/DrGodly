@@ -22,7 +22,7 @@ import { Check, House, LogOut, Settings2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
-import { authClient } from "@/modules/auth/betterauth/auth-client";
+import { authClient } from "@/modules/client/auth/betterauth/auth-client";
 import ActionTooltipProvider from "../../providers/action-tooltip-provider";
 
 const items = [

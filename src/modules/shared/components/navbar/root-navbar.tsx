@@ -1,6 +1,6 @@
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { getServerSession } from "@/modules/auth/betterauth/auth-server";
+import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
 import { ThemeSwitcher } from "@/theme/theme-switcher";
 import Link from "next/link";
 

@@ -2,20 +2,21 @@
 
 import {
   Sidebar,
+  SidebarContent,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useSession } from "@/modules/auth/betterauth/auth-client";
+import { useSession } from "@/modules/client/auth/betterauth/auth-client";
 // import { getRolewiseAppMenuItems } from "@/shared/modules-utils/utils";
 import { Loader2 } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type MenuItemsStateType = {
   name: string;
@@ -47,8 +48,6 @@ export const CommonSideBar = ({ label }: { label: string }) => {
   ]);
   const [error, setError] = useState<string | null>(null);
 
-  console.log(resolvedTheme);
-
   //   useEffect(() => {
   //     if (!isPending) {
   //       const rolewiseAppMenus = getRolewiseAppMenuItems(
@@ -66,48 +65,50 @@ export const CommonSideBar = ({ label }: { label: string }) => {
 
   return (
     <Sidebar
-      className="!absolute h-full overflow-y-auto bg-zinc-100/50 dark:bg-zinc-900 w-[12.5rem] overflow-hidden"
+      className="!absolute h-full overflow-y-auto overflow-hidden"
       collapsible="icon"
     >
-      <SidebarGroup>
-        <SidebarGroupLabel>{label}</SidebarGroupLabel>
-        {isPending && <Loader2 className="animate-spin" />}
-        {error && <p>{error}</p>}
-        <SidebarMenu>
-          <SidebarMenuItem className="space-y-2">
-            {menuItems.map((item, i) => {
-              const Icon =
-                LucideIcons[item?.icon as keyof typeof LucideIcons] ||
-                LucideIcons.LayoutGrid;
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>{label}</SidebarGroupLabel>
+          {isPending && <Loader2 className="animate-spin" />}
+          {error && <p>{error}</p>}
+          <SidebarMenu>
+            <SidebarMenuItem className="space-y-2">
+              {menuItems.map((item, i) => {
+                const Icon =
+                  LucideIcons[item?.icon as keyof typeof LucideIcons] ||
+                  LucideIcons.LayoutGrid;
 
-              if (!item.icon) return null;
+                if (!item.icon) return null;
 
-              return (
-                <SidebarMenuButton
-                  key={i}
-                  className={
-                    isMatch(pathname, item.slug)
-                      ? `bg-primary hover:bg-primary/50 ${
-                          resolvedTheme === "zinc-dark"
-                            ? "text-zinc-900 hover:text-zinc-100"
-                            : "text-zinc-100 hover:text-zinc-100"
-                        }`
-                      : "hover:bg-primary/20"
-                  }
-                  asChild
-                >
-                  <Link
-                    href={item.slug}
-                    className="flex items-center gap-2 w-full"
+                return (
+                  <SidebarMenuButton
+                    key={i}
+                    className={
+                      isMatch(pathname, item.slug)
+                        ? `bg-primary hover:bg-primary/50 ${
+                            resolvedTheme === "zinc-dark"
+                              ? "text-zinc-900 hover:text-zinc-100"
+                              : "text-zinc-100 hover:text-zinc-100"
+                          }`
+                        : "hover:bg-primary/20"
+                    }
+                    asChild
                   >
-                    {Icon ? <Icon className="w-5 h-5" /> : null} {item.name}
-                  </Link>
-                </SidebarMenuButton>
-              );
-            })}
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarGroup>
+                    <Link
+                      href={item.slug}
+                      className="flex items-center gap-2 w-full"
+                    >
+                      {Icon ? <Icon className="w-5 h-5" /> : null} {item.name}
+                    </Link>
+                  </SidebarMenuButton>
+                );
+              })}
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+      </SidebarContent>
     </Sidebar>
   );
 };

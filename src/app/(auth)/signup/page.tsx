@@ -1,7 +1,7 @@
 "use client";
 
-import { SignUpForm } from "@/modules/auth/components/auth/signup-form";
-import { signInWithKeycloakGenericOAuth } from "@/modules/auth/frontend/server-actions/auth-actions";
+import { SignUpForm } from "@/modules/client/auth/components/auth/signup-form";
+import { signInWithKeycloakGenericOAuth } from "@/modules/client/auth/server-actions/auth-actions";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useServerAction } from "zsa-react";

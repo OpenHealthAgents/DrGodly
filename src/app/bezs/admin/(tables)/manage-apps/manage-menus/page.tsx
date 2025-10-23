@@ -1,6 +1,5 @@
-import { AppMenuItemsListTable } from "@/modules/admin/ui/tables/app-menuItems-list-table/app-menuItems-list-table";
-
-// import { AppMenuItemsListTable } from "@/modules/admin/ui/app-menuItems-list-table copy";
+import { AppMenuItemsListTable } from "@/modules/client/admin/components/tables/app-menuItems-list-table/app-menuItems-list-table";
+import { getAppMenuItems } from "@/modules/client/admin/server-actions/appMenutem-actions";
 
 const AppMenuItemsPage = async ({
   searchParams,
@@ -9,13 +8,15 @@ const AppMenuItemsPage = async ({
 }) => {
   const appId = (await searchParams)?.appId;
 
+  if (!appId) {
+    throw new Error("Failed to get appId");
+  }
+
+  const [data, error] = await getAppMenuItems({ appId });
+
   return (
-    <div className="space-y-8 mx-auto">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-semibold">Manage Menu Items</h1>
-        <p className="text-sm">Manage Menu Items and its functionality.</p>
-      </div>
-      <AppMenuItemsListTable appId={appId} />
+    <div className="mx-auto">
+      <AppMenuItemsListTable appMenuItemDatas={data} error={error} />
     </div>
   );
 };

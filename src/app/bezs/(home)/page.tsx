@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "@/modules/auth/betterauth/auth-client";
+import { useSession } from "@/modules/client/auth/betterauth/auth-client";
 
 const BezsPage = () => {
   const { data } = useSession();
