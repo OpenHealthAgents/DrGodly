@@ -30,6 +30,7 @@ import Link from "next/link";
 import { ThemeSwitcher } from "@/theme/theme-switcher";
 import { useServerAction } from "zsa-react";
 import { signOut } from "@/modules/client/auth/server-actions/auth-actions";
+import LocaleSwitcher from "../LocaleSwitcher";
 
 type TUser = {
   name?: string;
@@ -87,7 +88,9 @@ const AppNavbar = ({ user }: { user: TUser }) => {
         <Search className="dark:text-zinc-300 absolute w-[1.1rem] h-[1.1rem] top-[25%] left-2" />
       </div>
       <div className="flex items-center gap-6">
-        <div>{/* <LangSwitcherBtn /> */}</div>
+        <div>
+          <LocaleSwitcher />
+        </div>
         <Bell className="h-5 w-5 text-zinc-500 dark:text-zinc-300 cursor-pointer" />
         <DropdownMenu>
           <DropdownMenuTrigger className="cursor-pointer">

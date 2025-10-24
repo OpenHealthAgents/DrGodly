@@ -3,12 +3,12 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { useAdminModalStore } from "../stores/admin-modal-store";
 import { useSession } from "@/modules/client/auth/betterauth/auth-client";
@@ -28,7 +28,7 @@ export const DeleteAppModal = () => {
 
   const { execute, isPending } = useServerAction(deleteApp, {
     onSuccess({ data }) {
-      toast.success(`${data?.name ?? ""} app Edited.`);
+      toast.success(`${data?.name ?? ""} app Deleted.`);
       handleCloseModal();
     },
     onError({ err }) {
