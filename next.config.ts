@@ -1,4 +1,6 @@
 import type { NextConfig } from "next";
+import createNectIntlPlugin from "next-intl/plugin";
+
 const nextConfig: NextConfig = {
   output: "standalone",
   eslint: {
@@ -12,4 +14,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+const withNextIntl = createNectIntlPlugin();
+
+export default withNextIntl(nextConfig);

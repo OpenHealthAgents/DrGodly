@@ -8,9 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "betterauth-generate": "npx @better-auth/cli generate --config ./src/modules/auth/betterauth/auth.ts",
-    "main-generate": "npx prisma generate --schema ./prisma/main-database/schema.prisma",
-    "main-db-push": "npx prisma db push --schema ./prisma/main-database/schema.prisma",
-    "main-studio": "npx prisma studio --schema ./prisma/main-database/schema.prisma",
+    "main-generate": "npx prisma generate --schema ./src/modules/server/prisma/main-database/schema.prisma",
+    "main-db-push": "npx prisma db push --schema ./src/modules/server/prisma/main-database/schema.prisma",
+    "main-studio": "npx prisma studio --schema ./src/modules/server/prisma/main-database/schema.prisma",
     "auth:generate": "npx @better-auth/cli@latest generate --config ./src/modules/auth/betterauth/auth.ts --output ./prisma/auth.prisma --yes"
   },
   "dependencies": {
@@ -57,6 +57,7 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.544.0",
     "next": "15.5.3",
+    "next-intl": "^4.4.0",
     "next-themes": "^0.4.6",
     "nextjs-toploader": "^3.9.17",
     "nodemailer": "^7.0.6",
