@@ -1,9 +1,16 @@
 import "reflect-metadata";
 import { Container } from "inversify";
 import { DI_RETURN_TYPES, DI_SYMBOLS } from "./types";
-import { AppModule } from "./modules/app.module";
-import { AppMenuItemModule } from "./modules/appMenuItem.module";
-import { OrganizationModule } from "./modules/organization.module";
+import {
+  AppMenuItemModule,
+  AppModule,
+  OrganizationAppModule,
+  OrganizationMemberModule,
+  OrganizationModule,
+  RbacModule,
+  RoleAppMenuItemModule,
+  RoleModule,
+} from "./modules";
 
 const AdminContainer = new Container({ defaultScope: "Singleton" });
 
@@ -11,6 +18,11 @@ const initializeContainer = () => {
   AdminContainer.load(AppModule);
   AdminContainer.load(AppMenuItemModule);
   AdminContainer.load(OrganizationModule);
+  AdminContainer.load(RoleModule);
+  AdminContainer.load(OrganizationMemberModule);
+  AdminContainer.load(OrganizationAppModule);
+  AdminContainer.load(RoleAppMenuItemModule);
+  AdminContainer.load(RbacModule);
 };
 
 initializeContainer();
@@ -22,5 +34,3 @@ export const getAdminInjection = <K extends keyof typeof DI_SYMBOLS>(
 };
 
 export { AdminContainer };
-
-// 2:22:21

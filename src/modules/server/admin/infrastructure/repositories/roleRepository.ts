@@ -1,41 +1,29 @@
-import { injectable } from "inversify";
-import { IOrganizationRepository } from "../../application/repositories/organizationRepository.interface";
 import {
-  OrganizationSchema,
-  OrganizationsDataSchema,
-  TCreateOrganization,
-  TOrganization,
-  TOrganizationsData,
-  TUpdateOrganization,
-} from "@/modules/shared/entities/models/admin/organization";
+  RoleSchema,
+  RolesDataSchema,
+  TCreateRole,
+  TRole,
+  TRolesData,
+  TUpdateRole,
+} from "@/modules/shared/entities/models/admin/role";
+import { IRoleRepository } from "../../application/repositories/roleRepository.interface";
 import { OperationError } from "@/modules/shared/entities/errors/commonError";
 import { prismaMain } from "@/modules/server/prisma/prisma";
+import { injectable } from "inversify";
 
 @injectable()
-export class OrganizationRepository implements IOrganizationRepository {
+export class RoleRepository implements IRoleRepository {
   constructor() {}
 
-  async getOrganizations(): Promise<TOrganizationsData> {
+  async getRoles(): Promise<TRolesData> {
     try {
-      const organizationsData = await prismaMain.organization.findMany({
-        include: {
-          _count: {
-            select: {
-              members: true,
-              appOrganization: true,
-            },
-          },
-        },
+      const data = await prismaMain.role.findMany({
         orderBy: {
           updatedAt: "desc",
         },
       });
 
-      const total = await prismaMain.organization.count();
-
-      const data = OrganizationsDataSchema.parse({ organizationsData, total });
-
-      return data;
+      return RolesDataSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -47,18 +35,15 @@ export class OrganizationRepository implements IOrganizationRepository {
     }
   }
 
-  async getOrganizationByUniqueFields(
-    name: string,
-    slug: string
-  ): Promise<TOrganization | null> {
+  async getRoleByUniqueField(roleName: string): Promise<TRole | null> {
     try {
-      const data = await prismaMain.organization.findFirst({
+      const data = await prismaMain.role.findUnique({
         where: {
-          OR: [{ name }, { slug }],
+          name: roleName,
         },
       });
 
-      return OrganizationSchema.parse(data);
+      return RoleSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -70,17 +55,15 @@ export class OrganizationRepository implements IOrganizationRepository {
     }
   }
 
-  async createOrganization(
-    createData: TCreateOrganization
-  ): Promise<TOrganization> {
+  async createRole(createData: TCreateRole): Promise<TRole> {
     try {
-      const data = await prismaMain.organization.create({
+      const data = await prismaMain.role.create({
         data: {
           ...createData,
         },
       });
 
-      return OrganizationSchema.parse(data);
+      return RoleSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -92,13 +75,11 @@ export class OrganizationRepository implements IOrganizationRepository {
     }
   }
 
-  async updateOrganization(
-    updateData: TUpdateOrganization
-  ): Promise<TOrganization> {
+  async updateRole(updateData: TUpdateRole): Promise<TRole> {
     const { id, ...updateValues } = updateData;
 
     try {
-      const data = await prismaMain.organization.update({
+      const data = await prismaMain.role.update({
         where: {
           id,
         },
@@ -107,7 +88,7 @@ export class OrganizationRepository implements IOrganizationRepository {
         },
       });
 
-      return OrganizationSchema.parse(data);
+      return RoleSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -119,15 +100,15 @@ export class OrganizationRepository implements IOrganizationRepository {
     }
   }
 
-  async deleteOrganization(id: string): Promise<TOrganization> {
+  async deleteRole(roleId: string): Promise<TRole> {
     try {
-      const data = await prismaMain.organization.delete({
+      const data = await prismaMain.role.delete({
         where: {
-          id,
+          id: roleId,
         },
       });
 
-      return OrganizationSchema.parse(data);
+      return RoleSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

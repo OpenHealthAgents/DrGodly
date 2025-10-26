@@ -246,7 +246,6 @@ model AppOrganization {
   updatedAt DateTime @updatedAt
 
   @@id([appId, organizationId])
-  @@index([appId, organizationId])
 }
 
 model AppMenuItem {

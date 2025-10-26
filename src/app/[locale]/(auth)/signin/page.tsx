@@ -15,6 +15,7 @@ const SignInPage = () => {
   useEffect(() => {
     (async () => {
       const [data] = await execute();
+      console.log(data);
 
       if (data?.redirect) {
         window.location.href = data.url;

@@ -1,9 +1,7 @@
 import { InputParseError } from "@/modules/shared/entities/errors/commonError";
-import {
-  CreateAppMenuItemSchema,
-  TAppMenuItem,
-} from "@/modules/shared/entities/models/admin/appMenuItem";
+import { TAppMenuItem } from "@/modules/shared/entities/models/admin/appMenuItem";
 import { createAppMenuItemUseCase } from "../../../application/useCases/appMenuItem/createAppMenuItem.useCase";
+import { CreateAppMenuItemValidationSchema } from "@/modules/shared/schemas/admin/appMenuItemValidationSchema";
 
 function presenter(appMenuItem: TAppMenuItem) {
   return appMenuItem;
@@ -15,7 +13,7 @@ export async function createAppMenuItemController(
   input: any
 ): Promise<TCreateAppMenuItemController> {
   const { data, error: inputParseError } =
-    CreateAppMenuItemSchema.safeParse(input);
+    CreateAppMenuItemValidationSchema.safeParse(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

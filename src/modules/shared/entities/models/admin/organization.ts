@@ -11,8 +11,19 @@ export const OrganizationSchema = z.object({
 });
 export type TOrganization = z.infer<typeof OrganizationSchema>;
 
+export const OrganizationMembersAppsCountSchema = z.object({
+  _count: z.object({
+    appOrganization: z.number(),
+    members: z.number(),
+  }),
+});
+
+export const OrganizationsWithMembersAppsCountSchema = z.array(
+  OrganizationSchema.merge(OrganizationMembersAppsCountSchema)
+);
+
 export const OrganizationsDataSchema = z.object({
-  organizationsData: z.array(OrganizationSchema),
+  organizationsData: OrganizationsWithMembersAppsCountSchema,
   total: z.number(),
 });
 export type TOrganizationsData = z.infer<typeof OrganizationsDataSchema>;

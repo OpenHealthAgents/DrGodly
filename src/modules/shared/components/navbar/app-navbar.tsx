@@ -23,7 +23,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 // import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
@@ -31,6 +30,7 @@ import { ThemeSwitcher } from "@/theme/theme-switcher";
 import { useServerAction } from "zsa-react";
 import { signOut } from "@/modules/client/auth/server-actions/auth-actions";
 import LocaleSwitcher from "../LocaleSwitcher";
+import { useRouter } from "@/i18n/navigation";
 
 type TUser = {
   name?: string;
@@ -58,7 +58,7 @@ const AppNavbar = ({ user }: { user: TUser }) => {
     const [data] = await execute();
 
     if (data?.success) {
-      window.location.href = "/";
+      router.push("/");
     }
   }
 

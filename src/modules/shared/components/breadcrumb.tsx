@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { capitalizeString } from "../helper";
+import { usePathname } from "@/i18n/navigation";
 
 const isProbablyId = (segment: string): boolean => {
   // You can adjust this regex based on your ID pattern
