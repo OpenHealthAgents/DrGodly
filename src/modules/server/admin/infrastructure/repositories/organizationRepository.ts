@@ -58,6 +58,10 @@ export class OrganizationRepository implements IOrganizationRepository {
         },
       });
 
+      if (!data) {
+        return null;
+      }
+
       return OrganizationSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {

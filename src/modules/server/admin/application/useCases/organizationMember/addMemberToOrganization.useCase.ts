@@ -8,7 +8,14 @@ import { getAdminInjection } from "../../../di/container";
 export async function addMemberToOrganizationUseCase(
   data: TAddMemberToOrganizationUseCase
 ): Promise<TOrganizationMemberAndUser> {
-  const { organizationId, email, username } = data;
+  const { organizationId, emailOrUsername } = data;
+
+  const isEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+    emailOrUsername
+  );
+
+  const email = isEmail ? emailOrUsername : undefined;
+  const username = !isEmail ? emailOrUsername : undefined;
 
   const userRepository = getSharedInjection("IUserRepository");
   const organizationMemberRepository = getAdminInjection(

@@ -3,11 +3,11 @@
 import DataTable from "@/modules/shared/components/table/data-table";
 import { appsListTableColumn } from "./apps-list-table-column";
 import { useAdminModalStore } from "@/modules/client/admin/stores/admin-modal-store";
-import { IManageAppsTableData } from "../../../types/data-table-types";
 import type { ZSAError } from "zsa";
+import { TAppDatas } from "@/modules/shared/entities/models/admin/app";
 
 type IAppsListTable = {
-  appDatas: IManageAppsTableData | null;
+  appDatas: TAppDatas | null;
   error: ZSAError | null;
 };
 

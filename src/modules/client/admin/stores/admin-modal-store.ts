@@ -1,5 +1,10 @@
 import { create } from "zustand";
-import { App } from "../../../server/prisma/generated/main-database";
+import {
+  App,
+  AppMenuItem,
+  Organization,
+  Role,
+} from "../../../server/prisma/generated/main-database";
 
 export type ModalType =
   | "addUser"
@@ -11,8 +16,8 @@ export type ModalType =
   | "manageOrgApps"
   | "manageRoleAppMenus"
   | "manageRoleAppActions"
-  | "editOrg"
-  | "deleteOrg"
+  | "editOrganization"
+  | "deleteOrganization"
   | "addRole"
   | "editRole"
   | "deleteRole"
@@ -30,12 +35,15 @@ interface AdminStore {
   type: ModalType | null;
   isOpen: boolean;
   userId?: string;
-  orgId?: string;
+  organizationId?: string;
   roleId?: string;
   appId?: string;
   appMenuItemId?: string;
   appActionId?: string;
   appData?: App;
+  appMenuItemData?: AppMenuItem;
+  organizationData?: Organization;
+  roleData?: Role;
   trigger: number;
   triggerInModal: number;
   incrementTrigger: () => void;
@@ -43,12 +51,15 @@ interface AdminStore {
   onOpen: (props: {
     type: ModalType;
     userId?: string;
-    orgId?: string;
+    organizationId?: string;
     roleId?: string;
     appId?: string;
     appActionId?: string;
     appMenuItemId?: string;
     appData?: App;
+    appMenuItemData?: AppMenuItem;
+    organizationData?: Organization;
+    roleData?: Role;
   }) => void;
   onClose: () => void;
 }
@@ -61,35 +72,46 @@ const _useAdminModalStore = create<AdminStore>((set) => ({
   onOpen: ({
     type,
     userId = "",
-    orgId = "",
+    organizationId = "",
     roleId = "",
     appId = "",
     appMenuItemId = "",
     appActionId = "",
     appData = undefined,
+    appMenuItemData = undefined,
+    organizationData = undefined,
+    roleData = undefined,
   }) =>
     set({
       isOpen: true,
       type,
       userId,
-      orgId,
+      organizationId,
       roleId,
       appId,
       appMenuItemId,
       appActionId,
       appData,
+      appMenuItemData,
+      organizationData,
+      roleData,
     }),
   onClose: () =>
     set({
       type: null,
       isOpen: false,
+      trigger: 0,
+      triggerInModal: 0,
       userId: "",
-      orgId: "",
+      organizationId: "",
       roleId: "",
       appId: "",
       appMenuItemId: "",
       appActionId: "",
       appData: undefined,
+      appMenuItemData: undefined,
+      organizationData: undefined,
+      roleData: undefined,
     }),
   incrementTrigger: () => set((state) => ({ trigger: state.trigger + 1 })),
   incrementInModalTrigger: () =>

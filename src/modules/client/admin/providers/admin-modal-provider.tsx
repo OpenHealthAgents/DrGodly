@@ -1,7 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CreateAppModal, DeleteAppModal, EditAppModal } from "../modals";
+import {
+  CreateAppMenuItemModal,
+  CreateAppModal,
+  CreateOrganizationModal,
+  CreateRoleModal,
+  DeleteAppMenuItemModal,
+  DeleteAppModal,
+  DeleteOrganizationModal,
+  DeleteRoleModal,
+  EditAppMenuItemModal,
+  EditAppModal,
+  EditOrganizationModal,
+  EditRoleModal,
+  ManageOrgAppsModal,
+  ManageOrgMembersModal,
+  ManageRoleAppMenusModal,
+} from "../modals";
 
 export const AdminModalProvider = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -17,6 +33,18 @@ export const AdminModalProvider = () => {
       <CreateAppModal />
       <EditAppModal />
       <DeleteAppModal />
+      <CreateAppMenuItemModal />
+      <EditAppMenuItemModal />
+      <DeleteAppMenuItemModal />
+      <CreateOrganizationModal />
+      <EditOrganizationModal />
+      <DeleteOrganizationModal />
+      <CreateRoleModal />
+      <EditRoleModal />
+      <DeleteRoleModal />
+      <ManageOrgMembersModal />
+      <ManageOrgAppsModal />
+      <ManageRoleAppMenusModal />
     </>
   );
 };

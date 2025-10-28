@@ -8,11 +8,13 @@ import type { ZSAError } from "zsa";
 
 interface IAppMenuItemListTable {
   appMenuItemDatas: TAppMenuItemsData | null;
+  appId: string;
   error: ZSAError | null;
 }
 
 export const AppMenuItemsListTable = ({
   appMenuItemDatas,
+  appId,
   error,
 }: IAppMenuItemListTable) => {
   const openModal = useAdminModalStore((state) => state.onOpen);
@@ -38,7 +40,7 @@ export const AppMenuItemsListTable = ({
               "No App Menu Items") ||
             undefined
           }
-          openModal={() => openModal({ type: "addAppMenuItem" })}
+          openModal={() => openModal({ type: "addAppMenuItem", appId })}
         />
       </div>
     </>

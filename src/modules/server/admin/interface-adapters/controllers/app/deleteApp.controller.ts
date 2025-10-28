@@ -7,11 +7,11 @@ function presenter(app: TApp) {
   return app;
 }
 
-export type DeleteAppControllerOutputType = ReturnType<typeof presenter>;
+export type DeleteAppControllerOutput = ReturnType<typeof presenter>;
 
 export async function deleteAppController(
   input: any
-): Promise<DeleteAppControllerOutputType> {
+): Promise<DeleteAppControllerOutput> {
   // TODO validate input, orchestrate use-cases
   const { data, error: inputParseError } =
     DeleteAppValidationSchema.safeParse(input);

@@ -7,11 +7,11 @@ function presenter(appMenuItem: TAppMenuItem) {
   return appMenuItem;
 }
 
-export type TCreateAppMenuItemController = ReturnType<typeof presenter>;
+export type TCreateAppMenuItemControllerOutput = ReturnType<typeof presenter>;
 
 export async function createAppMenuItemController(
   input: any
-): Promise<TCreateAppMenuItemController> {
+): Promise<TCreateAppMenuItemControllerOutput> {
   const { data, error: inputParseError } =
     CreateAppMenuItemValidationSchema.safeParse(input);
 

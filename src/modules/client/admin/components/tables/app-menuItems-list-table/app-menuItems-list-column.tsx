@@ -68,7 +68,7 @@ export const appMenuItemsListColumn: ColumnDef<TAppMenuItem>[] = [
 
       return (
         <TanstackTableColumnSorting
-          label="Joined"
+          label="Created At"
           column={column}
           isSorted={isSorted}
         />
@@ -79,6 +79,7 @@ export const appMenuItemsListColumn: ColumnDef<TAppMenuItem>[] = [
       const openModal = adminModalStore((state) => state.onOpen);
 
       const appMenuItemId: string | undefined = row.original.id;
+      const appMenuItemData = row.original;
       const joinedDate: Date = row.getValue("createdAt");
       return (
         <div className="flex items-center justify-between gap-4">
@@ -88,24 +89,28 @@ export const appMenuItemsListColumn: ColumnDef<TAppMenuItem>[] = [
               <Ellipsis className="font-medium" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" side="left">
-              <DropdownMenuItem className="cursor-pointer">
+              {/* <DropdownMenuItem className="cursor-pointer">
                 <User />
                 View
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() =>
-                  openModal({ type: "editAppMenuItem", appMenuItemId })
+                  openModal({ type: "editAppMenuItem", appMenuItemData })
                 }
               >
                 <PencilLine />
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
+              {/* <DropdownMenuSeparator /> */}
               <DropdownMenuItem
                 className="space-x-2 cursor-pointer"
                 onClick={() =>
-                  openModal({ type: "deleteAppMenuItem", appMenuItemId })
+                  openModal({
+                    type: "deleteAppMenuItem",
+                    appId: appMenuItemData.appId,
+                    appMenuItemId: appMenuItemData.id,
+                  })
                 }
               >
                 <div className="flex items-center gap-2">

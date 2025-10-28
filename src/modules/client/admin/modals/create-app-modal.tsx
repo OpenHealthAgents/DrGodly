@@ -6,23 +6,31 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useSession } from "../../auth/betterauth/auth-client";
 import { useAdminModalStore } from "../stores/admin-modal-store";
 import { AppType } from "../../../server/prisma/generated/main-database";
-import { CustomInput } from "@/modules/shared/components/custom-input";
 import { useServerAction } from "zsa-react";
 import { createApp } from "../server-actions/app-actions";
 import {
   CreateAppValidationSchema,
   TCreateAppForm,
 } from "@/modules/shared/schemas/admin/appValidationSchema";
+import {
+  FormInput,
+  FormSelect,
+  FormTextarea,
+} from "@/modules/shared/custom-form-fields";
+import { SelectItem } from "@/components/ui/select";
+import { FieldGroup } from "@/components/ui/field";
 
 export const CreateAppModal = () => {
   const session = useSession();
@@ -45,11 +53,6 @@ export const CreateAppModal = () => {
   const {
     formState: { isSubmitting },
   } = form;
-
-  const selectAppType = Object.values(AppType).map((type) => ({
-    label: type,
-    value: type,
-  }));
 
   const { execute } = useServerAction(createApp, {
     onSuccess({ data }) {
@@ -79,71 +82,73 @@ export const CreateAppModal = () => {
   return (
     <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="">Create App</DialogTitle>
-          <DialogDescription>Apps are used by consumers.</DialogDescription>
-        </DialogHeader>
-        <div>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleCreateApp)}
-              className="grid w-full items-center gap-3"
-            >
-              <CustomInput
-                type="input"
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleCreateApp)}
+            className="space-y-5"
+          >
+            <DialogHeader>
+              <DialogTitle>Create App</DialogTitle>
+              <DialogDescription>
+                Fill in the app details to add a new one to your collection.
+              </DialogDescription>
+            </DialogHeader>
+            <FieldGroup>
+              <FormInput
                 control={form.control}
                 name="name"
                 label="Name"
-                placeholder="name"
-                inputType="text"
+                placeholder="Enter a descriptive app name (e.g. Project Tracker)"
               />
 
-              <CustomInput
-                type="input"
+              <FormInput
                 control={form.control}
                 name="slug"
                 label="Slug"
-                placeholder="..."
-                inputType="text"
+                description="Used to define the app's URL path. Example: /bezs/project-tracker"
+                placeholder="Enter a unique slug (e.g., project-tracker)"
               />
 
-              <CustomInput
-                type="textarea"
+              <FormTextarea
                 control={form.control}
                 name="description"
                 label="Description"
-                placeholder="..."
-                inputType="text"
+                placeholder="Briefly describe what this app does or its purpose"
               />
 
-              <CustomInput
-                type="select"
+              <FormSelect
                 control={form.control}
                 name="type"
                 label="Type"
-                placeholder="Select a type"
-                selectList={selectAppType}
-              />
+                placeholder="Select a Type"
+                className="!w-fit"
+              >
+                {Object.keys(AppType).map((k) => (
+                  <SelectItem key={k} value={k}>
+                    {k}
+                  </SelectItem>
+                ))}
+              </FormSelect>
+            </FieldGroup>
 
-              <div className="space-x-4 justify-self-end">
-                <Button
-                  type="submit"
-                  className="cursor-pointer"
-                  disabled={isSubmitting}
-                  size="sm"
-                >
-                  {isSubmitting ? (
-                    <>
-                      Create <Loader2 className="animate-spin" />
-                    </>
-                  ) : (
-                    "Create"
-                  )}
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline" size="sm" disabled={isSubmitting}>
+                  Cancel
                 </Button>
-              </div>
-            </form>
-          </Form>
-        </div>
+              </DialogClose>
+              <Button disabled={isSubmitting} size="sm">
+                {isSubmitting ? (
+                  <>
+                    Create <Loader2 className="animate-spin" />
+                  </>
+                ) : (
+                  "Create"
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

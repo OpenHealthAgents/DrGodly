@@ -18,9 +18,10 @@ export type TOrganizationMemberAndUser = z.infer<
   typeof OrganizationMemberAndUserSchema
 >;
 
-export const OrganizationMembersAndUsersSchema = z.array(
-  OrganizationMemberAndUserSchema
-);
+export const OrganizationMembersAndUsersSchema = z.object({
+  organizationMembersAndUsers: z.array(OrganizationMemberAndUserSchema),
+  total: z.number(),
+});
 export type TOrganizationMembersAndUsers = z.infer<
   typeof OrganizationMembersAndUsersSchema
 >;
@@ -46,6 +47,5 @@ export type TRemoveMemberFromOrganization = z.infer<
 
 export type TAddMemberToOrganizationUseCase = {
   organizationId: string;
-  email?: string;
-  username?: string;
+  emailOrUsername: string;
 };

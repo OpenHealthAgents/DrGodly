@@ -16,7 +16,11 @@ const AppMenuItemsPage = async ({
 
   return (
     <div className="mx-auto">
-      <AppMenuItemsListTable appMenuItemDatas={data} error={error} />
+      <AppMenuItemsListTable
+        appMenuItemDatas={data}
+        appId={appId}
+        error={error}
+      />
     </div>
   );
 };

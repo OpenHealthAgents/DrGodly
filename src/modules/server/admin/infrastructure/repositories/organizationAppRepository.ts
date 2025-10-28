@@ -34,7 +34,16 @@ export class OrganizationAppRepository implements IOrganizationAppRepository {
         },
       });
 
-      return OrganizationAppsSchema.parse(data);
+      const total = await prismaMain.appOrganization.count({
+        where: {
+          organizationId,
+        },
+      });
+
+      return OrganizationAppsSchema.parse({
+        organizationApps: data,
+        total,
+      });
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -68,6 +77,10 @@ export class OrganizationAppRepository implements IOrganizationAppRepository {
           },
         },
       });
+
+      if (!data) {
+        return null;
+      }
 
       return OrganizationAppSchema.parse(data);
     } catch (error) {
@@ -126,6 +139,17 @@ export class OrganizationAppRepository implements IOrganizationAppRepository {
           appId_organizationId: {
             appId,
             organizationId,
+          },
+        },
+        include: {
+          app: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              description: true,
+              type: true,
+            },
           },
         },
       });

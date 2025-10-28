@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { adminModalStore } from "@/modules/client/admin/stores/admin-modal-store";
-import { TAppData } from "../../../types/data-table-types";
 import { TanstackTableColumnSorting } from "@/modules/shared/components/table/tanstack-table-column-sorting";
 
 import { ColumnDef } from "@tanstack/react-table";
@@ -23,8 +22,9 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import Link from "next/link";
+import { TAppsListTableColumn } from "@/modules/shared/entities/models/admin/app";
 
-export const appsListTableColumn: ColumnDef<TAppData>[] = [
+export const appsListTableColumn: ColumnDef<TAppsListTableColumn>[] = [
   {
     header: ({ column }) => {
       const isSorted = column.getIsSorted();
@@ -98,39 +98,39 @@ export const appsListTableColumn: ColumnDef<TAppData>[] = [
       );
     },
   },
-  {
-    header: "Actions",
-    cell: ({ row }) => {
-      type CountType = {
-        appMenuItems: number;
-        appActions: number;
-      };
+  // {
+  //   header: "Actions",
+  //   cell: ({ row }) => {
+  //     type CountType = {
+  //       appMenuItems: number;
+  //       appActions: number;
+  //     };
 
-      const count: CountType = row.original._count;
-      const appId = row.original.id;
+  //     const count: CountType = row.original._count;
+  //     const appId = row.original.id;
 
-      return (
-        <div>
-          <Link
-            href={`/bezs/admin/manage-apps/manage-actions?appId=${appId}`}
-            className={cn(
-              buttonVariants({ size: "sm", variant: "outline" }),
-              "flex items-center cursor-pointer w-fit"
-            )}
-          >
-            <Lock /> ({count.appActions})
-          </Link>
-        </div>
-      );
-    },
-  },
+  //     return (
+  //       <div>
+  //         <Link
+  //           href={`/bezs/admin/manage-apps/manage-actions?appId=${appId}`}
+  //           className={cn(
+  //             buttonVariants({ size: "sm", variant: "outline" }),
+  //             "flex items-center cursor-pointer w-fit"
+  //           )}
+  //         >
+  //           <Lock /> ({count.appActions})
+  //         </Link>
+  //       </div>
+  //     );
+  //   },
+  // },
   {
     header: ({ column }) => {
       const isSorted = column.getIsSorted();
 
       return (
         <TanstackTableColumnSorting
-          label="Joined"
+          label="Created At"
           column={column}
           isSorted={isSorted}
         />
@@ -151,10 +151,10 @@ export const appsListTableColumn: ColumnDef<TAppData>[] = [
               <Ellipsis className="font-medium" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" side="left">
-              <DropdownMenuItem className="cursor-pointer">
+              {/* <DropdownMenuItem className="cursor-pointer">
                 <Eye />
                 View
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => openModal({ type: "editApp", appData })}
@@ -162,7 +162,7 @@ export const appsListTableColumn: ColumnDef<TAppData>[] = [
                 <PencilLine />
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
+              {/* <DropdownMenuSeparator /> */}
               <DropdownMenuItem
                 className="space-x-2 cursor-pointer"
                 onClick={() => openModal({ type: "deleteApp", appId })}
