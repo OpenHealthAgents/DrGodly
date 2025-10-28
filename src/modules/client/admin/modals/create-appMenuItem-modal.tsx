@@ -3,18 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -22,7 +16,6 @@ import {
 import { useAdminModalStore } from "../stores/admin-modal-store";
 import { useSession } from "../../auth/betterauth/auth-client";
 import { toast } from "sonner";
-import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import {
@@ -31,6 +24,8 @@ import {
 } from "@/modules/shared/schemas/admin/appMenuItemValidationSchema";
 import { createAppMenuItem } from "../server-actions/appMenutem-actions";
 import { useServerAction } from "zsa-react";
+import { FieldGroup } from "@/components/ui/field";
+import { FormInput, FormTextarea } from "@/modules/shared/custom-form-fields";
 
 export const CreateAppMenuItemModal = () => {
   const session = useSession();
@@ -55,18 +50,9 @@ export const CreateAppMenuItemModal = () => {
     formState: { isSubmitting },
   } = form;
 
-  useEffect(() => {
-    form.reset({
-      name: "",
-      slug: "",
-      description: "",
-      icon: "",
-    });
-  }, [form]);
-
   const { execute } = useServerAction(createAppMenuItem, {
     onSuccess({ data }) {
-      toast.success(`${data?.name ?? ""} menu item created`);
+      toast.success(`${data?.name ?? ""} menu item created.`);
       handleCloseModal();
     },
     onError({ err }) {
@@ -81,7 +67,10 @@ export const CreateAppMenuItemModal = () => {
       return;
     }
 
-    if (!appId) return;
+    if (!appId) {
+      toast.error("No app id found.");
+      return;
+    }
 
     await execute({ ...values, appId });
 
@@ -95,106 +84,66 @@ export const CreateAppMenuItemModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
-      <DialogContent className="p-8 ">
-        <DialogHeader>
-          <DialogTitle className="mb-6 text-2xl text-center">
-            Create App MenuItem
-          </DialogTitle>
-          <div>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(handleCreateMenuItem)}
-                className="space-y-8"
-              >
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+      <DialogContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleCreateMenuItem)}
+            className="space-y-5"
+          >
+            <DialogHeader>
+              <DialogTitle>Create Menu Item</DialogTitle>
+              <DialogDescription>
+                Add a new menu item to your app by providing the details below.
+              </DialogDescription>
+            </DialogHeader>
+            <FieldGroup>
+              <FormInput
+                control={form.control}
+                name="name"
+                label="Name"
+                placeholder="Enter the menu item name (e.g., Project Tracker)"
+              />
 
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Input placeholder="...." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormInput
+                control={form.control}
+                name="slug"
+                label="Slug"
+                description="Used to define the menu item's URL path. Example: /apps/project-tracker"
+                placeholder="Enter a unique slug (e.g., project-tracker)"
+              />
 
-                <FormField
-                  control={form.control}
-                  name="slug"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Slug (Lowercase)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="my-org" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormTextarea
+                control={form.control}
+                name="description"
+                label="Description"
+                placeholder="Provide a short summary of what this menu item represents or does"
+              />
 
-                <FormField
-                  control={form.control}
-                  name="icon"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Menu Icon</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="icon name"
-                          {...field}
-                          value={field.value ?? ""}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="space-x-4">
-                  <Button
-                    type="submit"
-                    className="cursor-pointer"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        Submit <Loader2 className="animate-spin" />
-                      </>
-                    ) : (
-                      "Submit"
-                    )}
-                  </Button>
-                  <DialogClose asChild>
-                    <Button
-                      type="button"
-                      className="cursor-pointer"
-                      disabled={isSubmitting}
-                    >
-                      Cancel
-                    </Button>
-                  </DialogClose>
-                </div>
-              </form>
-            </Form>
-          </div>
-          <DialogFooter className="space-x-2"></DialogFooter>
-        </DialogHeader>
+              <FormInput
+                control={form.control}
+                name="icon"
+                label="Menu Icon"
+                placeholder="Enter the icon name or identifier"
+              />
+            </FieldGroup>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline" size="sm" disabled={isSubmitting}>
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button size="sm" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    Create <Loader2 className="animate-spin" />
+                  </>
+                ) : (
+                  "Create"
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

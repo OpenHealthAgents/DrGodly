@@ -1,13 +1,12 @@
-// import { OrganizationListTable } from "@/modules/admin/ui/organizations-list-table";
+import { OrganizationsListTable } from "@/modules/client/admin/components/tables/organizations-list-table/organizations-list-table";
+import { getAllOrganizationsData } from "@/modules/client/admin/server-actions/organization-actions";
 
-const ManageOrganizationsPage = () => {
+const ManageOrganizationsPage = async () => {
+  const [data, error] = await getAllOrganizationsData();
+
   return (
     <div className="space-y-8 mx-auto">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-semibold">Manage Organizations</h1>
-        <p className="text-sm">Manage Organizations and members.</p>
-      </div>
-      {/* <OrganizationListTable /> */}
+      <OrganizationsListTable organizationsDatas={data} error={error} />
     </div>
   );
 };

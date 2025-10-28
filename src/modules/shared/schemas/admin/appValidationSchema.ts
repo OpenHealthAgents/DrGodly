@@ -1,4 +1,5 @@
 import { CreateAppSchema } from "@/modules/shared/entities/models/admin/app";
+
 import { z } from "zod";
 
 export const CreateAppValidationSchema = CreateAppSchema.extend({

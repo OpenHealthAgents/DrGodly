@@ -17,13 +17,6 @@ export class RbacRepository implements IrbacRepository {
   async getRbacDatas(): Promise<TRbacDatas> {
     try {
       const data = await prismaMain.rBAC.findMany({
-        orderBy: [
-          {
-            user: {
-              name: "asc",
-            },
-          },
-        ],
         include: {
           organization: {
             select: {
@@ -46,9 +39,17 @@ export class RbacRepository implements IrbacRepository {
             },
           },
         },
+        orderBy: {
+          createdAt: "asc",
+        },
       });
 
-      return RbacDatasSchema.parse(data);
+      const total = await prismaMain.rBAC.count();
+
+      return RbacDatasSchema.parse({
+        rbacDatas: data,
+        total,
+      });
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

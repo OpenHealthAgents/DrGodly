@@ -11,18 +11,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAdminModalStore } from "../stores/admin-modal-store";
-import { useSession } from "@/modules/client/auth/betterauth/auth-client";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { deleteApp } from "../server-actions/app-actions";
 import { useServerAction } from "zsa-react";
 
 export const DeleteAppModal = () => {
-  const session = useSession();
   const closeModal = useAdminModalStore((state) => state.onClose);
   const modalType = useAdminModalStore((state) => state.type);
   const isOpen = useAdminModalStore((state) => state.isOpen);
-  const appId = useAdminModalStore((state) => state.appId) || "";
+  const appId = useAdminModalStore((state) => state.appId);
 
   const isModalOpen = isOpen && modalType === "deleteApp";
 
@@ -39,7 +37,8 @@ export const DeleteAppModal = () => {
   });
 
   async function handleAppDelete() {
-    if (session.data?.user.role !== "admin") {
+    if (!appId) {
+      toast.error("No app id found.");
       return;
     }
 
@@ -55,32 +54,27 @@ export const DeleteAppModal = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete App</DialogTitle>
-          <DialogDescription className="mb-6 text-md">
-            Are you sure you want to delete this App? This action cannot be
-            undone.
+          <DialogDescription>
+            Deleting this app will permanently remove it from your app list and
+            related records.
           </DialogDescription>
-          <DialogFooter className="space-x-2">
-            <Button
-              className="cursor-pointer"
-              onClick={handleAppDelete}
-              disabled={isPending}
-              size="sm"
-            >
-              {isPending ? (
-                <>
-                  Delete <Loader2 className="animate-spin" />
-                </>
-              ) : (
-                "Delete"
-              )}
-            </Button>
-            <DialogClose asChild>
-              <Button className="cursor-pointer" size="sm" disabled={isPending}>
-                Cancel
-              </Button>
-            </DialogClose>
-          </DialogFooter>
         </DialogHeader>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button size="sm" variant="outline" disabled={isPending}>
+              Cancel
+            </Button>
+          </DialogClose>
+          <Button onClick={handleAppDelete} disabled={isPending} size="sm">
+            {isPending ? (
+              <>
+                Delete <Loader2 className="animate-spin" />
+              </>
+            ) : (
+              "Delete"
+            )}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

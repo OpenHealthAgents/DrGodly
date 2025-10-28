@@ -5,9 +5,9 @@ function presenter(appDatas: TAppDatas) {
   return appDatas;
 }
 
-export type GetAppsControllerOutputType = ReturnType<typeof presenter>;
+export type TGetAppsControllerOutput = ReturnType<typeof presenter>;
 
-export async function getAppsController(): Promise<GetAppsControllerOutputType> {
+export async function getAppsController(): Promise<TGetAppsControllerOutput> {
   const appDatas = await getAppsUseCase();
   return presenter(appDatas);
 }

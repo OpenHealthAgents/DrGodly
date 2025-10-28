@@ -79,7 +79,11 @@ export class AppRepository implements IAppRepository {
         },
       });
 
-      return AppSchema.nullable().parse(data);
+      if (!data) {
+        return null;
+      }
+
+      return AppSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

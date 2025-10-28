@@ -12,7 +12,7 @@
 
 # prisma generate and migrate
 /prisma/generated
-
+/src/modules/server/prisma/generated
 
 # vs code stuff
 .vscode

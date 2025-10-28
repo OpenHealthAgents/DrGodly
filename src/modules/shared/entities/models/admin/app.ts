@@ -18,6 +18,11 @@ export const AppMenuActionCountSchema = z.object({
   }),
 });
 
+export const AppsListTableColumnSchema = AppSchema.merge(
+  AppMenuActionCountSchema
+);
+export type TAppsListTableColumn = z.infer<typeof AppsListTableColumnSchema>;
+
 export const AppsWithMenuActionCountSchema = z.array(
   AppSchema.merge(AppMenuActionCountSchema)
 );

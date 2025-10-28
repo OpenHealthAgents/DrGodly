@@ -58,6 +58,24 @@ export const CommonSideBar = ({ label }: { label: string }) => {
       description: "addwef",
       icon: "Dashboard",
     },
+    {
+      name: "Manage Organizations",
+      slug: "/bezs/admin/manage-organizations",
+      description: "addwef",
+      icon: "Building",
+    },
+    {
+      name: "Manage Roles",
+      slug: "/bezs/admin/manage-roles",
+      description: "addwef",
+      icon: "UserRoundCog",
+    },
+    {
+      name: "RBAC",
+      slug: "/bezs/admin/rbac",
+      description: "addwef",
+      icon: "ShieldUser",
+    },
   ]);
   const [error, setError] = useState<string | null>(null);
 

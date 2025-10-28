@@ -2,7 +2,7 @@ import z from "zod";
 
 export const OrganizationAppSchema = z.object({
   appId: z.string(),
-  id: z.string(),
+  organizationId: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
   app: z.object({
@@ -15,5 +15,8 @@ export const OrganizationAppSchema = z.object({
 });
 export type TOrganizationApp = z.infer<typeof OrganizationAppSchema>;
 
-export const OrganizationAppsSchema = z.array(OrganizationAppSchema);
+export const OrganizationAppsSchema = z.object({
+  organizationApps: z.array(OrganizationAppSchema),
+  total: z.number(),
+});
 export type TOrganizationApps = z.infer<typeof OrganizationAppsSchema>;

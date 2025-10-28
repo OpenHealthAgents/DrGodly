@@ -18,6 +18,13 @@ export const OrganizationMembersAppsCountSchema = z.object({
   }),
 });
 
+export const OrganizationsTableColumnsSchema = OrganizationSchema.merge(
+  OrganizationMembersAppsCountSchema
+);
+export type TOrganizationsTableColumns = z.infer<
+  typeof OrganizationsTableColumnsSchema
+>;
+
 export const OrganizationsWithMembersAppsCountSchema = z.array(
   OrganizationSchema.merge(OrganizationMembersAppsCountSchema)
 );

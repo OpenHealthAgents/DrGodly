@@ -35,7 +35,18 @@ export class OrganizationMemberRepository
         },
       });
 
-      return OrganizationMembersAndUsersSchema.parse(data);
+      const total = await prismaMain.member.count({
+        where: {
+          organizationId,
+        },
+      });
+
+      const dataWithTotal = OrganizationMembersAndUsersSchema.parse({
+        organizationMembersAndUsers: data,
+        total,
+      });
+
+      return OrganizationMembersAndUsersSchema.parse(dataWithTotal);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -131,7 +142,7 @@ export class OrganizationMemberRepository
           organizationId,
           userId,
         },
-        select: {
+        include: {
           user: {
             select: {
               id: true,
@@ -176,6 +187,10 @@ export class OrganizationMemberRepository
           },
         },
       });
+
+      if (!data) {
+        return null;
+      }
 
       return OrganizationMemberAndUserSchema.parse(data);
     } catch (error) {

@@ -25,3 +25,15 @@ export const CreateAppMenuItemValidationSchema =
       appId: z.string(),
     })
   );
+
+export const UpdateAppMenuItemValidationSchema =
+  CreateAppMenuItemValidationSchema.merge(
+    z.object({
+      id: z.string(),
+    })
+  );
+
+export const DeleteAppMenuItemValidationSchema = z.object({
+  id: z.string(),
+  appId: z.string(),
+});

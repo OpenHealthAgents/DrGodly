@@ -7,10 +7,12 @@ import { AppType } from "../../../server/prisma/generated/main-database";
 import { Form } from "@/components/ui/form";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { useAdminModalStore } from "../stores/admin-modal-store";
 import { useSession } from "@/modules/client/auth/betterauth/auth-client";
@@ -20,10 +22,15 @@ import {
   TCreateAppForm as TEditAppForm,
   CreateAppValidationSchema as EditAppValidationFormSchema,
 } from "@/modules/shared/schemas/admin/appValidationSchema";
-import { CustomInput } from "@/modules/shared/components/custom-input";
 import { useEffect } from "react";
 import { editApp } from "../server-actions/app-actions";
 import { useServerAction } from "zsa-react";
+import {
+  FormInput,
+  FormSelect,
+  FormTextarea,
+} from "@/modules/shared/custom-form-fields";
+import { SelectItem } from "@/components/ui/select";
 
 export const EditAppModal = () => {
   const session = useSession();
@@ -59,14 +66,9 @@ export const EditAppModal = () => {
     formState: { isSubmitting },
   } = form;
 
-  const selectAppType = Object.values(AppType).map((type) => ({
-    label: type,
-    value: type,
-  }));
-
   const { execute } = useServerAction(editApp, {
     onSuccess({ data }) {
-      toast.success(`${data?.name ?? ""} app Edited.`);
+      toast.success(`${data?.name ?? ""} app edited.`);
       handleCloseModal();
     },
     onError({ err }) {
@@ -102,71 +104,79 @@ export const EditAppModal = () => {
   return (
     <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="">Edit App</DialogTitle>
-          <DialogDescription>Apps are used by consumers.</DialogDescription>
-        </DialogHeader>
-        <div>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleEditUser)}
-              className="grid w-full items-center gap-3"
-            >
-              <CustomInput
-                type="input"
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleEditUser)}
+            className="space-y-5"
+          >
+            <DialogHeader>
+              <DialogTitle className="">Edit App</DialogTitle>
+              <DialogDescription>
+                Modify this application’s information. Changes will be reflected
+                in your app list.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-5">
+              <FormInput
                 control={form.control}
                 name="name"
                 label="Name"
-                placeholder="name"
-                inputType="text"
+                placeholder="Enter a descriptive app name (e.g. Project Tracker)"
               />
 
-              <CustomInput
-                type="input"
+              <FormInput
                 control={form.control}
                 name="slug"
                 label="Slug"
-                placeholder="..."
-                inputType="text"
+                description="Sets your app’s web address. Example: /bezs/project-tracker"
+                placeholder="Unique identifier, e.g. project-tracker"
               />
 
-              <CustomInput
-                type="textarea"
+              <FormTextarea
                 control={form.control}
                 name="description"
                 label="Description"
-                placeholder="..."
-                inputType="text"
+                placeholder="Briefly describe what this app does or its purpose"
               />
 
-              <CustomInput
-                type="select"
+              <FormSelect
                 control={form.control}
                 name="type"
                 label="Type"
-                placeholder="Select a type"
-                selectList={selectAppType}
-              />
+                placeholder="Select a Type"
+                className="!w-fit"
+              >
+                {Object.keys(AppType).map((k) => (
+                  <SelectItem key={k} value={k}>
+                    {k}
+                  </SelectItem>
+                ))}
+              </FormSelect>
+            </div>
 
-              <div className="space-x-4 justify-self-end">
-                <Button
-                  type="submit"
-                  className="cursor-pointer"
-                  disabled={isSubmitting}
-                  size="sm"
-                >
-                  {isSubmitting ? (
-                    <>
-                      Edit <Loader2 className="animate-spin" />
-                    </>
-                  ) : (
-                    "Edit"
-                  )}
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline" size="sm">
+                  Cancel
                 </Button>
-              </div>
-            </form>
-          </Form>
-        </div>
+              </DialogClose>
+              <Button
+                type="submit"
+                className="cursor-pointer"
+                disabled={isSubmitting}
+                size="sm"
+              >
+                {isSubmitting ? (
+                  <>
+                    Edit <Loader2 className="animate-spin" />
+                  </>
+                ) : (
+                  "Edit"
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

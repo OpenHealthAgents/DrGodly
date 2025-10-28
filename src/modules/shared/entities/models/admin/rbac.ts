@@ -24,7 +24,10 @@ export const RbacSchema = z.object({
 });
 export type TRbac = z.infer<typeof RbacSchema>;
 
-export const RbacDatasSchema = z.array(RbacSchema);
+export const RbacDatasSchema = z.object({
+  rbacDatas: z.array(RbacSchema),
+  total: z.number(),
+});
 export type TRbacDatas = z.infer<typeof RbacDatasSchema>;
 
 export const mapOrUnmapRbacUserOrganizationRoleInputSchema = RbacSchema.pick({

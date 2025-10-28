@@ -49,7 +49,7 @@ export default async function RootLayout({
           >
             {children}
             <Toaster />
-            <NextTopLoader showSpinner={false} />
+            <NextTopLoader showSpinner={false} color="var(--progress-bar)" />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

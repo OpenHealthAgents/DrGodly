@@ -85,6 +85,10 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         },
       });
 
+      if (!data) {
+        return null;
+      }
+
       return AppMenuItemSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {

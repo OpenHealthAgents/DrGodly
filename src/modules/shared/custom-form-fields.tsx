@@ -57,7 +57,7 @@ type TFormControlFunc<
   TTransformedValues = TFieldValues
 >(
   props: FormControlProps<TFieldValues, TName, TTransformedValues> &
-    ExtraProps & { className?: string }
+    ExtraProps & { className?: string; placeholder?: string }
 ) => React.ReactNode;
 
 function FormBase<
@@ -99,6 +99,7 @@ function FormBase<
           <Field
             data-invalid={fieldState.invalid}
             orientation={horizontal ? "horizontal" : undefined}
+            className="gap-2"
           >
             {controlFirst ? (
               <>
@@ -122,18 +123,30 @@ function FormBase<
   );
 }
 
-export const FormInput: TFormControlFunc = ({ className, ...props }) => {
+export const FormInput: TFormControlFunc = ({
+  className,
+  placeholder,
+  ...props
+}) => {
   return (
     <FormBase {...props}>
-      {(field) => <Input {...field} className={className} />}
+      {(field) => (
+        <Input {...field} placeholder={placeholder} className={className} />
+      )}
     </FormBase>
   );
 };
 
-export const FormTextarea: TFormControlFunc = ({ className, ...props }) => {
+export const FormTextarea: TFormControlFunc = ({
+  className,
+  placeholder,
+  ...props
+}) => {
   return (
     <FormBase {...props}>
-      {(field) => <Textarea {...field} className={className} />}
+      {(field) => (
+        <Textarea {...field} className={className} placeholder={placeholder} />
+      )}
     </FormBase>
   );
 };
@@ -141,6 +154,7 @@ export const FormTextarea: TFormControlFunc = ({ className, ...props }) => {
 export const FormSelect: TFormControlFunc<{ children: React.ReactNode }> = ({
   children,
   className,
+  placeholder,
   ...props
 }) => {
   return (
@@ -153,7 +167,7 @@ export const FormSelect: TFormControlFunc<{ children: React.ReactNode }> = ({
             onBlur={onBlur}
             className={className}
           >
-            <SelectValue />
+            <SelectValue placeholder={placeholder} />
           </SelectTrigger>
           <SelectContent>{children}</SelectContent>
         </Select>

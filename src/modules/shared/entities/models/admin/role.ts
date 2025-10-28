@@ -9,7 +9,10 @@ export const RoleSchema = z.object({
 });
 export type TRole = z.infer<typeof RoleSchema>;
 
-export const RolesDataSchema = z.array(RoleSchema);
+export const RolesDataSchema = z.object({
+  roleDatas: z.array(RoleSchema),
+  total: z.number(),
+});
 export type TRolesData = z.infer<typeof RolesDataSchema>;
 
 export const CreateRoleSchema = RoleSchema.pick({
