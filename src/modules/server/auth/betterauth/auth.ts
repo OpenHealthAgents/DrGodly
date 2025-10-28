@@ -217,6 +217,22 @@ export const auth = betterAuth({
         },
       });
 
+      let userPreferences;
+
+      userPreferences = await prismaMain.userPreference.findUnique({
+        where: {
+          userId,
+        },
+      });
+
+      if (!userPreferences) {
+        userPreferences = await prismaMain.userPreference.create({
+          data: {
+            userId,
+          },
+        });
+      }
+
       /*
       const userDetails = await prismaMain.user.findUnique({
         where: { id: userId },
@@ -269,6 +285,7 @@ export const auth = betterAuth({
           refreshToken: providers?.refreshToken ?? null,
           accessToken: providers?.accessToken ?? null,
         },
+        userPreferences,
       };
     }),
     username(),
@@ -282,6 +299,7 @@ export const auth = betterAuth({
           scopes: ["openid", "email", "profile", "roles"],
           pkce: true,
           async getUserInfo(tokens): Promise<any> {
+            console.log("----------- getUserInfo executing ----------");
             let keycloakSession = null;
             if (tokens?.accessToken) {
               const claims: any = decodeJwt(tokens.accessToken);
@@ -312,6 +330,7 @@ export const auth = betterAuth({
             return null;
           },
           mapProfileToUser(profile) {
+            console.log("----------- mapProfileToUser executing ----------");
             return {
               id: profile?.id ?? profile?.keycloakUserid ?? undefined,
               email: profile?.email ?? undefined,

@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model UserPreference
+ * 
+ */
+export type UserPreference = $Result.DefaultSelection<Prisma.$UserPreferencePayload>
+/**
  * Model Session
  * 
  */
@@ -265,6 +270,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userPreference`: Exposes CRUD operations for the **UserPreference** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserPreferences
+    * const userPreferences = await prisma.userPreference.findMany()
+    * ```
+    */
+  get userPreference(): Prisma.UserPreferenceDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.session`: Exposes CRUD operations for the **Session** model.
@@ -886,6 +901,7 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    UserPreference: 'UserPreference',
     Session: 'Session',
     Account: 'Account',
     Verification: 'Verification',
@@ -922,7 +938,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "twoFactor" | "organization" | "member" | "invitation" | "oauthApplication" | "oauthAccessToken" | "oauthConsent" | "role" | "app" | "appOrganization" | "appMenuItem" | "appAction" | "menuPermission" | "actionPermission" | "rBAC"
+      modelProps: "user" | "userPreference" | "session" | "account" | "verification" | "twoFactor" | "organization" | "member" | "invitation" | "oauthApplication" | "oauthAccessToken" | "oauthConsent" | "role" | "app" | "appOrganization" | "appMenuItem" | "appAction" | "menuPermission" | "actionPermission" | "rBAC"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -997,6 +1013,80 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserPreference: {
+        payload: Prisma.$UserPreferencePayload<ExtArgs>
+        fields: Prisma.UserPreferenceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserPreferenceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserPreferenceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>
+          }
+          findFirst: {
+            args: Prisma.UserPreferenceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserPreferenceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>
+          }
+          findMany: {
+            args: Prisma.UserPreferenceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>[]
+          }
+          create: {
+            args: Prisma.UserPreferenceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>
+          }
+          createMany: {
+            args: Prisma.UserPreferenceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserPreferenceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>[]
+          }
+          delete: {
+            args: Prisma.UserPreferenceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>
+          }
+          update: {
+            args: Prisma.UserPreferenceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>
+          }
+          deleteMany: {
+            args: Prisma.UserPreferenceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserPreferenceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserPreferenceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>[]
+          }
+          upsert: {
+            args: Prisma.UserPreferenceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>
+          }
+          aggregate: {
+            args: Prisma.UserPreferenceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserPreference>
+          }
+          groupBy: {
+            args: Prisma.UserPreferenceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserPreferenceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserPreferenceCountArgs<ExtArgs>
+            result: $Utils.Optional<UserPreferenceCountAggregateOutputType> | number
           }
         }
       }
@@ -2429,6 +2519,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
+    userPreference?: UserPreferenceOmit
     session?: SessionOmit
     account?: AccountOmit
     verification?: VerificationOmit
@@ -3158,6 +3249,7 @@ export namespace Prisma {
     oauthapplications?: boolean | User$oauthapplicationsArgs<ExtArgs>
     oauthaccesstokens?: boolean | User$oauthaccesstokensArgs<ExtArgs>
     oauthconsents?: boolean | User$oauthconsentsArgs<ExtArgs>
+    userpreferences?: boolean | User$userpreferencesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3226,6 +3318,7 @@ export namespace Prisma {
     oauthapplications?: boolean | User$oauthapplicationsArgs<ExtArgs>
     oauthaccesstokens?: boolean | User$oauthaccesstokensArgs<ExtArgs>
     oauthconsents?: boolean | User$oauthconsentsArgs<ExtArgs>
+    userpreferences?: boolean | User$userpreferencesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3243,6 +3336,7 @@ export namespace Prisma {
       oauthapplications: Prisma.$OauthApplicationPayload<ExtArgs>[]
       oauthaccesstokens: Prisma.$OauthAccessTokenPayload<ExtArgs>[]
       oauthconsents: Prisma.$OauthConsentPayload<ExtArgs>[]
+      userpreferences: Prisma.$UserPreferencePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3663,6 +3757,7 @@ export namespace Prisma {
     oauthapplications<T extends User$oauthapplicationsArgs<ExtArgs> = {}>(args?: Subset<T, User$oauthapplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OauthApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     oauthaccesstokens<T extends User$oauthaccesstokensArgs<ExtArgs> = {}>(args?: Subset<T, User$oauthaccesstokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OauthAccessTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     oauthconsents<T extends User$oauthconsentsArgs<ExtArgs> = {}>(args?: Subset<T, User$oauthconsentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OauthConsentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    userpreferences<T extends User$userpreferencesArgs<ExtArgs> = {}>(args?: Subset<T, User$userpreferencesArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4311,6 +4406,25 @@ export namespace Prisma {
   }
 
   /**
+   * User.userpreferences
+   */
+  export type User$userpreferencesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    where?: UserPreferenceWhereInput
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4326,6 +4440,1155 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserPreference
+   */
+
+  export type AggregateUserPreference = {
+    _count: UserPreferenceCountAggregateOutputType | null
+    _min: UserPreferenceMinAggregateOutputType | null
+    _max: UserPreferenceMaxAggregateOutputType | null
+  }
+
+  export type UserPreferenceMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    timezone: string | null
+    dateFormat: string | null
+    timeFormat: string | null
+    country: string | null
+    currency: string | null
+    measurementSystem: string | null
+    numberFormat: string | null
+    weekStart: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserPreferenceMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    timezone: string | null
+    dateFormat: string | null
+    timeFormat: string | null
+    country: string | null
+    currency: string | null
+    measurementSystem: string | null
+    numberFormat: string | null
+    weekStart: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserPreferenceCountAggregateOutputType = {
+    id: number
+    userId: number
+    timezone: number
+    dateFormat: number
+    timeFormat: number
+    country: number
+    currency: number
+    measurementSystem: number
+    numberFormat: number
+    weekStart: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserPreferenceMinAggregateInputType = {
+    id?: true
+    userId?: true
+    timezone?: true
+    dateFormat?: true
+    timeFormat?: true
+    country?: true
+    currency?: true
+    measurementSystem?: true
+    numberFormat?: true
+    weekStart?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserPreferenceMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    timezone?: true
+    dateFormat?: true
+    timeFormat?: true
+    country?: true
+    currency?: true
+    measurementSystem?: true
+    numberFormat?: true
+    weekStart?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserPreferenceCountAggregateInputType = {
+    id?: true
+    userId?: true
+    timezone?: true
+    dateFormat?: true
+    timeFormat?: true
+    country?: true
+    currency?: true
+    measurementSystem?: true
+    numberFormat?: true
+    weekStart?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserPreferenceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserPreference to aggregate.
+     */
+    where?: UserPreferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPreferences to fetch.
+     */
+    orderBy?: UserPreferenceOrderByWithRelationInput | UserPreferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserPreferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPreferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPreferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserPreferences
+    **/
+    _count?: true | UserPreferenceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserPreferenceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserPreferenceMaxAggregateInputType
+  }
+
+  export type GetUserPreferenceAggregateType<T extends UserPreferenceAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserPreference]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserPreference[P]>
+      : GetScalarType<T[P], AggregateUserPreference[P]>
+  }
+
+
+
+
+  export type UserPreferenceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserPreferenceWhereInput
+    orderBy?: UserPreferenceOrderByWithAggregationInput | UserPreferenceOrderByWithAggregationInput[]
+    by: UserPreferenceScalarFieldEnum[] | UserPreferenceScalarFieldEnum
+    having?: UserPreferenceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserPreferenceCountAggregateInputType | true
+    _min?: UserPreferenceMinAggregateInputType
+    _max?: UserPreferenceMaxAggregateInputType
+  }
+
+  export type UserPreferenceGroupByOutputType = {
+    id: string
+    userId: string
+    timezone: string | null
+    dateFormat: string | null
+    timeFormat: string | null
+    country: string | null
+    currency: string | null
+    measurementSystem: string | null
+    numberFormat: string | null
+    weekStart: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: UserPreferenceCountAggregateOutputType | null
+    _min: UserPreferenceMinAggregateOutputType | null
+    _max: UserPreferenceMaxAggregateOutputType | null
+  }
+
+  type GetUserPreferenceGroupByPayload<T extends UserPreferenceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserPreferenceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserPreferenceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserPreferenceGroupByOutputType[P]>
+            : GetScalarType<T[P], UserPreferenceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserPreferenceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    timezone?: boolean
+    dateFormat?: boolean
+    timeFormat?: boolean
+    country?: boolean
+    currency?: boolean
+    measurementSystem?: boolean
+    numberFormat?: boolean
+    weekStart?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userPreference"]>
+
+  export type UserPreferenceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    timezone?: boolean
+    dateFormat?: boolean
+    timeFormat?: boolean
+    country?: boolean
+    currency?: boolean
+    measurementSystem?: boolean
+    numberFormat?: boolean
+    weekStart?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userPreference"]>
+
+  export type UserPreferenceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    timezone?: boolean
+    dateFormat?: boolean
+    timeFormat?: boolean
+    country?: boolean
+    currency?: boolean
+    measurementSystem?: boolean
+    numberFormat?: boolean
+    weekStart?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userPreference"]>
+
+  export type UserPreferenceSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    timezone?: boolean
+    dateFormat?: boolean
+    timeFormat?: boolean
+    country?: boolean
+    currency?: boolean
+    measurementSystem?: boolean
+    numberFormat?: boolean
+    weekStart?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserPreferenceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "timezone" | "dateFormat" | "timeFormat" | "country" | "currency" | "measurementSystem" | "numberFormat" | "weekStart" | "createdAt" | "updatedAt", ExtArgs["result"]["userPreference"]>
+  export type UserPreferenceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserPreferenceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserPreferenceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserPreferencePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserPreference"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      timezone: string | null
+      dateFormat: string | null
+      timeFormat: string | null
+      country: string | null
+      currency: string | null
+      measurementSystem: string | null
+      numberFormat: string | null
+      weekStart: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userPreference"]>
+    composites: {}
+  }
+
+  type UserPreferenceGetPayload<S extends boolean | null | undefined | UserPreferenceDefaultArgs> = $Result.GetResult<Prisma.$UserPreferencePayload, S>
+
+  type UserPreferenceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserPreferenceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserPreferenceCountAggregateInputType | true
+    }
+
+  export interface UserPreferenceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserPreference'], meta: { name: 'UserPreference' } }
+    /**
+     * Find zero or one UserPreference that matches the filter.
+     * @param {UserPreferenceFindUniqueArgs} args - Arguments to find a UserPreference
+     * @example
+     * // Get one UserPreference
+     * const userPreference = await prisma.userPreference.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserPreferenceFindUniqueArgs>(args: SelectSubset<T, UserPreferenceFindUniqueArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserPreference that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserPreferenceFindUniqueOrThrowArgs} args - Arguments to find a UserPreference
+     * @example
+     * // Get one UserPreference
+     * const userPreference = await prisma.userPreference.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserPreferenceFindUniqueOrThrowArgs>(args: SelectSubset<T, UserPreferenceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserPreference that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPreferenceFindFirstArgs} args - Arguments to find a UserPreference
+     * @example
+     * // Get one UserPreference
+     * const userPreference = await prisma.userPreference.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserPreferenceFindFirstArgs>(args?: SelectSubset<T, UserPreferenceFindFirstArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserPreference that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPreferenceFindFirstOrThrowArgs} args - Arguments to find a UserPreference
+     * @example
+     * // Get one UserPreference
+     * const userPreference = await prisma.userPreference.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserPreferenceFindFirstOrThrowArgs>(args?: SelectSubset<T, UserPreferenceFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserPreferences that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPreferenceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserPreferences
+     * const userPreferences = await prisma.userPreference.findMany()
+     * 
+     * // Get first 10 UserPreferences
+     * const userPreferences = await prisma.userPreference.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userPreferenceWithIdOnly = await prisma.userPreference.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserPreferenceFindManyArgs>(args?: SelectSubset<T, UserPreferenceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserPreference.
+     * @param {UserPreferenceCreateArgs} args - Arguments to create a UserPreference.
+     * @example
+     * // Create one UserPreference
+     * const UserPreference = await prisma.userPreference.create({
+     *   data: {
+     *     // ... data to create a UserPreference
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserPreferenceCreateArgs>(args: SelectSubset<T, UserPreferenceCreateArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserPreferences.
+     * @param {UserPreferenceCreateManyArgs} args - Arguments to create many UserPreferences.
+     * @example
+     * // Create many UserPreferences
+     * const userPreference = await prisma.userPreference.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserPreferenceCreateManyArgs>(args?: SelectSubset<T, UserPreferenceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserPreferences and returns the data saved in the database.
+     * @param {UserPreferenceCreateManyAndReturnArgs} args - Arguments to create many UserPreferences.
+     * @example
+     * // Create many UserPreferences
+     * const userPreference = await prisma.userPreference.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserPreferences and only return the `id`
+     * const userPreferenceWithIdOnly = await prisma.userPreference.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserPreferenceCreateManyAndReturnArgs>(args?: SelectSubset<T, UserPreferenceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserPreference.
+     * @param {UserPreferenceDeleteArgs} args - Arguments to delete one UserPreference.
+     * @example
+     * // Delete one UserPreference
+     * const UserPreference = await prisma.userPreference.delete({
+     *   where: {
+     *     // ... filter to delete one UserPreference
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserPreferenceDeleteArgs>(args: SelectSubset<T, UserPreferenceDeleteArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserPreference.
+     * @param {UserPreferenceUpdateArgs} args - Arguments to update one UserPreference.
+     * @example
+     * // Update one UserPreference
+     * const userPreference = await prisma.userPreference.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserPreferenceUpdateArgs>(args: SelectSubset<T, UserPreferenceUpdateArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserPreferences.
+     * @param {UserPreferenceDeleteManyArgs} args - Arguments to filter UserPreferences to delete.
+     * @example
+     * // Delete a few UserPreferences
+     * const { count } = await prisma.userPreference.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserPreferenceDeleteManyArgs>(args?: SelectSubset<T, UserPreferenceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserPreferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPreferenceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserPreferences
+     * const userPreference = await prisma.userPreference.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserPreferenceUpdateManyArgs>(args: SelectSubset<T, UserPreferenceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserPreferences and returns the data updated in the database.
+     * @param {UserPreferenceUpdateManyAndReturnArgs} args - Arguments to update many UserPreferences.
+     * @example
+     * // Update many UserPreferences
+     * const userPreference = await prisma.userPreference.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserPreferences and only return the `id`
+     * const userPreferenceWithIdOnly = await prisma.userPreference.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserPreferenceUpdateManyAndReturnArgs>(args: SelectSubset<T, UserPreferenceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserPreference.
+     * @param {UserPreferenceUpsertArgs} args - Arguments to update or create a UserPreference.
+     * @example
+     * // Update or create a UserPreference
+     * const userPreference = await prisma.userPreference.upsert({
+     *   create: {
+     *     // ... data to create a UserPreference
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserPreference we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserPreferenceUpsertArgs>(args: SelectSubset<T, UserPreferenceUpsertArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserPreferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPreferenceCountArgs} args - Arguments to filter UserPreferences to count.
+     * @example
+     * // Count the number of UserPreferences
+     * const count = await prisma.userPreference.count({
+     *   where: {
+     *     // ... the filter for the UserPreferences we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserPreferenceCountArgs>(
+      args?: Subset<T, UserPreferenceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserPreferenceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserPreference.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPreferenceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserPreferenceAggregateArgs>(args: Subset<T, UserPreferenceAggregateArgs>): Prisma.PrismaPromise<GetUserPreferenceAggregateType<T>>
+
+    /**
+     * Group by UserPreference.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPreferenceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserPreferenceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserPreferenceGroupByArgs['orderBy'] }
+        : { orderBy?: UserPreferenceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserPreferenceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserPreferenceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserPreference model
+   */
+  readonly fields: UserPreferenceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserPreference.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserPreferenceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserPreference model
+   */
+  interface UserPreferenceFieldRefs {
+    readonly id: FieldRef<"UserPreference", 'String'>
+    readonly userId: FieldRef<"UserPreference", 'String'>
+    readonly timezone: FieldRef<"UserPreference", 'String'>
+    readonly dateFormat: FieldRef<"UserPreference", 'String'>
+    readonly timeFormat: FieldRef<"UserPreference", 'String'>
+    readonly country: FieldRef<"UserPreference", 'String'>
+    readonly currency: FieldRef<"UserPreference", 'String'>
+    readonly measurementSystem: FieldRef<"UserPreference", 'String'>
+    readonly numberFormat: FieldRef<"UserPreference", 'String'>
+    readonly weekStart: FieldRef<"UserPreference", 'String'>
+    readonly createdAt: FieldRef<"UserPreference", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserPreference", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserPreference findUnique
+   */
+  export type UserPreferenceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPreference to fetch.
+     */
+    where: UserPreferenceWhereUniqueInput
+  }
+
+  /**
+   * UserPreference findUniqueOrThrow
+   */
+  export type UserPreferenceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPreference to fetch.
+     */
+    where: UserPreferenceWhereUniqueInput
+  }
+
+  /**
+   * UserPreference findFirst
+   */
+  export type UserPreferenceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPreference to fetch.
+     */
+    where?: UserPreferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPreferences to fetch.
+     */
+    orderBy?: UserPreferenceOrderByWithRelationInput | UserPreferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserPreferences.
+     */
+    cursor?: UserPreferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPreferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPreferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserPreferences.
+     */
+    distinct?: UserPreferenceScalarFieldEnum | UserPreferenceScalarFieldEnum[]
+  }
+
+  /**
+   * UserPreference findFirstOrThrow
+   */
+  export type UserPreferenceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPreference to fetch.
+     */
+    where?: UserPreferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPreferences to fetch.
+     */
+    orderBy?: UserPreferenceOrderByWithRelationInput | UserPreferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserPreferences.
+     */
+    cursor?: UserPreferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPreferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPreferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserPreferences.
+     */
+    distinct?: UserPreferenceScalarFieldEnum | UserPreferenceScalarFieldEnum[]
+  }
+
+  /**
+   * UserPreference findMany
+   */
+  export type UserPreferenceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPreferences to fetch.
+     */
+    where?: UserPreferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPreferences to fetch.
+     */
+    orderBy?: UserPreferenceOrderByWithRelationInput | UserPreferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserPreferences.
+     */
+    cursor?: UserPreferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPreferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPreferences.
+     */
+    skip?: number
+    distinct?: UserPreferenceScalarFieldEnum | UserPreferenceScalarFieldEnum[]
+  }
+
+  /**
+   * UserPreference create
+   */
+  export type UserPreferenceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserPreference.
+     */
+    data: XOR<UserPreferenceCreateInput, UserPreferenceUncheckedCreateInput>
+  }
+
+  /**
+   * UserPreference createMany
+   */
+  export type UserPreferenceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserPreferences.
+     */
+    data: UserPreferenceCreateManyInput | UserPreferenceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserPreference createManyAndReturn
+   */
+  export type UserPreferenceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserPreferences.
+     */
+    data: UserPreferenceCreateManyInput | UserPreferenceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserPreference update
+   */
+  export type UserPreferenceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserPreference.
+     */
+    data: XOR<UserPreferenceUpdateInput, UserPreferenceUncheckedUpdateInput>
+    /**
+     * Choose, which UserPreference to update.
+     */
+    where: UserPreferenceWhereUniqueInput
+  }
+
+  /**
+   * UserPreference updateMany
+   */
+  export type UserPreferenceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserPreferences.
+     */
+    data: XOR<UserPreferenceUpdateManyMutationInput, UserPreferenceUncheckedUpdateManyInput>
+    /**
+     * Filter which UserPreferences to update
+     */
+    where?: UserPreferenceWhereInput
+    /**
+     * Limit how many UserPreferences to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserPreference updateManyAndReturn
+   */
+  export type UserPreferenceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * The data used to update UserPreferences.
+     */
+    data: XOR<UserPreferenceUpdateManyMutationInput, UserPreferenceUncheckedUpdateManyInput>
+    /**
+     * Filter which UserPreferences to update
+     */
+    where?: UserPreferenceWhereInput
+    /**
+     * Limit how many UserPreferences to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserPreference upsert
+   */
+  export type UserPreferenceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserPreference to update in case it exists.
+     */
+    where: UserPreferenceWhereUniqueInput
+    /**
+     * In case the UserPreference found by the `where` argument doesn't exist, create a new UserPreference with this data.
+     */
+    create: XOR<UserPreferenceCreateInput, UserPreferenceUncheckedCreateInput>
+    /**
+     * In case the UserPreference was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserPreferenceUpdateInput, UserPreferenceUncheckedUpdateInput>
+  }
+
+  /**
+   * UserPreference delete
+   */
+  export type UserPreferenceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter which UserPreference to delete.
+     */
+    where: UserPreferenceWhereUniqueInput
+  }
+
+  /**
+   * UserPreference deleteMany
+   */
+  export type UserPreferenceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserPreferences to delete
+     */
+    where?: UserPreferenceWhereInput
+    /**
+     * Limit how many UserPreferences to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserPreference without action
+   */
+  export type UserPreferenceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
   }
 
 
@@ -24493,6 +25756,24 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const UserPreferenceScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    timezone: 'timezone',
+    dateFormat: 'dateFormat',
+    timeFormat: 'timeFormat',
+    country: 'country',
+    currency: 'currency',
+    measurementSystem: 'measurementSystem',
+    numberFormat: 'numberFormat',
+    weekStart: 'weekStart',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserPreferenceScalarFieldEnum = (typeof UserPreferenceScalarFieldEnum)[keyof typeof UserPreferenceScalarFieldEnum]
+
+
   export const SessionScalarFieldEnum: {
     id: 'id',
     expiresAt: 'expiresAt',
@@ -24871,6 +26152,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationListRelationFilter
     oauthaccesstokens?: OauthAccessTokenListRelationFilter
     oauthconsents?: OauthConsentListRelationFilter
+    userpreferences?: XOR<UserPreferenceNullableScalarRelationFilter, UserPreferenceWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -24898,6 +26180,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationOrderByRelationAggregateInput
     oauthaccesstokens?: OauthAccessTokenOrderByRelationAggregateInput
     oauthconsents?: OauthConsentOrderByRelationAggregateInput
+    userpreferences?: UserPreferenceOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -24928,6 +26211,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationListRelationFilter
     oauthaccesstokens?: OauthAccessTokenListRelationFilter
     oauthconsents?: OauthConsentListRelationFilter
+    userpreferences?: XOR<UserPreferenceNullableScalarRelationFilter, UserPreferenceWhereInput> | null
   }, "id" | "email" | "username">
 
   export type UserOrderByWithAggregationInput = {
@@ -24970,6 +26254,96 @@ export namespace Prisma {
     username?: StringNullableWithAggregatesFilter<"User"> | string | null
     keycloakUserid?: StringNullableWithAggregatesFilter<"User"> | string | null
     displayUsername?: StringNullableWithAggregatesFilter<"User"> | string | null
+  }
+
+  export type UserPreferenceWhereInput = {
+    AND?: UserPreferenceWhereInput | UserPreferenceWhereInput[]
+    OR?: UserPreferenceWhereInput[]
+    NOT?: UserPreferenceWhereInput | UserPreferenceWhereInput[]
+    id?: StringFilter<"UserPreference"> | string
+    userId?: StringFilter<"UserPreference"> | string
+    timezone?: StringNullableFilter<"UserPreference"> | string | null
+    dateFormat?: StringNullableFilter<"UserPreference"> | string | null
+    timeFormat?: StringNullableFilter<"UserPreference"> | string | null
+    country?: StringNullableFilter<"UserPreference"> | string | null
+    currency?: StringNullableFilter<"UserPreference"> | string | null
+    measurementSystem?: StringNullableFilter<"UserPreference"> | string | null
+    numberFormat?: StringNullableFilter<"UserPreference"> | string | null
+    weekStart?: StringNullableFilter<"UserPreference"> | string | null
+    createdAt?: DateTimeFilter<"UserPreference"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPreference"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserPreferenceOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    timezone?: SortOrderInput | SortOrder
+    dateFormat?: SortOrderInput | SortOrder
+    timeFormat?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    currency?: SortOrderInput | SortOrder
+    measurementSystem?: SortOrderInput | SortOrder
+    numberFormat?: SortOrderInput | SortOrder
+    weekStart?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserPreferenceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: UserPreferenceWhereInput | UserPreferenceWhereInput[]
+    OR?: UserPreferenceWhereInput[]
+    NOT?: UserPreferenceWhereInput | UserPreferenceWhereInput[]
+    timezone?: StringNullableFilter<"UserPreference"> | string | null
+    dateFormat?: StringNullableFilter<"UserPreference"> | string | null
+    timeFormat?: StringNullableFilter<"UserPreference"> | string | null
+    country?: StringNullableFilter<"UserPreference"> | string | null
+    currency?: StringNullableFilter<"UserPreference"> | string | null
+    measurementSystem?: StringNullableFilter<"UserPreference"> | string | null
+    numberFormat?: StringNullableFilter<"UserPreference"> | string | null
+    weekStart?: StringNullableFilter<"UserPreference"> | string | null
+    createdAt?: DateTimeFilter<"UserPreference"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPreference"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type UserPreferenceOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    timezone?: SortOrderInput | SortOrder
+    dateFormat?: SortOrderInput | SortOrder
+    timeFormat?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    currency?: SortOrderInput | SortOrder
+    measurementSystem?: SortOrderInput | SortOrder
+    numberFormat?: SortOrderInput | SortOrder
+    weekStart?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserPreferenceCountOrderByAggregateInput
+    _max?: UserPreferenceMaxOrderByAggregateInput
+    _min?: UserPreferenceMinOrderByAggregateInput
+  }
+
+  export type UserPreferenceScalarWhereWithAggregatesInput = {
+    AND?: UserPreferenceScalarWhereWithAggregatesInput | UserPreferenceScalarWhereWithAggregatesInput[]
+    OR?: UserPreferenceScalarWhereWithAggregatesInput[]
+    NOT?: UserPreferenceScalarWhereWithAggregatesInput | UserPreferenceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserPreference"> | string
+    userId?: StringWithAggregatesFilter<"UserPreference"> | string
+    timezone?: StringNullableWithAggregatesFilter<"UserPreference"> | string | null
+    dateFormat?: StringNullableWithAggregatesFilter<"UserPreference"> | string | null
+    timeFormat?: StringNullableWithAggregatesFilter<"UserPreference"> | string | null
+    country?: StringNullableWithAggregatesFilter<"UserPreference"> | string | null
+    currency?: StringNullableWithAggregatesFilter<"UserPreference"> | string | null
+    measurementSystem?: StringNullableWithAggregatesFilter<"UserPreference"> | string | null
+    numberFormat?: StringNullableWithAggregatesFilter<"UserPreference"> | string | null
+    weekStart?: StringNullableWithAggregatesFilter<"UserPreference"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"UserPreference"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserPreference"> | Date | string
   }
 
   export type SessionWhereInput = {
@@ -26277,6 +27651,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -26304,6 +27679,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUncheckedCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenUncheckedCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentUncheckedCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -26331,6 +27707,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -26358,6 +27735,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUncheckedUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUncheckedUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUncheckedUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -26412,6 +27790,110 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     keycloakUserid?: NullableStringFieldUpdateOperationsInput | string | null
     displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserPreferenceCreateInput = {
+    id?: string
+    timezone?: string | null
+    dateFormat?: string | null
+    timeFormat?: string | null
+    country?: string | null
+    currency?: string | null
+    measurementSystem?: string | null
+    numberFormat?: string | null
+    weekStart?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutUserpreferencesInput
+  }
+
+  export type UserPreferenceUncheckedCreateInput = {
+    id?: string
+    userId: string
+    timezone?: string | null
+    dateFormat?: string | null
+    timeFormat?: string | null
+    country?: string | null
+    currency?: string | null
+    measurementSystem?: string | null
+    numberFormat?: string | null
+    weekStart?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPreferenceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    dateFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    timeFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
+    measurementSystem?: NullableStringFieldUpdateOperationsInput | string | null
+    numberFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    weekStart?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutUserpreferencesNestedInput
+  }
+
+  export type UserPreferenceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    dateFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    timeFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
+    measurementSystem?: NullableStringFieldUpdateOperationsInput | string | null
+    numberFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    weekStart?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPreferenceCreateManyInput = {
+    id?: string
+    userId: string
+    timezone?: string | null
+    dateFormat?: string | null
+    timeFormat?: string | null
+    country?: string | null
+    currency?: string | null
+    measurementSystem?: string | null
+    numberFormat?: string | null
+    weekStart?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPreferenceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    dateFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    timeFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
+    measurementSystem?: NullableStringFieldUpdateOperationsInput | string | null
+    numberFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    weekStart?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPreferenceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    dateFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    timeFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
+    measurementSystem?: NullableStringFieldUpdateOperationsInput | string | null
+    numberFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    weekStart?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SessionCreateInput = {
@@ -27878,6 +29360,11 @@ export namespace Prisma {
     none?: OauthConsentWhereInput
   }
 
+  export type UserPreferenceNullableScalarRelationFilter = {
+    is?: UserPreferenceWhereInput | null
+    isNot?: UserPreferenceWhereInput | null
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -28056,6 +29543,51 @@ export namespace Prisma {
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
+  }
+
+  export type UserPreferenceCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    timezone?: SortOrder
+    dateFormat?: SortOrder
+    timeFormat?: SortOrder
+    country?: SortOrder
+    currency?: SortOrder
+    measurementSystem?: SortOrder
+    numberFormat?: SortOrder
+    weekStart?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserPreferenceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    timezone?: SortOrder
+    dateFormat?: SortOrder
+    timeFormat?: SortOrder
+    country?: SortOrder
+    currency?: SortOrder
+    measurementSystem?: SortOrder
+    numberFormat?: SortOrder
+    weekStart?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserPreferenceMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    timezone?: SortOrder
+    dateFormat?: SortOrder
+    timeFormat?: SortOrder
+    country?: SortOrder
+    currency?: SortOrder
+    measurementSystem?: SortOrder
+    numberFormat?: SortOrder
+    weekStart?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type SessionCountOrderByAggregateInput = {
@@ -28834,6 +30366,12 @@ export namespace Prisma {
     connect?: OauthConsentWhereUniqueInput | OauthConsentWhereUniqueInput[]
   }
 
+  export type UserPreferenceCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserPreferenceCreateWithoutUserInput, UserPreferenceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserPreferenceCreateOrConnectWithoutUserInput
+    connect?: UserPreferenceWhereUniqueInput
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -28895,6 +30433,12 @@ export namespace Prisma {
     connectOrCreate?: OauthConsentCreateOrConnectWithoutUserInput | OauthConsentCreateOrConnectWithoutUserInput[]
     createMany?: OauthConsentCreateManyUserInputEnvelope
     connect?: OauthConsentWhereUniqueInput | OauthConsentWhereUniqueInput[]
+  }
+
+  export type UserPreferenceUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserPreferenceCreateWithoutUserInput, UserPreferenceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserPreferenceCreateOrConnectWithoutUserInput
+    connect?: UserPreferenceWhereUniqueInput
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -29047,6 +30591,16 @@ export namespace Prisma {
     deleteMany?: OauthConsentScalarWhereInput | OauthConsentScalarWhereInput[]
   }
 
+  export type UserPreferenceUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserPreferenceCreateWithoutUserInput, UserPreferenceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserPreferenceCreateOrConnectWithoutUserInput
+    upsert?: UserPreferenceUpsertWithoutUserInput
+    disconnect?: UserPreferenceWhereInput | boolean
+    delete?: UserPreferenceWhereInput | boolean
+    connect?: UserPreferenceWhereUniqueInput
+    update?: XOR<XOR<UserPreferenceUpdateToOneWithWhereWithoutUserInput, UserPreferenceUpdateWithoutUserInput>, UserPreferenceUncheckedUpdateWithoutUserInput>
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -29171,6 +30725,30 @@ export namespace Prisma {
     update?: OauthConsentUpdateWithWhereUniqueWithoutUserInput | OauthConsentUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: OauthConsentUpdateManyWithWhereWithoutUserInput | OauthConsentUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: OauthConsentScalarWhereInput | OauthConsentScalarWhereInput[]
+  }
+
+  export type UserPreferenceUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserPreferenceCreateWithoutUserInput, UserPreferenceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserPreferenceCreateOrConnectWithoutUserInput
+    upsert?: UserPreferenceUpsertWithoutUserInput
+    disconnect?: UserPreferenceWhereInput | boolean
+    delete?: UserPreferenceWhereInput | boolean
+    connect?: UserPreferenceWhereUniqueInput
+    update?: XOR<XOR<UserPreferenceUpdateToOneWithWhereWithoutUserInput, UserPreferenceUpdateWithoutUserInput>, UserPreferenceUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserCreateNestedOneWithoutUserpreferencesInput = {
+    create?: XOR<UserCreateWithoutUserpreferencesInput, UserUncheckedCreateWithoutUserpreferencesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserpreferencesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutUserpreferencesNestedInput = {
+    create?: XOR<UserCreateWithoutUserpreferencesInput, UserUncheckedCreateWithoutUserpreferencesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserpreferencesInput
+    upsert?: UserUpsertWithoutUserpreferencesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserpreferencesInput, UserUpdateWithoutUserpreferencesInput>, UserUncheckedUpdateWithoutUserpreferencesInput>
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -30687,6 +32265,39 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserPreferenceCreateWithoutUserInput = {
+    id?: string
+    timezone?: string | null
+    dateFormat?: string | null
+    timeFormat?: string | null
+    country?: string | null
+    currency?: string | null
+    measurementSystem?: string | null
+    numberFormat?: string | null
+    weekStart?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPreferenceUncheckedCreateWithoutUserInput = {
+    id?: string
+    timezone?: string | null
+    dateFormat?: string | null
+    timeFormat?: string | null
+    country?: string | null
+    currency?: string | null
+    measurementSystem?: string | null
+    numberFormat?: string | null
+    weekStart?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPreferenceCreateOrConnectWithoutUserInput = {
+    where: UserPreferenceWhereUniqueInput
+    create: XOR<UserPreferenceCreateWithoutUserInput, UserPreferenceUncheckedCreateWithoutUserInput>
+  }
+
   export type SessionUpsertWithWhereUniqueWithoutUserInput = {
     where: SessionWhereUniqueInput
     update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
@@ -30960,6 +32571,169 @@ export namespace Prisma {
     consentGiven?: BoolNullableFilter<"OauthConsent"> | boolean | null
   }
 
+  export type UserPreferenceUpsertWithoutUserInput = {
+    update: XOR<UserPreferenceUpdateWithoutUserInput, UserPreferenceUncheckedUpdateWithoutUserInput>
+    create: XOR<UserPreferenceCreateWithoutUserInput, UserPreferenceUncheckedCreateWithoutUserInput>
+    where?: UserPreferenceWhereInput
+  }
+
+  export type UserPreferenceUpdateToOneWithWhereWithoutUserInput = {
+    where?: UserPreferenceWhereInput
+    data: XOR<UserPreferenceUpdateWithoutUserInput, UserPreferenceUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserPreferenceUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    dateFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    timeFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
+    measurementSystem?: NullableStringFieldUpdateOperationsInput | string | null
+    numberFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    weekStart?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPreferenceUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    dateFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    timeFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    currency?: NullableStringFieldUpdateOperationsInput | string | null
+    measurementSystem?: NullableStringFieldUpdateOperationsInput | string | null
+    numberFormat?: NullableStringFieldUpdateOperationsInput | string | null
+    weekStart?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateWithoutUserpreferencesInput = {
+    id?: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    twoFactorEnabled?: boolean | null
+    role?: string | null
+    banned?: boolean | null
+    banReason?: string | null
+    banExpires?: Date | string | null
+    username?: string | null
+    keycloakUserid?: string | null
+    displayUsername?: string | null
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    twofactors?: TwoFactorCreateNestedManyWithoutUserInput
+    members?: MemberCreateNestedManyWithoutUserInput
+    invitations?: InvitationCreateNestedManyWithoutUserInput
+    rbac?: RBACCreateNestedManyWithoutUserInput
+    oauthapplications?: OauthApplicationCreateNestedManyWithoutUserInput
+    oauthaccesstokens?: OauthAccessTokenCreateNestedManyWithoutUserInput
+    oauthconsents?: OauthConsentCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutUserpreferencesInput = {
+    id?: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    twoFactorEnabled?: boolean | null
+    role?: string | null
+    banned?: boolean | null
+    banReason?: string | null
+    banExpires?: Date | string | null
+    username?: string | null
+    keycloakUserid?: string | null
+    displayUsername?: string | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    twofactors?: TwoFactorUncheckedCreateNestedManyWithoutUserInput
+    members?: MemberUncheckedCreateNestedManyWithoutUserInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutUserInput
+    rbac?: RBACUncheckedCreateNestedManyWithoutUserInput
+    oauthapplications?: OauthApplicationUncheckedCreateNestedManyWithoutUserInput
+    oauthaccesstokens?: OauthAccessTokenUncheckedCreateNestedManyWithoutUserInput
+    oauthconsents?: OauthConsentUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutUserpreferencesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUserpreferencesInput, UserUncheckedCreateWithoutUserpreferencesInput>
+  }
+
+  export type UserUpsertWithoutUserpreferencesInput = {
+    update: XOR<UserUpdateWithoutUserpreferencesInput, UserUncheckedUpdateWithoutUserpreferencesInput>
+    create: XOR<UserCreateWithoutUserpreferencesInput, UserUncheckedCreateWithoutUserpreferencesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutUserpreferencesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutUserpreferencesInput, UserUncheckedUpdateWithoutUserpreferencesInput>
+  }
+
+  export type UserUpdateWithoutUserpreferencesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    twoFactorEnabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    banned?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    banReason?: NullableStringFieldUpdateOperationsInput | string | null
+    banExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    keycloakUserid?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    twofactors?: TwoFactorUpdateManyWithoutUserNestedInput
+    members?: MemberUpdateManyWithoutUserNestedInput
+    invitations?: InvitationUpdateManyWithoutUserNestedInput
+    rbac?: RBACUpdateManyWithoutUserNestedInput
+    oauthapplications?: OauthApplicationUpdateManyWithoutUserNestedInput
+    oauthaccesstokens?: OauthAccessTokenUpdateManyWithoutUserNestedInput
+    oauthconsents?: OauthConsentUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutUserpreferencesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    twoFactorEnabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    banned?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    banReason?: NullableStringFieldUpdateOperationsInput | string | null
+    banExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    keycloakUserid?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    twofactors?: TwoFactorUncheckedUpdateManyWithoutUserNestedInput
+    members?: MemberUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutUserNestedInput
+    rbac?: RBACUncheckedUpdateManyWithoutUserNestedInput
+    oauthapplications?: OauthApplicationUncheckedUpdateManyWithoutUserNestedInput
+    oauthaccesstokens?: OauthAccessTokenUncheckedUpdateManyWithoutUserNestedInput
+    oauthconsents?: OauthConsentUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id?: string
     name: string
@@ -30984,6 +32758,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -31010,6 +32785,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUncheckedCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenUncheckedCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentUncheckedCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -31052,6 +32828,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -31078,6 +32855,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUncheckedUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUncheckedUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUncheckedUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -31104,6 +32882,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -31130,6 +32909,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUncheckedCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenUncheckedCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentUncheckedCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -31172,6 +32952,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -31198,6 +32979,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUncheckedUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUncheckedUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUncheckedUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutTwofactorsInput = {
@@ -31224,6 +33006,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTwofactorsInput = {
@@ -31250,6 +33033,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUncheckedCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenUncheckedCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentUncheckedCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTwofactorsInput = {
@@ -31292,6 +33076,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTwofactorsInput = {
@@ -31318,6 +33103,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUncheckedUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUncheckedUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUncheckedUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type MemberCreateWithoutOrganizationInput = {
@@ -31551,6 +33337,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMembersInput = {
@@ -31577,6 +33364,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUncheckedCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenUncheckedCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentUncheckedCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMembersInput = {
@@ -31656,6 +33444,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMembersInput = {
@@ -31682,6 +33471,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUncheckedUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUncheckedUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUncheckedUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type OrganizationCreateWithoutInvitationsInput = {
@@ -31739,6 +33529,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInvitationsInput = {
@@ -31765,6 +33556,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUncheckedCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenUncheckedCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentUncheckedCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInvitationsInput = {
@@ -31844,6 +33636,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitationsInput = {
@@ -31870,6 +33663,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUncheckedUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUncheckedUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUncheckedUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutOauthapplicationsInput = {
@@ -31896,6 +33690,7 @@ export namespace Prisma {
     rbac?: RBACCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOauthapplicationsInput = {
@@ -31922,6 +33717,7 @@ export namespace Prisma {
     rbac?: RBACUncheckedCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenUncheckedCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentUncheckedCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOauthapplicationsInput = {
@@ -32026,6 +33822,7 @@ export namespace Prisma {
     rbac?: RBACUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOauthapplicationsInput = {
@@ -32052,6 +33849,7 @@ export namespace Prisma {
     rbac?: RBACUncheckedUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUncheckedUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUncheckedUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type OauthAccessTokenUpsertWithWhereUniqueWithoutOauthapplicationInput = {
@@ -32147,6 +33945,7 @@ export namespace Prisma {
     rbac?: RBACCreateNestedManyWithoutUserInput
     oauthapplications?: OauthApplicationCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOauthaccesstokensInput = {
@@ -32173,6 +33972,7 @@ export namespace Prisma {
     rbac?: RBACUncheckedCreateNestedManyWithoutUserInput
     oauthapplications?: OauthApplicationUncheckedCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentUncheckedCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOauthaccesstokensInput = {
@@ -32258,6 +34058,7 @@ export namespace Prisma {
     rbac?: RBACUpdateManyWithoutUserNestedInput
     oauthapplications?: OauthApplicationUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOauthaccesstokensInput = {
@@ -32284,6 +34085,7 @@ export namespace Prisma {
     rbac?: RBACUncheckedUpdateManyWithoutUserNestedInput
     oauthapplications?: OauthApplicationUncheckedUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUncheckedUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type OauthApplicationCreateWithoutOauthconsentsInput = {
@@ -32347,6 +34149,7 @@ export namespace Prisma {
     rbac?: RBACCreateNestedManyWithoutUserInput
     oauthapplications?: OauthApplicationCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOauthconsentsInput = {
@@ -32373,6 +34176,7 @@ export namespace Prisma {
     rbac?: RBACUncheckedCreateNestedManyWithoutUserInput
     oauthapplications?: OauthApplicationUncheckedCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenUncheckedCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOauthconsentsInput = {
@@ -32458,6 +34262,7 @@ export namespace Prisma {
     rbac?: RBACUpdateManyWithoutUserNestedInput
     oauthapplications?: OauthApplicationUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOauthconsentsInput = {
@@ -32484,6 +34289,7 @@ export namespace Prisma {
     rbac?: RBACUncheckedUpdateManyWithoutUserNestedInput
     oauthapplications?: OauthApplicationUncheckedUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUncheckedUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type MenuPermissionCreateWithoutRoleInput = {
@@ -33701,6 +35507,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRbacInput = {
@@ -33727,6 +35534,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUncheckedCreateNestedManyWithoutUserInput
     oauthaccesstokens?: OauthAccessTokenUncheckedCreateNestedManyWithoutUserInput
     oauthconsents?: OauthConsentUncheckedCreateNestedManyWithoutUserInput
+    userpreferences?: UserPreferenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRbacInput = {
@@ -33831,6 +35639,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRbacInput = {
@@ -33857,6 +35666,7 @@ export namespace Prisma {
     oauthapplications?: OauthApplicationUncheckedUpdateManyWithoutUserNestedInput
     oauthaccesstokens?: OauthAccessTokenUncheckedUpdateManyWithoutUserNestedInput
     oauthconsents?: OauthConsentUncheckedUpdateManyWithoutUserNestedInput
+    userpreferences?: UserPreferenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type RoleUpsertWithoutRbacInput = {

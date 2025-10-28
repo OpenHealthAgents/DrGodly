@@ -138,6 +138,21 @@ exports.Prisma.UserScalarFieldEnum = {
   displayUsername: 'displayUsername'
 };
 
+exports.Prisma.UserPreferenceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  timezone: 'timezone',
+  dateFormat: 'dateFormat',
+  timeFormat: 'timeFormat',
+  country: 'country',
+  currency: 'currency',
+  measurementSystem: 'measurementSystem',
+  numberFormat: 'numberFormat',
+  weekStart: 'weekStart',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SessionScalarFieldEnum = {
   id: 'id',
   expiresAt: 'expiresAt',
@@ -351,6 +366,7 @@ exports.AppActionType = exports.$Enums.AppActionType = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  UserPreference: 'UserPreference',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',

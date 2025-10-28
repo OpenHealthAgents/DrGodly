@@ -34,10 +34,27 @@ model User {
   oauthapplications OauthApplication[]
   oauthaccesstokens OauthAccessToken[]
   oauthconsents     OauthConsent[]
+  userpreferences   UserPreference?
 
   @@unique([email])
   @@unique([username])
   @@map("user")
+}
+
+model UserPreference {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  timezone          String?  @default("UTC")
+  dateFormat        String?  @default("DD/MM/YYYY")
+  timeFormat        String?  @default("24h")
+  country           String?  @default("IN")
+  currency          String?  @default("INR")
+  measurementSystem String?  @default("metric")
+  numberFormat      String?  @default("1,23,456.78")
+  weekStart         String?  @default("monday")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Session {
@@ -246,7 +263,6 @@ model AppOrganization {
   updatedAt DateTime @updatedAt
 
   @@id([appId, organizationId])
-  @@index([appId, organizationId])
 }
 
 model AppMenuItem {
