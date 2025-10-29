@@ -41,10 +41,7 @@ export const rolesListTableColumn: ColumnDef<TRole>[] = [
     cell: ({ row }) => {
       const desc: string = row.getValue("description");
       return (
-        <p
-          className="truncate max-w-[250px] xl:max-w-[450px] 2xl:max-w-full"
-          title={desc}
-        >
+        <p className="truncate max-w-[250px] xl:max-w-[450px]" title={desc}>
           {desc}
         </p>
       );

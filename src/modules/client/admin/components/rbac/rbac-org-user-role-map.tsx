@@ -142,7 +142,7 @@ export function RBACOrgUserRoleMap({ allOrgs = [], allRoles = [] }: Props) {
             )}
           />
 
-          <div className="flex gap-12">
+          <div className="flex flex-wrap gap-12">
             <FormField
               control={form.control}
               name="userId"

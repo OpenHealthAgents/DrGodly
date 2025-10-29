@@ -5,7 +5,7 @@ const ManageRolesPage = async () => {
   const [data, error] = await getAllRolesData();
 
   return (
-    <div className="space-y-8 mx-auto">
+    <div className="w-full">
       <RolesListTable rolesData={data} error={error} />
     </div>
   );

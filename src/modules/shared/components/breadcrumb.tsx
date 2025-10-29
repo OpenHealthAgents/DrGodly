@@ -27,7 +27,7 @@ const BreadCrumb = ({ className = "" }: { className?: string }) => {
   const pathSegmentsLength = pathSegments.length;
 
   return (
-    <Breadcrumb className={`px-4 py-2 ${className}`}>
+    <Breadcrumb className={`${className}`}>
       <BreadcrumbList>
         {pathSegments.map((pathSegment, index) => {
           const formattedPathSegment = pathSegment

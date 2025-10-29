@@ -118,8 +118,8 @@ const BezsPage = () => {
 
   return (
     <div className="h-full p-4">
-      {/* <h1>{t("header")}</h1> */}
-      <div className="container px-4 mx-auto my-6">
+      <h1>{t("header")}</h1>
+      {/* <div className="px-4 mx-auto my-6">
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
             <FormInput control={form.control} label="Name" name="name" />
@@ -246,7 +246,7 @@ const BezsPage = () => {
             <Button>Create</Button>
           </FieldGroup>
         </form>
-      </div>
+      </div> */}
     </div>
   );
 };
