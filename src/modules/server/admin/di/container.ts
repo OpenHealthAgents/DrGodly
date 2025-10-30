@@ -7,6 +7,7 @@ import {
   OrganizationAppModule,
   OrganizationMemberModule,
   OrganizationModule,
+  PreferenceTemplateModule,
   RbacModule,
   RoleAppMenuItemModule,
   RoleModule,
@@ -23,6 +24,7 @@ const initializeContainer = () => {
   AdminContainer.load(OrganizationAppModule);
   AdminContainer.load(RoleAppMenuItemModule);
   AdminContainer.load(RbacModule);
+  AdminContainer.load(PreferenceTemplateModule);
 };
 
 initializeContainer();

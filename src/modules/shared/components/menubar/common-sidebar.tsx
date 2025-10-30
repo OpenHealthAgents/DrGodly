@@ -32,20 +32,6 @@ const isMatch = (pathname: string, slug: string) => {
 // const isActive = (pathname: string, slug: string) => {
 //   return pathname === slug || pathname.startsWith(slug);
 // };
-
-/**
- * Renders a collapsible sidebar with dynamic menu items, active-route highlighting and loading/error states.
- * @example
- * <CommonSideBar label="Admin" />
- * // Returns a JSX sidebar element ready to be embedded in a page.
- * @param {string} label - Text displayed as the sidebar group label.
- * @returns {JSX.Element} Fully composed sidebar component.
- * @description
- *   - Shows a spinner until user session data is resolved, then populates menu items.
- *   - Uses current pathname and theme to style active links and colors appropriately.
- *   - Displays an error message when menu data cannot be retrieved.
- *   - Icon components are looked up at runtime from lucide-react; falls back to LayoutGrid when missing.
- */
 export const CommonSideBar = ({ label }: { label: string }) => {
   const { data, isPending } = useSession();
   const pathname = usePathname();

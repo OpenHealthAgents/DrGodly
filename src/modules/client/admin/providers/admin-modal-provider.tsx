@@ -5,6 +5,7 @@ import {
   CreateAppMenuItemModal,
   CreateAppModal,
   CreateOrganizationModal,
+  CreatePreferenceTemplateModal,
   CreateRoleModal,
   DeleteAppMenuItemModal,
   DeleteAppModal,
@@ -45,6 +46,7 @@ export const AdminModalProvider = () => {
       <ManageOrgMembersModal />
       <ManageOrgAppsModal />
       <ManageRoleAppMenusModal />
+      <CreatePreferenceTemplateModal />
     </>
   );
 };

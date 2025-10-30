@@ -1,36 +1,21 @@
 "use client";
 
-import {
-  Bell,
-  Check,
-  ChevronRight,
-  Globe,
-  Grip,
-  LogOut,
-  Search,
-  Settings2,
-} from "lucide-react";
+import { Bell, Search } from "lucide-react";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { toast } from "sonner";
 // import { useTranslations } from "next-intl";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import Link from "next/link";
-import { ThemeSwitcher } from "@/theme/theme-switcher";
-import { useServerAction } from "zsa-react";
-import { signOut } from "@/modules/client/auth/server-actions/auth-actions";
 import LocaleSwitcher from "../LocaleSwitcher";
-import { useRouter } from "@/i18n/navigation";
+import { NavUser } from "../nav-user";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
+import { CommandSearch } from "./command-search";
 
 type TUser = {
   name?: string;
@@ -42,152 +27,67 @@ type TUser = {
 const AppNavbar = ({ user }: { user: TUser }) => {
   // const t = useTranslations("bezs");
 
-  const router = useRouter();
+  // bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60
 
-  const { name, email, image, username } = user;
+  const [scrolled, setScrolled] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
-  const { execute } = useServerAction(signOut, {
-    onError(ctx) {
-      toast("Error!", {
-        description: ctx.err.message,
-      });
-    },
-  });
+  useEffect(() => {
+    const handleScroll = () => {
+      const headerHeight = headerRef.current?.offsetHeight || 68;
+      if (window.scrollY > headerHeight) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
 
-  async function handleLogout() {
-    const [data] = await execute();
+    window.addEventListener("scroll", handleScroll);
 
-    if (data?.success) {
-      router.push("/");
-    }
-  }
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <nav className="flex items-center justify-between px-4 py-2 bg-zinc-200/50 dark:bg-zinc-900 shadow">
-      <div className="mt-1.5">
-        {/* <h1 className="text-2xl mb-0.5">
-            {t("welcome")}, {name} 👋
-          </h1>
-          <p className="text-zinc-300">{format(today, "MMMM dd, yyy")}</p> */}
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Grip className="h-6 w-6 cursor-pointer" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="shadow py-2" sideOffset={15}>
-            {/* <DropdownMenuItem className="hover:bg-none"> */}
-            <ScrollArea className="h-[500px] w-[500px]">
-              {/* <AppsList isNavItem /> */}
-            </ScrollArea>
-            {/* </DropdownMenuItem> */}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      <div className="w-[20rem] relative">
-        <Input placeholder="Search" className="pl-8 border-zinc-500" />
-        <Search className="dark:text-zinc-300 absolute w-[1.1rem] h-[1.1rem] top-[25%] left-2" />
-      </div>
-      <div className="flex items-center gap-6">
-        <div>
-          <LocaleSwitcher />
+    <header
+      ref={headerRef}
+      className={cn(
+        "sticky top-0 left-0 z-50 w-full bg-background transition-shadow duration-300",
+        scrolled && "shadow-sm"
+      )}
+    >
+      <nav className="flex items-center justify-between p-4">
+        <div className="flex items-center gap-3">
+          <SidebarTrigger
+            className="cursor-pointer max-md:scale-125"
+            variant="outline"
+          />
+          <Separator orientation="vertical" className="!h-6" />
+          {/* <InputGroup>
+            <InputGroupInput
+              placeholder="Search..."
+              className="!h-6 !rounded-4xl"
+            />
+            <InputGroupAddon>
+              <Search />
+            </InputGroupAddon>
+            <InputGroupAddon align="inline-end">
+              <KbdGroup>
+                <Kbd>⌘ k</Kbd>
+              </KbdGroup>
+            </InputGroupAddon>
+          </InputGroup> */}
+          <CommandSearch />
         </div>
-        <Bell className="h-5 w-5 text-zinc-500 dark:text-zinc-300 cursor-pointer" />
-        <DropdownMenu>
-          <DropdownMenuTrigger className="cursor-pointer">
-            <Avatar>
-              <AvatarImage src={image || "https://github.com/shadcn.png"} />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            side="bottom"
-            align="end"
-            sideOffset={10}
-            asChild
-          >
-            <div>
-              <DropdownMenuLabel className="flex items-center gap-2">
-                <Avatar>
-                  <AvatarImage src={image || "https://github.com/shadcn.png"} />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <div className="space-y-0.5">
-                  <p>
-                    {name} (@{username || "no username"})
-                  </p>
-                  <p>{email}</p>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
 
-              {/* First element */}
-              <DropdownMenuItem className="p-0 cursor-pointer w-full">
-                <ThemeSwitcher isAppNav />
-              </DropdownMenuItem>
-
-              {/* Second element */}
-              <DropdownMenuItem className="cursor-pointer">
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="cursor-pointer flex items-center justify-between w-full">
-                    <div className="flex items-center gap-2">
-                      <Globe className="!h-[1.1rem] !w-[1.1rem] dark:text-white" />
-                      <p>Change language</p>
-                    </div>
-                    <ChevronRight className="!h-[1.2rem] !w-[1.2rem] dark:text-white" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="center"
-                    side="left"
-                    sideOffset={18}
-                    className="space-y-1"
-                  >
-                    <div
-                      className="flex items-center justify-between px-1.5 py-1 cursor-pointer hover:bg-secondary"
-                      onClick={() => {}}
-                    >
-                      EN
-                      <Check className="!h-[1.2rem] !w-[1.2rem]" />
-                    </div>
-
-                    <div
-                      className="px-1 py-0.5 cursor-pointer hover:bg-secondary"
-                      onClick={() => {}}
-                    >
-                      HI
-                    </div>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </DropdownMenuItem>
-
-              {/* Third element */}
-              <DropdownMenuItem
-                className="cursor-pointer"
-                // onClick={() => router.push("/bezs/settings")}
-              >
-                <Link
-                  href="/bezs/dashboard/settings/account"
-                  className="flex items-center gap-2 cursor-pointer w-full"
-                >
-                  <Settings2 className="!h-[1.2rem] !w-[1.2rem] dark:text-white" />
-                  <p>Settings</p>
-                </Link>
-              </DropdownMenuItem>
-
-              <DropdownMenuSeparator />
-
-              {/* Fourth element */}
-              <DropdownMenuItem
-                className="flex items-center gap-2 cursor-pointer"
-                onClick={handleLogout}
-              >
-                <LogOut className="!h-[1.2rem] !w-[1.2rem] dark:text-white" />
-                <p>Logout</p>
-              </DropdownMenuItem>
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </nav>
+        <div className="flex items-center gap-6">
+          <div>
+            <LocaleSwitcher />
+          </div>
+          <Bell className="h-5 w-5 block text-zinc-500 dark:text-zinc-300 cursor-pointer" />
+          <NavUser user={user} />
+        </div>
+      </nav>
+    </header>
   );
 };
 

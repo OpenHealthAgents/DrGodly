@@ -13,3 +13,4 @@ export { DeleteRoleModal } from "./delete-role-modal";
 export { ManageOrgMembersModal } from "./manage-org-members";
 export { ManageOrgAppsModal } from "./manage-org-apps";
 export { ManageRoleAppMenusModal } from "./manage-role-appMenus-modal";
+export { CreatePreferenceTemplateModal } from "./create-preference-template-modal";

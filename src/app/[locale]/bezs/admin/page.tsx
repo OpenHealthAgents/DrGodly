@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const AdminPage = async () => {
   return (
-    <div className="p-4 space-y-8 max-w-[1240px] mx-auto">
+    <div>
       <div>
         <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
         <p>Manage Users</p>
