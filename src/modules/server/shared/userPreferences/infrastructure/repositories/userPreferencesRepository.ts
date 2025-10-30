@@ -5,7 +5,7 @@ import { injectable } from "inversify";
 import {
   TUserPreference,
   UserPreferenceSchema,
-} from "../../entities/models/userPreferences";
+} from "@/modules/shared/entities/models/userPreferences/userPreferences";
 
 @injectable()
 export class UserPreferencesRepository implements IUserPreferencesRepository {
@@ -33,7 +33,7 @@ export class UserPreferencesRepository implements IUserPreferencesRepository {
 
   async updateUserPreferences(
     fields: TUserPreference
-  ): Promise<TUserPreference | null> {
+  ): Promise<TUserPreference> {
     const { id, userId, ...datas } = fields;
 
     try {

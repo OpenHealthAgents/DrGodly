@@ -10,9 +10,11 @@
 !.yarn/releases
 !.yarn/versions
 
+/src/restapi/node_modules
+
 # prisma generate and migrate
 /prisma/generated
-/src/modules/server/prisma/generated
+/src/modules/server/prisma/generated/
 
 # vs code stuff
 .vscode

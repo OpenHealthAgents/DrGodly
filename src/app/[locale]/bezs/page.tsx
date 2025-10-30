@@ -78,6 +78,12 @@ const BezsPage = () => {
   const { data } = useSession();
   console.log(data);
 
+  async function getLocation() {
+    const res = await fetch("https://ipapi.co/json/");
+    const location = await res.json();
+    console.log(location);
+  }
+
   const form = useForm({
     resolver: zodResolver(projectSchema),
     defaultValues: {
@@ -119,6 +125,7 @@ const BezsPage = () => {
   return (
     <div className="h-full p-4">
       <h1>{t("header")}</h1>
+      <Button onClick={getLocation}>Get Location</Button>
       {/* <div className="px-4 mx-auto my-6">
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>

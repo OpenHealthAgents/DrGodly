@@ -12,6 +12,7 @@ import { NavUser } from "../nav-user";
 import { AppTitle } from "./app-title";
 import {
   Building,
+  FileSliders,
   House,
   LayoutDashboard,
   ShieldUser,
@@ -65,6 +66,11 @@ const adminSidebarData = {
           title: "RBAC",
           url: "/bezs/admin/rbac",
           icon: ShieldUser,
+        },
+        {
+          title: "Preference Templates",
+          url: "/bezs/admin/manage-preferences",
+          icon: FileSliders,
         },
       ],
     },

@@ -25,3 +25,6 @@ export const DeleteAppValidationSchema = z.object({
 export const UpdateAppValidationFormSchema = CreateAppValidationSchema.merge(
   DeleteAppValidationSchema
 );
+export type TUpdateAppValidationSchema = z.infer<
+  typeof UpdateAppValidationFormSchema
+>;

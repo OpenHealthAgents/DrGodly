@@ -29,7 +29,10 @@ export type ModalType =
   | "deleteAppMenuItem"
   | "addAppAction"
   | "editAppAction"
-  | "deleteAppAction";
+  | "deleteAppAction"
+  | "addPreferenceTemplate"
+  | "editPreferenceTemplate"
+  | "deletePreferenceTemplate";
 
 interface AdminStore {
   type: ModalType | null;

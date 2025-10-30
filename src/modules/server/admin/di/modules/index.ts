@@ -6,3 +6,4 @@ export { OrganizationAppModule } from "./organizationApp.module";
 export { OrganizationMemberModule } from "./organizationMember.module";
 export { RoleAppMenuItemModule } from "./roleAppMenuItem.module";
 export { RbacModule } from "./rbac.module";
+export { PreferenceTemplateModule } from "./preferenceTemplate.module";
