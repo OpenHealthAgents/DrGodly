@@ -29,12 +29,12 @@ const appsList = [
   {
     name: "File Nest",
     logo: "/app-icons/file-nest.svg",
-    href: "/bezs/file-nest",
+    href: "/bezs/filenest",
   },
   {
     name: "Tele Medicine",
     logo: "/app-icons/tele-medicine.svg",
-    href: "/bezs/tele-medicine",
+    href: "/bezs/telemedicine",
   },
 ];
 
@@ -81,7 +81,7 @@ export function CommandSearch() {
                 {appsList.map((app) => {
                   return (
                     <CommandItem asChild key={app.href}>
-                      <Link href={app.href}>
+                      <Link href={app.href} onClick={() => setOpen(false)}>
                         <Image
                           src={app.logo}
                           alt={app.name}

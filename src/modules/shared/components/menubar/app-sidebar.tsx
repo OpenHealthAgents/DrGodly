@@ -12,11 +12,15 @@ import { NavUser } from "../nav-user";
 import { AppTitle } from "./app-title";
 import {
   Building,
+  CalendarRange,
   FileSliders,
-  House,
   LayoutDashboard,
+  Palette,
+  Settings,
   ShieldUser,
+  UserCog,
   UserRoundCog,
+  Wrench,
 } from "lucide-react";
 import { usePathname } from "@/i18n/navigation";
 
@@ -30,12 +34,43 @@ type TUser = {
 const homeSidebarData = {
   navGroups: [
     {
-      title: "Home",
+      title: "General",
       items: [
         {
-          title: "Home",
+          title: "Dashboard",
           url: "/bezs",
-          icon: House,
+          icon: LayoutDashboard,
+        },
+        {
+          title: "Calendar",
+          url: "/bezs/calendar",
+          icon: CalendarRange,
+        },
+      ],
+    },
+    {
+      title: "Others",
+      items: [
+        {
+          title: "Settings",
+          icon: Settings,
+          items: [
+            {
+              title: "Profile",
+              url: "/bezs/settings",
+              icon: UserCog,
+            },
+            {
+              title: "Account",
+              url: "/bezs/settings/account",
+              icon: Wrench,
+            },
+            {
+              title: "Preference",
+              url: "/bezs/settings/preference",
+              icon: Palette,
+            },
+          ],
         },
       ],
     },

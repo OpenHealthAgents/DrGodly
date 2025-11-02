@@ -33,7 +33,7 @@ import {
   type NavItem,
   type NavLink,
 } from "./types";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { usePathname } from "@/i18n/navigation";
 
 export function NavGroup({ title, items }: NavGroupProps) {

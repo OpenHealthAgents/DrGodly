@@ -36,7 +36,13 @@ const themeColors: Record<string, string> = {
 
 const themeModes: string[] = ["light", "dark"];
 
-export const ThemeSwitcher = ({ isAppNav }: { isAppNav?: boolean }) => {
+export const ThemeSwitcher = ({
+  isAppNav,
+  className,
+}: {
+  isAppNav?: boolean;
+  className?: string;
+}) => {
   const { setTheme, resolvedTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
 
@@ -67,14 +73,17 @@ export const ThemeSwitcher = ({ isAppNav }: { isAppNav?: boolean }) => {
   return (
     <div className="w-full">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild className="cursor-pointer mr-2">
+        <DropdownMenuTrigger
+          asChild
+          className={cn("cursor-pointer mr-2", className)}
+        >
           <div className="flex items-center">
             <Button
               variant="ghost"
               size="icon"
               className={cn(
                 isAppNav && "pointer-events-none",
-                "cursor-pointer"
+                "cursor-pointer hover:bg-transparent"
               )}
             >
               <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 dark:text-white" />

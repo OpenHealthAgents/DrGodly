@@ -8,7 +8,7 @@ export const PreferenceTemplateSchema = z.object({
   dateFormat: z.string(),
   timeFormat: z.string(),
   currency: z.string(),
-  measurementSystem: z.string(),
+  // measurementSystem: z.string(),
   numberFormat: z.string(),
   weekStart: z.string(),
   createdAt: z.date(),

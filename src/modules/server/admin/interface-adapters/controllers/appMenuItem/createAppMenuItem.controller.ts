@@ -1,7 +1,7 @@
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
-import { TAppMenuItem } from "@/modules/shared/entities/models/admin/appMenuItem";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
+import { TAppMenuItem } from "../../../../../../modules/shared/entities/models/admin/appMenuItem";
 import { createAppMenuItemUseCase } from "../../../application/useCases/appMenuItem/createAppMenuItem.useCase";
-import { CreateAppMenuItemValidationSchema } from "@/modules/shared/schemas/admin/appMenuItemValidationSchema";
+import { CreateAppMenuItemValidationSchema } from "../../../../../../modules/shared/schemas/admin/appMenuItemValidationSchema";
 
 function presenter(appMenuItem: TAppMenuItem) {
   return appMenuItem;

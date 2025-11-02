@@ -7,9 +7,9 @@ import {
   TOrganization,
   TOrganizationsData,
   TUpdateOrganization,
-} from "@/modules/shared/entities/models/admin/organization";
-import { OperationError } from "@/modules/shared/entities/errors/commonError";
-import { prismaMain } from "@/modules/server/prisma/prisma";
+} from "../../../../../modules/shared/entities/models/admin/organization";
+import { OperationError } from "../../../../../modules/shared/entities/errors/commonError";
+import { prismaMain } from "../../../prisma/prisma";
 
 @injectable()
 export class OrganizationRepository implements IOrganizationRepository {

@@ -1,6 +1,6 @@
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
-import { AddAppToOrganizationValidationSchema as RemoveAppToOrganizationValidationSchema } from "@/modules/shared/schemas/admin/organizationAppValidationSchema";
-import { TOrganizationApp } from "@/modules/shared/entities/models/admin/organizationApp";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
+import { AddAppToOrganizationValidationSchema as RemoveAppToOrganizationValidationSchema } from "../../../../../../modules/shared/schemas/admin/organizationAppValidationSchema";
+import { TOrganizationApp } from "../../../../../../modules/shared/entities/models/admin/organizationApp";
 import { removeAppToOrganizationUseCase } from "../../../application/useCases/organizationApp/removeAppToOrganization.useCase";
 
 function presenter(organizationApp: TOrganizationApp) {

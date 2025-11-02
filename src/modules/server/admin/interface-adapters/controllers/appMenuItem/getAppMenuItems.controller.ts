@@ -1,9 +1,9 @@
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
 import { getAppMenuItemsUseCase } from "../../../application/useCases/appMenuItem/getAppMenuItems.useCase";
 import {
   AppIdSchema,
   TAppMenuItemsData,
-} from "@/modules/shared/entities/models/admin/appMenuItem";
+} from "../../../../../../modules/shared/entities/models/admin/appMenuItem";
 
 function presenter(appMenuItem: TAppMenuItemsData) {
   return appMenuItem;

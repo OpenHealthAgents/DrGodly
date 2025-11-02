@@ -1,7 +1,7 @@
-import { CreateRoleValidationSchema } from "@/modules/shared/schemas/admin/roleValidationSchema";
+import { CreateRoleValidationSchema } from "../../../../../../modules/shared/schemas/admin/roleValidationSchema";
 import { createRoleUseCase } from "../../../application/useCases/role/createRole.useCase";
-import { TRole } from "@/modules/shared/entities/models/admin/role";
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
+import { TRole } from "../../../../../../modules/shared/entities/models/admin/role";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
 
 function presenter(role: TRole) {
   return role;

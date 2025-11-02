@@ -5,10 +5,10 @@ import {
   TOrganizationMemberAndUser,
   TOrganizationMembersAndUsers,
   TRemoveMemberFromOrganization,
-} from "@/modules/shared/entities/models/admin/organizationMember";
+} from "../../../../../modules/shared/entities/models/admin/organizationMember";
 import { IOrganizationMemberRepository } from "../../application/repositories/organizationMemberRepository.interface";
-import { OperationError } from "@/modules/shared/entities/errors/commonError";
-import { prismaMain } from "@/modules/server/prisma/prisma";
+import { OperationError } from "../../../../../modules/shared/entities/errors/commonError";
+import { prismaMain } from "../../../prisma/prisma";
 import { injectable } from "inversify";
 
 @injectable()

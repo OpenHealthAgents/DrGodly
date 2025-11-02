@@ -1,9 +1,4 @@
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezonePlugin from "dayjs/plugin/timezone";
-
-dayjs.extend(utc);
-dayjs.extend(timezonePlugin);
+import moment from "moment-timezone";
 
 type Preferences = {
   country?: string;
@@ -30,7 +25,7 @@ export function createPresenter(prefs: Preferences) {
     timeFormat = "hh:mm A",
   } = prefs;
 
-  /** Parse numberFormat like "1,234.56" or "1.234,56" */
+  /** 🔍 Parse number format like "1,234.56" or "1.234,56" */
   function parseNumberFormat(format: string) {
     const parts = format.match(/1(.+)234(.+)56/);
     if (!parts) return { group: ",", decimal: "." };
@@ -40,18 +35,25 @@ export function createPresenter(prefs: Preferences) {
   const { group: groupSeparator, decimal: decimalSeparator } =
     parseNumberFormat(numberFormat);
 
-  /** 📅 Format date according to timezone and format */
+  /** 📅 Format date using Moment + timezone */
   function formatDate(date: Date | string) {
-    return dayjs(date).tz(timezone).format(dateFormat);
+    try {
+      return moment.tz(date, timezone || "UTC").format(dateFormat);
+    } catch {
+      return moment(date).utc().format(dateFormat);
+    }
   }
 
-  /** 🕒 Format time according to 12h/24h preference */
+  /** 🕒 Format time using Moment + timezone */
   function formatTime(date: Date | string) {
-    // const format = timeFormat === "12h" ? "hh:mm A" : "HH:mm";
-    return dayjs(date).tz(timezone).format(timeFormat);
+    try {
+      return moment.tz(date, timezone || "UTC").format(timeFormat);
+    } catch {
+      return moment(date).utc().format(timeFormat);
+    }
   }
 
-  /** 💰 Format currency based on locale and currency code */
+  /** 💰 Format currency based on locale and code */
   function formatCurrency(amount: number) {
     return new Intl.NumberFormat(country, {
       style: "currency",
@@ -59,9 +61,12 @@ export function createPresenter(prefs: Preferences) {
     }).format(amount);
   }
 
-  /** 🔢 Format number according to custom format pattern */
+  /** 🔢 Format number according to custom grouping/decimal pattern */
   function formatNumber(value: number) {
-    const [intPart, fracPart] = value.toFixed(2).split(".");
+    const parts = value.toFixed(2).split(".");
+    const intPart = parts[0];
+    const fracPart = parts[1] || "00";
+
     const withGrouping = intPart.replace(
       /\B(?=(\d{3})+(?!\d))/g,
       groupSeparator
@@ -69,7 +74,7 @@ export function createPresenter(prefs: Preferences) {
     return `${withGrouping}${decimalSeparator}${fracPart}`;
   }
 
-  /** 📏 Convert between metric and imperial systems */
+  /** 📏 Convert between metric and imperial units */
   function convertMeasurement(
     value: number,
     type: "distance" | "weight" | "temperature"
@@ -77,15 +82,14 @@ export function createPresenter(prefs: Preferences) {
     if (measurementSystem === "imperial") {
       switch (type) {
         case "distance":
-          return `${(value * 0.621371).toFixed(2)} mi`; // km → miles
+          return `${(value * 0.621371).toFixed(2)} mi`;
         case "weight":
-          return `${(value * 2.20462).toFixed(2)} lb`; // kg → pounds
+          return `${(value * 2.20462).toFixed(2)} lb`;
         case "temperature":
-          return `${((value * 9) / 5 + 32).toFixed(1)} °F`; // °C → °F
+          return `${((value * 9) / 5 + 32).toFixed(1)} °F`;
       }
     }
 
-    // Metric system (default)
     switch (type) {
       case "distance":
         return `${value.toFixed(2)} km`;
@@ -96,14 +100,19 @@ export function createPresenter(prefs: Preferences) {
     }
   }
 
-  /** 📆 Return start of week based on preference */
+  /** 📆 Get week start */
   function getWeekStart() {
     return weekStart;
   }
 
-  /** 🌍 Return scope (GLOBAL or COUNTRY level) */
+  /** 🌍 Get scope */
   function getScope() {
     return scope;
+  }
+
+  /** 🧭 Guess user timezone automatically */
+  function guessUserZone() {
+    return moment.tz.guess();
   }
 
   return {
@@ -114,5 +123,6 @@ export function createPresenter(prefs: Preferences) {
     convertMeasurement,
     getWeekStart,
     getScope,
+    guessUserZone,
   };
 }

@@ -1,7 +1,7 @@
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
 import { TApp } from "../../../../../shared/entities/models/admin/app";
 import { updateAppUseCase } from "../../../application/useCases/app/updateAppUseCase";
-import { UpdateAppValidationFormSchema } from "@/modules/shared/schemas/admin/appValidationSchema";
+import { UpdateAppValidationFormSchema } from "../../../../../../modules/shared/schemas/admin/appValidationSchema";
 
 function presenter(app: TApp) {
   return app;

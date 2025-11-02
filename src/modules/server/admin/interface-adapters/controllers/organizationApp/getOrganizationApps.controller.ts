@@ -1,7 +1,7 @@
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
-import { GetOrganizationAppsValidationSchema } from "@/modules/shared/schemas/admin/organizationAppValidationSchema";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
+import { GetOrganizationAppsValidationSchema } from "../../../../../../modules/shared/schemas/admin/organizationAppValidationSchema";
 import { getOrganizationAppsUseCase } from "../../../application/useCases/organizationApp/getOrganizationApps.useCase";
-import { TOrganizationApps } from "@/modules/shared/entities/models/admin/organizationApp";
+import { TOrganizationApps } from "../../../../../../modules/shared/entities/models/admin/organizationApp";
 
 function presenter(organizationApps: TOrganizationApps) {
   return organizationApps;

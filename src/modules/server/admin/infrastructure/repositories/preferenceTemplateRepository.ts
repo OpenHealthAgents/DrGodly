@@ -4,10 +4,10 @@ import {
   TCreatePreferenceTemplate,
   TPreferenceTemplate,
   TPreferenceTemplates,
-} from "@/modules/shared/entities/models/admin/preferenceTemplete";
+} from "../../../../../modules/shared/entities/models/admin/preferenceTemplete";
 import { IPreferenceTempleteRepository } from "../../application/repositories/preferenceTemplateRepository.interface";
-import { prismaMain } from "@/modules/server/prisma/prisma";
-import { OperationError } from "@/modules/shared/entities/errors/commonError";
+import { prismaMain } from "../../../prisma/prisma";
+import { OperationError } from "../../../../../modules/shared/entities/errors/commonError";
 import { injectable } from "inversify";
 
 @injectable()

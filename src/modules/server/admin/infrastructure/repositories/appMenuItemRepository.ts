@@ -1,15 +1,15 @@
-import { OperationError } from "@/modules/shared/entities/errors/commonError";
+import { OperationError } from "../../../../../modules/shared/entities/errors/commonError";
 import { IAppMenuItemRepository } from "../../application/repositories/appMenuItemRepository.interface";
-import { prismaMain } from "@/modules/server/prisma/prisma";
+import { prismaMain } from "../../../prisma/prisma";
 import {
-  AppMenuItemsDataSchema,
   AppMenuItemSchema,
+  AppMenuItemsDataSchema,
   TAppMenuItem,
   TAppMenuItemsData,
   TCreateAppMenuItem,
-  TUpdateAppMenuItem,
   TDeleteAppMenuItem,
-} from "@/modules/shared/entities/models/admin/appMenuItem";
+  TUpdateAppMenuItem,
+} from "../../../../../modules/shared/entities/models/admin/appMenuItem";
 import { injectable } from "inversify";
 
 @injectable()

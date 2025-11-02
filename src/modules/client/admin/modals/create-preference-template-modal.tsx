@@ -18,7 +18,6 @@ import { Loader2 } from "lucide-react";
 import { useSession } from "../../auth/betterauth/auth-client";
 import { useAdminModalStore } from "../stores/admin-modal-store";
 import { useServerAction } from "zsa-react";
-import { createApp } from "../server-actions/app-actions";
 import { FormSelect } from "@/modules/shared/custom-form-fields";
 import { SelectItem } from "@/components/ui/select";
 import { FieldGroup } from "@/components/ui/field";
@@ -30,14 +29,12 @@ import {
   countryOptions,
   currencyOptions,
   dateFormatOptions,
-  measurementSystemOptions,
   numberFormatOptions,
   scopeOptions,
   timeFormatOptions,
   timezoneOptions,
   weekStartOptions,
 } from "@/modules/shared/staticDatas/preference-datas";
-import { createPresenter } from "@/modules/shared/utils/user-preference";
 import { createPreferenceTemplate } from "../server-actions/preferenceTemplate-actions";
 
 export const CreatePreferenceTemplateModal = () => {
@@ -57,7 +54,6 @@ export const CreatePreferenceTemplateModal = () => {
       dateFormat: "",
       numberFormat: "",
       timezone: "",
-      measurementSystem: "",
       weekStart: "monday",
       timeFormat: "",
     },
@@ -231,7 +227,7 @@ export const CreatePreferenceTemplateModal = () => {
                   ))}
                 </FormSelect>
 
-                <FormSelect
+                {/* <FormSelect
                   control={form.control}
                   label="Measurement System"
                   name="measurementSystem"
@@ -242,12 +238,24 @@ export const CreatePreferenceTemplateModal = () => {
                       {ms.label}
                     </SelectItem>
                   ))}
+                </FormSelect> */}
+                <FormSelect
+                  control={form.control}
+                  label="Week Start Day"
+                  name="weekStart"
+                  placeholder="Select Week Start"
+                >
+                  {weekStartOptions.map((week) => (
+                    <SelectItem key={week.value} value={week.value}>
+                      {week.label}
+                    </SelectItem>
+                  ))}
                 </FormSelect>
               </div>
             </FieldGroup>
 
             {/* ================= Week Start ================= */}
-            <FieldGroup>
+            {/* <FieldGroup>
               <FormSelect
                 control={form.control}
                 label="Week Start Day"
@@ -260,7 +268,7 @@ export const CreatePreferenceTemplateModal = () => {
                   </SelectItem>
                 ))}
               </FormSelect>
-            </FieldGroup>
+            </FieldGroup> */}
 
             <DialogFooter>
               <DialogClose asChild>

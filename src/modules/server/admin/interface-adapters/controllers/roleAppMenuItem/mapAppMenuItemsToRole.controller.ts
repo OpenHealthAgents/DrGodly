@@ -1,7 +1,7 @@
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
-import { MapOrUnmapAppMenuItemToRoleValidateSchema } from "@/modules/shared/schemas/admin/roleAppMenuItemValidatorSchema";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
+import { MapOrUnmapAppMenuItemToRoleValidateSchema } from "../../../../../../modules/shared/schemas/admin/roleAppMenuItemValidatorSchema";
 import { mapAppMenuItemsToRoleUseCase } from "../../../application/useCases/roleAppMenuItem/mapAppMenuItemsToRole.useCase";
-import { TRoleAppMenuItem } from "@/modules/shared/entities/models/admin/roleAppMenuItem";
+import { TRoleAppMenuItem } from "../../../../../../modules/shared/entities/models/admin/roleAppMenuItem";
 
 function presenter(roleAppMenuItem: TRoleAppMenuItem) {
   return roleAppMenuItem;

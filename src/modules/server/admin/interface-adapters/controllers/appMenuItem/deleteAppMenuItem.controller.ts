@@ -1,7 +1,7 @@
-import { DeleteAppMenuItemValidationSchema } from "@/modules/shared/schemas/admin/appMenuItemValidationSchema";
+import { DeleteAppMenuItemValidationSchema } from "../../../../../../modules/shared/schemas/admin/appMenuItemValidationSchema";
 import { deleteAppMenuItemUseCase } from "../../../application/useCases/appMenuItem/deleteAppMenuItem.useCase";
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
-import { TAppMenuItem } from "@/modules/shared/entities/models/admin/appMenuItem";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
+import { TAppMenuItem } from "../../../../../../modules/shared/entities/models/admin/appMenuItem";
 
 function presenter(appMenuItem: TAppMenuItem) {
   return appMenuItem;

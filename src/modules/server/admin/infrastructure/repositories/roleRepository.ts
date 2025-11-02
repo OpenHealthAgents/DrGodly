@@ -5,10 +5,10 @@ import {
   TRole,
   TRolesData,
   TUpdateRole,
-} from "@/modules/shared/entities/models/admin/role";
+} from "../../../../../modules/shared/entities/models/admin/role";
 import { IRoleRepository } from "../../application/repositories/roleRepository.interface";
-import { OperationError } from "@/modules/shared/entities/errors/commonError";
-import { prismaMain } from "@/modules/server/prisma/prisma";
+import { OperationError } from "../../../../../modules/shared/entities/errors/commonError";
+import { prismaMain } from "../../../prisma/prisma";
 import { injectable } from "inversify";
 
 @injectable()

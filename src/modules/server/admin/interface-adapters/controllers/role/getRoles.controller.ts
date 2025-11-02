@@ -1,4 +1,4 @@
-import { TRolesData } from "@/modules/shared/entities/models/admin/role";
+import { TRolesData } from "../../../../../../modules/shared/entities/models/admin/role";
 import { getRolesUseCase } from "../../../application/useCases/role/getRoles.useCase";
 
 function presenter(roleDatas: TRolesData) {

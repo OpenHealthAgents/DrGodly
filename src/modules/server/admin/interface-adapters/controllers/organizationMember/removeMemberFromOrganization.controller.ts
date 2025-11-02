@@ -1,7 +1,7 @@
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
-import { RemoveMemberFromOrganizationValidationSchema } from "@/modules/shared/schemas/admin/organizationMemberValidationSchema";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
+import { RemoveMemberFromOrganizationValidationSchema } from "../../../../../../modules/shared/schemas/admin/organizationMemberValidationSchema";
 import { removeMemberFromOrganizationUseCase } from "../../../application/useCases/organizationMember/removeMemberFromOrganization.useCase";
-import { TOrganizationMemberAndUser } from "@/modules/shared/entities/models/admin/organizationMember";
+import { TOrganizationMemberAndUser } from "../../../../../../modules/shared/entities/models/admin/organizationMember";
 
 function presenter(organizationMember: TOrganizationMemberAndUser) {
   return organizationMember;

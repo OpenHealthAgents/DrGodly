@@ -1,7 +1,7 @@
-import { DeleteOrganizationFormSchema } from "@/modules/shared/schemas/admin/organizationValidationSchema";
+import { DeleteOrganizationFormSchema } from "../../../../../../modules/shared/schemas/admin/organizationValidationSchema";
 import { deleteOrganizationUseCase } from "../../../application/useCases/organization/deleteOrganization.useCase";
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
-import { TOrganization } from "@/modules/shared/entities/models/admin/organization";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
+import { TOrganization } from "../../../../../../modules/shared/entities/models/admin/organization";
 
 function presenter(organization: TOrganization) {
   return organization;

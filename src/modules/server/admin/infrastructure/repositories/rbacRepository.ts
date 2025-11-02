@@ -1,13 +1,13 @@
-import { prismaMain } from "@/modules/server/prisma/prisma";
+import { prismaMain } from "../../../prisma/prisma";
 import { IrbacRepository } from "../../application/repositories/rbacRepository.interface";
-import { OperationError } from "@/modules/shared/entities/errors/commonError";
+import { OperationError } from "../../../../../modules/shared/entities/errors/commonError";
 import {
   RbacDatasSchema,
   RbacSchema,
   TMapOrUnmapRbacUserOrganizationRoleInput,
   TRbac,
   TRbacDatas,
-} from "@/modules/shared/entities/models/admin/rbac";
+} from "../../../../../modules/shared/entities/models/admin/rbac";
 import { injectable } from "inversify";
 
 @injectable()

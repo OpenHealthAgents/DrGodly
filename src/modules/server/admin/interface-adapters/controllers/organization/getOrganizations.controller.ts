@@ -1,4 +1,4 @@
-import { TOrganizationsData } from "@/modules/shared/entities/models/admin/organization";
+import { TOrganizationsData } from "../../../../../../modules/shared/entities/models/admin/organization";
 import { getOrganizationsUseCase } from "../../../application/useCases/organization/getOrganizations.useCase";
 
 function presenter(organizationDatas: TOrganizationsData) {

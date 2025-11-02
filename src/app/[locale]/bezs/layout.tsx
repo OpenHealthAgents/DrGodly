@@ -30,7 +30,7 @@ const AppListingLayout = async ({
       <AppSidebar user={user} />
       <SidebarInset className="min-w-0">
         <AppNavbar user={user} />
-        <main className="mx-auto p-6 space-y-6 w-full">
+        <main className="mx-auto px-8 max-w-[110rem] space-y-6 w-full">
           <BreadCrumb />
           <div className="w-full">{children}</div>
         </main>

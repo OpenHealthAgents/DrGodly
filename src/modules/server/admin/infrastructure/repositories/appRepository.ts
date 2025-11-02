@@ -1,14 +1,14 @@
-import { prismaMain } from "@/modules/server/prisma/prisma";
+import { prismaMain } from "../../../prisma/prisma";
 import { IAppRepository } from "../../application/repositories/appRepository.interface";
-import { OperationError } from "@/modules/shared/entities/errors/commonError";
+import { OperationError } from "../../../../../modules/shared/entities/errors/commonError";
 import {
+  AppDatasSchema,
+  AppSchema,
   TApp,
   TAppDatas,
-  AppDatasSchema,
   TCreateApp,
-  AppSchema,
   TUpdateApp,
-} from "@/modules/shared/entities/models/admin/app";
+} from "../../../../../modules/shared/entities/models/admin/app";
 import { injectable } from "inversify";
 
 @injectable()
