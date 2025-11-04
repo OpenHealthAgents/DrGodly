@@ -1,4 +1,4 @@
-import RootNavBarPage from "@/modules/shared/components/navbar/root-navbar";
+import RootNavBarPage from "@/modules/client/home/components/root-navbar";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (

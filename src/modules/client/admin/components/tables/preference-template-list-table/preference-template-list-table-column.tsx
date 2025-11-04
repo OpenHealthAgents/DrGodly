@@ -71,10 +71,6 @@ export const preferenceTemplateListTableColumn: ColumnDef<TPreferenceTemplate>[]
       accessorKey: "currency",
     },
     {
-      header: "Measurement System",
-      accessorKey: "measurementSystem",
-    },
-    {
       header: "Number Format",
       accessorKey: "numberFormat",
     },

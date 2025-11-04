@@ -1,6 +1,6 @@
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
-import { MapOrUnmapAppMenuItemToRoleValidateSchema } from "@/modules/shared/schemas/admin/roleAppMenuItemValidatorSchema";
-import { TRoleAppMenuItem } from "@/modules/shared/entities/models/admin/roleAppMenuItem";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
+import { MapOrUnmapAppMenuItemToRoleValidateSchema } from "../../../../../../modules/shared/schemas/admin/roleAppMenuItemValidatorSchema";
+import { TRoleAppMenuItem } from "../../../../../../modules/shared/entities/models/admin/roleAppMenuItem";
 import { unmapAppMenuItemsToRoleUseCase } from "../../../application/useCases/roleAppMenuItem/unmapAppMenuItemsToRole.useCase";
 
 function presenter(roleAppMenuItem: TRoleAppMenuItem) {
@@ -15,7 +15,7 @@ export async function unmapAppMenuItemsToRoleController(
   input: any
 ): Promise<TUnMapAppMenuItemsToRoleControllerOutput> {
   const { data, error: inputParseError } =
-    MapOrUnmapAppMenuItemToRoleValidateSchema.safeParse(input);
+    MapOrUnmapAppMenuItemToRoleValidateSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

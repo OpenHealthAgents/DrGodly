@@ -1,12 +1,12 @@
-import { OperationError } from "@/modules/shared/entities/errors/commonError";
+import { OperationError } from "../../../../../modules/shared/entities/errors/commonError";
 import { IOrganizationAppRepository } from "../../application/repositories/organizationAppRepository.interface";
-import { prismaMain } from "@/modules/server/prisma/prisma";
+import { prismaMain } from "../../../prisma/prisma";
 import {
   OrganizationAppSchema,
   OrganizationAppsSchema,
   TOrganizationApp,
   TOrganizationApps,
-} from "@/modules/shared/entities/models/admin/organizationApp";
+} from "../../../../../modules/shared/entities/models/admin/organizationApp";
 import { injectable } from "inversify";
 
 @injectable()
@@ -40,7 +40,7 @@ export class OrganizationAppRepository implements IOrganizationAppRepository {
         },
       });
 
-      return OrganizationAppsSchema.parse({
+      return OrganizationAppsSchema.parseAsync({
         organizationApps: data,
         total,
       });
@@ -82,7 +82,7 @@ export class OrganizationAppRepository implements IOrganizationAppRepository {
         return null;
       }
 
-      return OrganizationAppSchema.parse(data);
+      return OrganizationAppSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -117,7 +117,7 @@ export class OrganizationAppRepository implements IOrganizationAppRepository {
         },
       });
 
-      return OrganizationAppSchema.parse(data);
+      return OrganizationAppSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -154,7 +154,7 @@ export class OrganizationAppRepository implements IOrganizationAppRepository {
         },
       });
 
-      return OrganizationAppSchema.parse(data);
+      return OrganizationAppSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

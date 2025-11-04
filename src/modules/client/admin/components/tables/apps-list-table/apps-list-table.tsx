@@ -5,13 +5,24 @@ import { appsListTableColumn } from "./apps-list-table-column";
 import { useAdminModalStore } from "@/modules/client/admin/stores/admin-modal-store";
 import type { ZSAError } from "zsa";
 import { TAppDatas } from "@/modules/shared/entities/models/admin/app";
+import { clientLogger } from "@/modules/shared/utils/client-logger";
+import { usePathname } from "@/i18n/navigation";
+
+type TUser = {
+  id: string;
+  name: string;
+  username?: string | null;
+  email: string;
+};
 
 type IAppsListTable = {
   appDatas: TAppDatas | null;
   error: ZSAError | null;
+  user: TUser;
 };
 
-export const AppsListTable = ({ appDatas, error }: IAppsListTable) => {
+export const AppsListTable = ({ appDatas, error, user }: IAppsListTable) => {
+  const pathname = usePathname();
   const openModal = useAdminModalStore((state) => state.onOpen);
 
   const typeFilteredData = ["platform", "custom"];
@@ -38,11 +49,23 @@ export const AppsListTable = ({ appDatas, error }: IAppsListTable) => {
           }
           filterField="type"
           filterValues={typeFilteredData}
-          openModal={() =>
+          openModal={() => {
             openModal({
               type: "addApp",
-            })
-          }
+            });
+
+            clientLogger.info(
+              clientLogger.fmt`${user.id}(${
+                user.username ?? "No username"
+              }) clicked the Add App button`,
+              {
+                extra: {
+                  action: "add_app_button_click",
+                  path: pathname,
+                },
+              }
+            );
+          }}
         />
       </div>
     </>

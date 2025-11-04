@@ -1,7 +1,7 @@
-import { DeleteOrganizationFormSchema } from "@/modules/shared/schemas/admin/organizationValidationSchema";
+import { DeleteOrganizationFormSchema } from "../../../../../../modules/shared/schemas/admin/organizationValidationSchema";
 import { deleteOrganizationUseCase } from "../../../application/useCases/organization/deleteOrganization.useCase";
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
-import { TOrganization } from "@/modules/shared/entities/models/admin/organization";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
+import { TOrganization } from "../../../../../../modules/shared/entities/models/admin/organization";
 
 function presenter(organization: TOrganization) {
   return organization;
@@ -13,7 +13,7 @@ export async function deleteOrganizationController(
   input: any
 ): Promise<TDeleteOrganizationControllerOutput> {
   const { data, error: inputParseError } =
-    DeleteOrganizationFormSchema.safeParse(input);
+    DeleteOrganizationFormSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

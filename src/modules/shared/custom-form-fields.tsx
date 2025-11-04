@@ -200,8 +200,14 @@ export const FormRadioGroup: TFormControlFunc<{
         <RadioGroup
           {...field}
           id={id}
-          value={value ?? ""}
-          onValueChange={onChange}
+          value={
+            value === true ? "true" : value === false ? "false" : value ?? ""
+          }
+          onValueChange={(val) => {
+            if (val === "true") onChange(true);
+            else if (val === "false") onChange(false);
+            else onChange(val);
+          }}
           className={className}
         >
           {children}

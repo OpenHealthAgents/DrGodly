@@ -1,7 +1,7 @@
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
-import { AddMemberToOrganizationValidationSchema } from "@/modules/shared/schemas/admin/organizationMemberValidationSchema";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
+import { AddMemberToOrganizationValidationSchema } from "../../../../../../modules/shared/schemas/admin/organizationMemberValidationSchema";
 import { addMemberToOrganizationUseCase } from "../../../application/useCases/organizationMember/addMemberToOrganization.useCase";
-import { TOrganizationMemberAndUser } from "@/modules/shared/entities/models/admin/organizationMember";
+import { TOrganizationMemberAndUser } from "../../../../../../modules/shared/entities/models/admin/organizationMember";
 
 function presenter(organizationMember: TOrganizationMemberAndUser) {
   return organizationMember;
@@ -15,7 +15,7 @@ export async function addMemberToOrganizationController(
   input: any
 ): Promise<TAddMemberToOrganizationControllerOutput> {
   const { data, error: inputParseError } =
-    AddMemberToOrganizationValidationSchema.safeParse(input);
+    AddMemberToOrganizationValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

@@ -5,10 +5,10 @@ import {
   TOrganizationMemberAndUser,
   TOrganizationMembersAndUsers,
   TRemoveMemberFromOrganization,
-} from "@/modules/shared/entities/models/admin/organizationMember";
+} from "../../../../../modules/shared/entities/models/admin/organizationMember";
 import { IOrganizationMemberRepository } from "../../application/repositories/organizationMemberRepository.interface";
-import { OperationError } from "@/modules/shared/entities/errors/commonError";
-import { prismaMain } from "@/modules/server/prisma/prisma";
+import { OperationError } from "../../../../../modules/shared/entities/errors/commonError";
+import { prismaMain } from "../../../prisma/prisma";
 import { injectable } from "inversify";
 
 @injectable()
@@ -41,12 +41,12 @@ export class OrganizationMemberRepository
         },
       });
 
-      const dataWithTotal = OrganizationMembersAndUsersSchema.parse({
+      const dataWithTotal = OrganizationMembersAndUsersSchema.parseAsync({
         organizationMembersAndUsers: data,
         total,
       });
 
-      return OrganizationMembersAndUsersSchema.parse(dataWithTotal);
+      return OrganizationMembersAndUsersSchema.parseAsync(dataWithTotal);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -82,7 +82,7 @@ export class OrganizationMemberRepository
         },
       });
 
-      return OrganizationMemberAndUserSchema.parse(data);
+      return OrganizationMemberAndUserSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -118,7 +118,7 @@ export class OrganizationMemberRepository
         },
       });
 
-      return OrganizationMemberAndUserSchema.parse(data);
+      return OrganizationMemberAndUserSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -154,7 +154,7 @@ export class OrganizationMemberRepository
         },
       });
 
-      return OrganizationMemberAndUserSchema.parse(data);
+      return OrganizationMemberAndUserSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -192,7 +192,7 @@ export class OrganizationMemberRepository
         return null;
       }
 
-      return OrganizationMemberAndUserSchema.parse(data);
+      return OrganizationMemberAndUserSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

@@ -8,7 +8,7 @@ export const PreferenceTemplateValidationSchema = z
     dateFormat: z.string().min(1, "Date format is required"),
     timeFormat: z.string().min(1, "Time format is required"),
     currency: z.string().min(1, "Currency is required"),
-    measurementSystem: z.string().min(1, "Measurement system is required"),
+    // measurementSystem: z.string().min(1, "Measurement system is required"),
     numberFormat: z.string().min(1, "Number format is required"),
     weekStart: z.string().min(1, "Week start day is required"),
   })

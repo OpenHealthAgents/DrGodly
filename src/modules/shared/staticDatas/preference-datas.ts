@@ -25,6 +25,7 @@ export const timezoneOptions = [
   { label: "America/Los_Angeles", value: "America/Los_Angeles" },
   { label: "Europe/London", value: "Europe/London" },
   { label: "Europe/Berlin", value: "Europe/Berlin" },
+  { label: "Europe/Paris", value: "Europe/Paris" },
   { label: "Asia/Kolkata", value: "Asia/Kolkata" },
   { label: "Asia/Tokyo", value: "Asia/Tokyo" },
   { label: "Asia/Dubai", value: "Asia/Dubai" },
@@ -92,7 +93,7 @@ export const regionalPresets = {
     country: "US",
     timezone: "America/New_York",
     dateFormat: "MM/DD/YYYY",
-    timeFormat: "hh:mm A", // 12-hour
+    timeFormat: "hh:mm A",
     currency: "USD",
     measurementSystem: "imperial",
     numberFormat: "1,234.56",
@@ -102,7 +103,7 @@ export const regionalPresets = {
     country: "GB",
     timezone: "Europe/London",
     dateFormat: "DD/MM/YYYY",
-    timeFormat: "HH:mm", // 24-hour
+    timeFormat: "HH:mm",
     currency: "GBP",
     measurementSystem: "metric",
     numberFormat: "1,234.56",
@@ -112,7 +113,7 @@ export const regionalPresets = {
     country: "IN",
     timezone: "Asia/Kolkata",
     dateFormat: "DD/MM/YYYY",
-    timeFormat: "hh:mm A", // 12-hour
+    timeFormat: "hh:mm A",
     currency: "INR",
     measurementSystem: "metric",
     numberFormat: "1,23,456.78",

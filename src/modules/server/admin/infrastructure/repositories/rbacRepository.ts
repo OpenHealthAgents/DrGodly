@@ -1,13 +1,13 @@
-import { prismaMain } from "@/modules/server/prisma/prisma";
+import { prismaMain } from "../../../prisma/prisma";
 import { IrbacRepository } from "../../application/repositories/rbacRepository.interface";
-import { OperationError } from "@/modules/shared/entities/errors/commonError";
+import { OperationError } from "../../../../../modules/shared/entities/errors/commonError";
 import {
   RbacDatasSchema,
   RbacSchema,
   TMapOrUnmapRbacUserOrganizationRoleInput,
   TRbac,
   TRbacDatas,
-} from "@/modules/shared/entities/models/admin/rbac";
+} from "../../../../../modules/shared/entities/models/admin/rbac";
 import { injectable } from "inversify";
 
 @injectable()
@@ -46,7 +46,7 @@ export class RbacRepository implements IrbacRepository {
 
       const total = await prismaMain.rBAC.count();
 
-      return RbacDatasSchema.parse({
+      return RbacDatasSchema.parseAsync({
         rbacDatas: data,
         total,
       });
@@ -93,7 +93,7 @@ export class RbacRepository implements IrbacRepository {
         },
       });
 
-      return RbacSchema.parse(data);
+      return RbacSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -139,7 +139,7 @@ export class RbacRepository implements IrbacRepository {
         },
       });
 
-      return RbacSchema.parse(data);
+      return RbacSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

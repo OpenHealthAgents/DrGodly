@@ -1,7 +1,7 @@
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
-import { MapOrUnMapRbacUserOrgRoleValidationSchema } from "@/modules/shared/schemas/admin/rbacValidationSchema";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
+import { MapOrUnMapRbacUserOrgRoleValidationSchema } from "../../../../../../modules/shared/schemas/admin/rbacValidationSchema";
 import { mapRbacUserOrganizationRoleUseCase } from "../../../application/useCases/rbac/mapRbacUserOrganizationRole.useCase";
-import { TRbac } from "@/modules/shared/entities/models/admin/rbac";
+import { TRbac } from "../../../../../../modules/shared/entities/models/admin/rbac";
 
 function presenter(rbac: TRbac) {
   return rbac;
@@ -15,7 +15,7 @@ export async function mapRbacUserOrganizationRoleController(
   input: any
 ): Promise<TmapRbacUserOrganizationRoleControllerOutPut> {
   const { data, error: inputParseError } =
-    MapOrUnMapRbacUserOrgRoleValidationSchema.safeParse(input);
+    MapOrUnMapRbacUserOrgRoleValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

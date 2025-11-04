@@ -19,7 +19,7 @@ export async function signInWithEmailController(
     "IBetterauthAuthenticationService"
   );
   const { data, error: inputParseError } =
-    SignInWithEmailSchema.safeParse(input);
+    SignInWithEmailSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

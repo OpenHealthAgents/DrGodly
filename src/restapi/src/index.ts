@@ -1,10 +1,11 @@
+import "dotenv/config";
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import {
-  getAppsController,
-  deleteAppController,
-  updateAppController,
   createAppController,
+  deleteAppController,
+  getAppsController,
+  updateAppController,
 } from "../../modules/server/admin/interface-adapters/controllers/app";
 import {
   InputParseError,
@@ -14,11 +15,17 @@ import {
   TCreateAppForm,
   TUpdateAppValidationSchema,
 } from "../../modules/shared/schemas/admin/appValidationSchema";
+import { authMiddleware } from "./middleware/auth";
 
-const app = new Hono();
+const app = new Hono().basePath("/api");
+
+app.use("*", async (c, next) => {
+  if (c.req.path === "/api/check") return next();
+  return authMiddleware(c, next);
+});
 
 app.get("/", (c) => c.text("Hono backend is running 🚀"));
-app.get("/health", (c) => c.json({ ok: true }));
+app.get("/check", (c) => c.json({ ok: true }));
 
 app.get("/admin/get-apps", async (c) => {
   try {

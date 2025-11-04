@@ -1,5 +1,5 @@
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
-import { PreferenceTemplateValidationSchema } from "@/modules/shared/schemas/admin/preferenceTemplateValidationSchema";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
+import { PreferenceTemplateValidationSchema } from "../../../../../../modules/shared/schemas/admin/preferenceTemplateValidationSchema";
 import { createPreferenceTemplateUseCase } from "../../../application/useCases/preferenceTemplete/createPreferenceTemplate.useCase";
 
 function presenter(preferenceTemplate: any) {
@@ -14,7 +14,7 @@ export async function createPreferenceTemplateController(
   input: any
 ): Promise<TCreatePreferenceTemplateControllerOutput> {
   const { data, error: inputParseError } =
-    PreferenceTemplateValidationSchema.safeParse(input);
+    PreferenceTemplateValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

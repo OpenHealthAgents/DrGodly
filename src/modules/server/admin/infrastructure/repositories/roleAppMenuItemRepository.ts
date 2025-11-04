@@ -5,10 +5,10 @@ import {
   TMapOrUnmapAppMenuItemsToRoleInput,
   TRoleAppMenuItem,
   TRoleAppMenuItemsData,
-} from "@/modules/shared/entities/models/admin/roleAppMenuItem";
+} from "../../../../../modules/shared/entities/models/admin/roleAppMenuItem";
 import { IRoleAppMenuItemRepository } from "../../application/repositories/roleAppMenuItemRepository.interface";
-import { OperationError } from "@/modules/shared/entities/errors/commonError";
-import { prismaMain } from "@/modules/server/prisma/prisma";
+import { OperationError } from "../../../../../modules/shared/entities/errors/commonError";
+import { prismaMain } from "../../../prisma/prisma";
 import { injectable } from "inversify";
 
 @injectable()
@@ -25,7 +25,7 @@ export class RoleAppMenuItemRepository implements IRoleAppMenuItemRepository {
         },
       });
 
-      return RoleAppMenuItemsDataSchema.parse(data);
+      return RoleAppMenuItemsDataSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -47,7 +47,7 @@ export class RoleAppMenuItemRepository implements IRoleAppMenuItemRepository {
         },
       });
 
-      return RoleAppMenuItemSchema.parse(data);
+      return RoleAppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -71,7 +71,7 @@ export class RoleAppMenuItemRepository implements IRoleAppMenuItemRepository {
         },
       });
 
-      return RoleAppMenuItemSchema.parse(data);
+      return RoleAppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

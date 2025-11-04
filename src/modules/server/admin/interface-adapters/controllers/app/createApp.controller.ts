@@ -1,7 +1,7 @@
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
 import { TApp } from "../../../../../shared/entities/models/admin/app";
 import { createAppUseCase } from "../../../application/useCases/app/createApp.useCase";
-import { CreateAppValidationSchema } from "@/modules/shared/schemas/admin/appValidationSchema";
+import { CreateAppValidationSchema } from "../../../../../../modules/shared/schemas/admin/appValidationSchema";
 
 function presenter(app: TApp) {
   return app;
@@ -14,7 +14,7 @@ export async function createAppController(
 ): Promise<TCreateAppControllerOutput> {
   // TODO validate input, orchestrate use-cases
   const { data, error: inputParseError } =
-    CreateAppValidationSchema.safeParse(input);
+    await CreateAppValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

@@ -1,7 +1,7 @@
-import { DeleteRoleValidationSchema } from "@/modules/shared/schemas/admin/roleValidationSchema";
+import { DeleteRoleValidationSchema } from "../../../../../../modules/shared/schemas/admin/roleValidationSchema";
 import { deleteRoleUseCase } from "../../../application/useCases/role/deleteRole.useCase";
-import { InputParseError } from "@/modules/shared/entities/errors/commonError";
-import { TRole } from "@/modules/shared/entities/models/admin/role";
+import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
+import { TRole } from "../../../../../../modules/shared/entities/models/admin/role";
 
 function presenter(role: TRole) {
   return role;
@@ -13,7 +13,7 @@ export async function deleteRoleController(
   input: any
 ): Promise<TDeleteRoleControllerOutput> {
   const { data, error: inputParseError } =
-    DeleteRoleValidationSchema.safeParse(input);
+    DeleteRoleValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

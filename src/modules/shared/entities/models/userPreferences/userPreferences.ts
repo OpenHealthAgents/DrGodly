@@ -5,14 +5,21 @@ export const UserPreferenceSchema = z.object({
   userId: z.string().min(1, "User ID is required"),
   timezone: z.string(),
   dateFormat: z.string(),
-  timeFormat: z.enum(["12h", "24h"]),
-  country: z.string(),
+  timeFormat: z.string(),
+  country: z.string().optional(),
   currency: z.string(),
-  measurementSystem: z.enum(["metric", "imperial"]),
+  // measurementSystem: z.enum(["metric", "imperial"]),
   numberFormat: z.string(),
-  weekStart: z.enum(["saturday", "sunday", "monday"]),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  weekStart: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 export type TUserPreference = z.infer<typeof UserPreferenceSchema>;
+
+export const updateUserPreferenceSchema = UserPreferenceSchema.omit({
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type TUpdateUserPreference = z.infer<typeof updateUserPreferenceSchema>;

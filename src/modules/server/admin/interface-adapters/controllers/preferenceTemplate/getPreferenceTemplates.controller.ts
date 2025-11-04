@@ -1,4 +1,4 @@
-import { TPreferenceTemplates } from "@/modules/shared/entities/models/admin/preferenceTemplete";
+import { TPreferenceTemplates } from "../../../../../../modules/shared/entities/models/admin/preferenceTemplete";
 import { getPreferenceTemplatesUseCase } from "../../../application/useCases/preferenceTemplete/getPreferenceTemplates.useCase";
 
 function presenter(preferenceTemplates: TPreferenceTemplates) {

@@ -18,38 +18,49 @@ import {
   deleteAppController,
   updateAppController,
 } from "@/modules/server/admin/interface-adapters/controllers/app";
+import { getSharedInjection } from "@/modules/server/shared/di/container";
 
 export const getAllAppsData = createServerAction().handler(async () => {
-  let appDatas: TAppDatas;
+  const monitoringService = getSharedInjection("IMonitoringService");
 
-  try {
-    appDatas = await getAppsController();
-  } catch (err) {
-    if (err instanceof InputParseError) {
-      throw new ZSAError("INPUT_PARSE_ERROR", err.message);
+  return monitoringService.instrumentServerAction(
+    "getAllAppsData",
+    { op: "server.action" },
+    async () => {
+      let appDatas: TAppDatas;
+
+      try {
+        appDatas = await getAppsController();
+      } catch (err) {
+        if (err instanceof InputParseError) {
+          throw new ZSAError("INPUT_PARSE_ERROR", err.message);
+        }
+
+        if (err instanceof OperationError) {
+          monitoringService.report(err);
+          console.log("Error reported to sentry");
+          throw new ZSAError("ERROR", "Failed to get apps.");
+        }
+
+        throw new ZSAError("ERROR", err);
+      }
+
+      return appDatas;
     }
-
-    if (err instanceof OperationError) {
-      console.log(err);
-      throw new ZSAError("ERROR", "Failed to get apps.");
-    }
-
-    throw new ZSAError("ERROR", err);
-  }
-
-  return appDatas;
+  );
 });
 
 export const createApp = createServerAction()
   .input(CreateAppValidationSchema, { skipInputParsing: true })
   .handler(async ({ input }) => {
+    // const monitoringService = getSharedInjection("IMonitoringService");
     let appData: TApp;
 
     try {
       appData = await createAppController(input);
     } catch (err) {
       if (err instanceof InputParseError) {
-        throw new ZSAError("INPUT_PARSE_ERROR", err.message);
+        throw new ZSAError("INPUT_PARSE_ERROR", err.cause);
       }
 
       if (err instanceof OperationError) {

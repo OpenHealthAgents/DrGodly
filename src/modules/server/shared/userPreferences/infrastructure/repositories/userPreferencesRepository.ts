@@ -3,6 +3,7 @@ import { OperationError } from "@/modules/shared/entities/errors/commonError";
 import { IUserPreferencesRepository } from "../../application/repositories/userPreferencesRepository.interface";
 import { injectable } from "inversify";
 import {
+  TUpdateUserPreference,
   TUserPreference,
   UserPreferenceSchema,
 } from "@/modules/shared/entities/models/userPreferences/userPreferences";
@@ -19,7 +20,7 @@ export class UserPreferencesRepository implements IUserPreferencesRepository {
         return null;
       }
 
-      return UserPreferenceSchema.parse(userPreferences);
+      return UserPreferenceSchema.parseAsync(userPreferences);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -32,7 +33,7 @@ export class UserPreferencesRepository implements IUserPreferencesRepository {
   }
 
   async updateUserPreferences(
-    fields: TUserPreference
+    fields: TUpdateUserPreference
   ): Promise<TUserPreference> {
     const { id, userId, ...datas } = fields;
 
@@ -42,7 +43,7 @@ export class UserPreferencesRepository implements IUserPreferencesRepository {
         data: datas,
       });
 
-      return UserPreferenceSchema.parse(userPreferences);
+      return UserPreferenceSchema.parseAsync(userPreferences);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

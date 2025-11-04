@@ -226,11 +226,33 @@ export const auth = betterAuth({
       });
 
       if (!userPreferences) {
-        userPreferences = await prismaMain.userPreference.create({
-          data: {
-            userId,
-          },
-        });
+        const preferenceTemplate =
+          await prismaMain.preferenceTemplate.findFirst({
+            where: {
+              scope: "GLOBAL",
+            },
+            omit: {
+              id: true,
+              scope: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+          });
+
+        if (preferenceTemplate) {
+          userPreferences = await prismaMain.userPreference.create({
+            data: {
+              userId,
+              ...preferenceTemplate,
+            },
+          });
+        } else {
+          userPreferences = await prismaMain.userPreference.create({
+            data: {
+              userId,
+            },
+          });
+        }
       }
 
       /*

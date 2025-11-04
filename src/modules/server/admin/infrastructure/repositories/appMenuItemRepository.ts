@@ -1,15 +1,15 @@
-import { OperationError } from "@/modules/shared/entities/errors/commonError";
+import { OperationError } from "../../../../../modules/shared/entities/errors/commonError";
 import { IAppMenuItemRepository } from "../../application/repositories/appMenuItemRepository.interface";
-import { prismaMain } from "@/modules/server/prisma/prisma";
+import { prismaMain } from "../../../prisma/prisma";
 import {
-  AppMenuItemsDataSchema,
   AppMenuItemSchema,
+  AppMenuItemsDataSchema,
   TAppMenuItem,
   TAppMenuItemsData,
   TCreateAppMenuItem,
-  TUpdateAppMenuItem,
   TDeleteAppMenuItem,
-} from "@/modules/shared/entities/models/admin/appMenuItem";
+  TUpdateAppMenuItem,
+} from "../../../../../modules/shared/entities/models/admin/appMenuItem";
 import { injectable } from "inversify";
 
 @injectable()
@@ -33,7 +33,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         },
       });
 
-      const data = AppMenuItemsDataSchema.parse({
+      const data = AppMenuItemsDataSchema.parseAsync({
         appMenuItemsData: appMenuItems,
         total,
       });
@@ -60,7 +60,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         },
       });
 
-      return AppMenuItemSchema.parse(data);
+      return AppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -89,7 +89,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         return null;
       }
 
-      return AppMenuItemSchema.parse(data);
+      return AppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -117,7 +117,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         },
       });
 
-      return AppMenuItemSchema.parse(data);
+      return AppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -140,7 +140,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         },
       });
 
-      return AppMenuItemSchema.parse(data);
+      return AppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
