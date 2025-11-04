@@ -13,7 +13,7 @@ export async function createRoleController(
   input: any
 ): Promise<TCreateRoleControllerOutput> {
   const { data, error: inputParseError } =
-    CreateRoleValidationSchema.safeParse(input);
+    CreateRoleValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

@@ -12,7 +12,7 @@ export async function signInController(input: TSignIn) {
     "IKeycloakAuthenticationService"
   );
 
-  const parsed = SignInSchema.safeParse(input);
+  const parsed = SignInSchema.safeParseAsync(input);
 
   if (parsed.error && !parsed.success) {
     throw new InputParseError(parsed.error.name, { cause: parsed.error });
@@ -22,7 +22,7 @@ export async function signInController(input: TSignIn) {
 
   if (isKeycloak) {
     const data = await keycloakAuthenticationService.signIn({
-      ...parsed.data,
+      ...parseAsyncd.data,
     });
 
     return data;

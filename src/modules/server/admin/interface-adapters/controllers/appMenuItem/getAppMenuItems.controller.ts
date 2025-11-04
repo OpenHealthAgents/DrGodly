@@ -14,7 +14,7 @@ export type getAppMenuItemsControllerOutputType = ReturnType<typeof presenter>;
 export async function getAppMenuItemsController(
   input: any
 ): Promise<getAppMenuItemsControllerOutputType> {
-  const { data, error: inputParseError } = AppIdSchema.safeParse(input);
+  const { data, error: inputParseError } = AppIdSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

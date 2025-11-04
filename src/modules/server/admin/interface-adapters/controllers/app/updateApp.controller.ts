@@ -14,7 +14,7 @@ export async function updateAppController(
 ): Promise<UpdateAppControllerOutputType> {
   // TODO validate input, orchestrate use-cases
   const { data, error: inputParseError } =
-    UpdateAppValidationFormSchema.safeParse(input);
+    UpdateAppValidationFormSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

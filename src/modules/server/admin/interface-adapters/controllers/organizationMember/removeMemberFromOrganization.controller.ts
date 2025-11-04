@@ -15,7 +15,7 @@ export async function removeMemberFromOrganizationController(
   input: any
 ): Promise<TRemoveMemberFromOrganizationControllerOutput> {
   const { data, error: inputParseError } =
-    RemoveMemberFromOrganizationValidationSchema.safeParse(input);
+    RemoveMemberFromOrganizationValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

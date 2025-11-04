@@ -15,7 +15,7 @@ export async function updateUserPreferencesController(
   input: any
 ): Promise<TGetUserPreferencesControllerOutput> {
   const { data, error: inputParseError } =
-    updateUserPreferenceSchema.safeParse(input);
+    updateUserPreferenceSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.message, {

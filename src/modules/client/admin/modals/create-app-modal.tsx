@@ -31,6 +31,7 @@ import {
 } from "@/modules/shared/custom-form-fields";
 import { SelectItem } from "@/components/ui/select";
 import { FieldGroup } from "@/components/ui/field";
+import { handleInputParseError } from "@/modules/shared/utils/handleInputParseError";
 
 export const CreateAppModal = () => {
   const session = useSession();
@@ -60,8 +61,17 @@ export const CreateAppModal = () => {
       handleCloseModal();
     },
     onError({ err }) {
-      toast.error("An Error Occurred!", {
-        description: err.message,
+      const handled = handleInputParseError({
+        err,
+        form,
+        toastMessage: "Form validation failed",
+        toastDescription: "Please correct the highlighted fields below.",
+      });
+
+      if (handled) return;
+
+      toast.error("An unexpected error occurred.", {
+        description: err.message ?? "Please try again later.",
       });
     },
   });

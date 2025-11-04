@@ -13,7 +13,7 @@ export async function getUserPreferencesController(
   input: any
 ): Promise<TGetUserPreferencesControllerOutput | null> {
   const { data, error: inputParseError } =
-    getUserPreferencesValidateSchema.safeParse(input);
+    getUserPreferencesValidateSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.message, {

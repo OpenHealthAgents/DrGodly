@@ -41,12 +41,12 @@ export class OrganizationMemberRepository
         },
       });
 
-      const dataWithTotal = OrganizationMembersAndUsersSchema.parse({
+      const dataWithTotal = OrganizationMembersAndUsersSchema.parseAsync({
         organizationMembersAndUsers: data,
         total,
       });
 
-      return OrganizationMembersAndUsersSchema.parse(dataWithTotal);
+      return OrganizationMembersAndUsersSchema.parseAsync(dataWithTotal);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -82,7 +82,7 @@ export class OrganizationMemberRepository
         },
       });
 
-      return OrganizationMemberAndUserSchema.parse(data);
+      return OrganizationMemberAndUserSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -118,7 +118,7 @@ export class OrganizationMemberRepository
         },
       });
 
-      return OrganizationMemberAndUserSchema.parse(data);
+      return OrganizationMemberAndUserSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -154,7 +154,7 @@ export class OrganizationMemberRepository
         },
       });
 
-      return OrganizationMemberAndUserSchema.parse(data);
+      return OrganizationMemberAndUserSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -192,7 +192,7 @@ export class OrganizationMemberRepository
         return null;
       }
 
-      return OrganizationMemberAndUserSchema.parse(data);
+      return OrganizationMemberAndUserSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

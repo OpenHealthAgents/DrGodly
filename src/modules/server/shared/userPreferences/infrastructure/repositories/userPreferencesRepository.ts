@@ -20,7 +20,7 @@ export class UserPreferencesRepository implements IUserPreferencesRepository {
         return null;
       }
 
-      return UserPreferenceSchema.parse(userPreferences);
+      return UserPreferenceSchema.parseAsync(userPreferences);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -43,7 +43,7 @@ export class UserPreferencesRepository implements IUserPreferencesRepository {
         data: datas,
       });
 
-      return UserPreferenceSchema.parse(userPreferences);
+      return UserPreferenceSchema.parseAsync(userPreferences);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

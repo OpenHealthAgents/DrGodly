@@ -25,7 +25,7 @@ export class RoleRepository implements IRoleRepository {
 
       const total = await prismaMain.role.count();
 
-      return RolesDataSchema.parse({
+      return RolesDataSchema.parseAsync({
         roleDatas: data,
         total,
       });
@@ -52,7 +52,7 @@ export class RoleRepository implements IRoleRepository {
         return null;
       }
 
-      return RoleSchema.parse(data);
+      return RoleSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -72,7 +72,7 @@ export class RoleRepository implements IRoleRepository {
         },
       });
 
-      return RoleSchema.parse(data);
+      return RoleSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -97,7 +97,7 @@ export class RoleRepository implements IRoleRepository {
         },
       });
 
-      return RoleSchema.parse(data);
+      return RoleSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -117,7 +117,7 @@ export class RoleRepository implements IRoleRepository {
         },
       });
 
-      return RoleSchema.parse(data);
+      return RoleSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

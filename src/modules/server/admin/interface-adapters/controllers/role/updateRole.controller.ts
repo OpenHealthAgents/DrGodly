@@ -13,7 +13,7 @@ export async function updateRoleController(
   input: any
 ): Promise<TUpdateRoleControllerOutput> {
   const { data, error: inputParseError } =
-    UpdateRoleValidationSchema.safeParse(input);
+    UpdateRoleValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

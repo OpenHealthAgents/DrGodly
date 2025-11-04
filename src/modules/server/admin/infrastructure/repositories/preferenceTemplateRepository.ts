@@ -20,7 +20,7 @@ export class PreferenceTemplateRepository
         await prismaMain.preferenceTemplate.findMany();
 
       const total = await prismaMain.preferenceTemplate.count();
-      return PreferenceTemplatesSchema.parse({
+      return PreferenceTemplatesSchema.parseAsync({
         preferenceTemplates,
         total,
       });
@@ -45,7 +45,7 @@ export class PreferenceTemplateRepository
 
       if (!preferenceTemplate) return null;
 
-      return PreferenceTemplateSchema.parse(preferenceTemplate);
+      return PreferenceTemplateSchema.parseAsync(preferenceTemplate);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -68,7 +68,9 @@ export class PreferenceTemplateRepository
           },
         });
 
-      return PreferenceTemplateSchema.parse(createUserPreferenceTemplateData);
+      return PreferenceTemplateSchema.parseAsync(
+        createUserPreferenceTemplateData
+      );
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -96,7 +98,7 @@ export class PreferenceTemplateRepository
           },
         });
 
-      return PreferenceTemplateSchema.parse(updatedPreferenceTemplateData);
+      return PreferenceTemplateSchema.parseAsync(updatedPreferenceTemplateData);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -117,7 +119,7 @@ export class PreferenceTemplateRepository
           },
         });
 
-      return PreferenceTemplateSchema.parse(deletedPreferenceTemplateData);
+      return PreferenceTemplateSchema.parseAsync(deletedPreferenceTemplateData);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

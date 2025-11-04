@@ -33,7 +33,7 @@ export class AppRepository implements IAppRepository {
 
       const total = await prismaMain.app.count();
 
-      return AppDatasSchema.parse({
+      return await AppDatasSchema.parseAsync({
         appDatas,
         total,
       });
@@ -56,7 +56,7 @@ export class AppRepository implements IAppRepository {
         },
       });
 
-      return AppSchema.parse(data);
+      return await AppSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -83,7 +83,7 @@ export class AppRepository implements IAppRepository {
         return null;
       }
 
-      return AppSchema.parse(data);
+      return await AppSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -103,7 +103,7 @@ export class AppRepository implements IAppRepository {
         },
       });
 
-      return AppSchema.parse(data);
+      return await AppSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -128,7 +128,7 @@ export class AppRepository implements IAppRepository {
         },
       });
 
-      return AppSchema.parse(data);
+      return await AppSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -148,7 +148,7 @@ export class AppRepository implements IAppRepository {
         },
       });
 
-      return AppSchema.parse(data);
+      return await AppSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

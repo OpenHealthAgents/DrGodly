@@ -15,7 +15,7 @@ export async function removeAppFromOrganizationController(
   input: any
 ): Promise<TRemoveAppFromOrganizationControllerOutput> {
   const { data, error: inputParseError } =
-    RemoveAppToOrganizationValidationSchema.safeParse(input);
+    RemoveAppToOrganizationValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

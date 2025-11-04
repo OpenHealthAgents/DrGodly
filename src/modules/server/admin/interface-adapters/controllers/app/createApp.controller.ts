@@ -14,7 +14,7 @@ export async function createAppController(
 ): Promise<TCreateAppControllerOutput> {
   // TODO validate input, orchestrate use-cases
   const { data, error: inputParseError } =
-    CreateAppValidationSchema.safeParse(input);
+    await CreateAppValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

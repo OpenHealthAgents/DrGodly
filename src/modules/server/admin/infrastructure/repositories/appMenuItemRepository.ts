@@ -33,7 +33,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         },
       });
 
-      const data = AppMenuItemsDataSchema.parse({
+      const data = AppMenuItemsDataSchema.parseAsync({
         appMenuItemsData: appMenuItems,
         total,
       });
@@ -60,7 +60,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         },
       });
 
-      return AppMenuItemSchema.parse(data);
+      return AppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -89,7 +89,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         return null;
       }
 
-      return AppMenuItemSchema.parse(data);
+      return AppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -117,7 +117,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         },
       });
 
-      return AppMenuItemSchema.parse(data);
+      return AppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -140,7 +140,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         },
       });
 
-      return AppMenuItemSchema.parse(data);
+      return AppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
