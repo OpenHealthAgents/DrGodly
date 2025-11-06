@@ -3,18 +3,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { authClient } from "@/modules/client/auth/betterauth/auth-client";
+import { useTranslations } from "next-intl";
 
 const EmailVerificationComp = ({ email }: { email: string }) => {
+  const t = useTranslations();
+
   return (
     <Card className="m-4">
       <CardHeader>
-        <CardTitle>Verify Email</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
       </CardHeader>
       <CardContent>
         <p>
-          We’ve sent a verification link to your email. Please check your inbox
-          and verify your email address. Once verified, refresh this page to
-          continue. If email not received then{" "}
+          {t("message")} {t("resendPrompt")}{" "}
           <span
             className="link cursor-pointer underline"
             onClick={async () => {
@@ -23,16 +24,15 @@ const EmailVerificationComp = ({ email }: { email: string }) => {
                   email,
                   callbackURL: "/bezs",
                 });
-
-                toast("Success!");
+                toast(t("toast.success"));
               } catch (error) {
-                toast("Error!", {
+                toast(t("toast.error"), {
                   description: `${error}`,
                 });
               }
             }}
           >
-            request again
+            {t("resendLink")}
           </span>
         </p>
       </CardContent>

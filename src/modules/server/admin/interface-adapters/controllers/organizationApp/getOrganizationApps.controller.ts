@@ -13,7 +13,7 @@ export async function getOrganizationAppsController(
   input: any
 ): Promise<TGetOrganizationAppsControllerOutput> {
   const { data, error: inputParseError } =
-    GetOrganizationAppsValidationSchema.safeParseAsync(input);
+    await GetOrganizationAppsValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

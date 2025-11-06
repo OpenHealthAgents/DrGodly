@@ -40,7 +40,7 @@ export class OrganizationAppRepository implements IOrganizationAppRepository {
         },
       });
 
-      return OrganizationAppsSchema.parseAsync({
+      return await OrganizationAppsSchema.parseAsync({
         organizationApps: data,
         total,
       });
@@ -82,7 +82,7 @@ export class OrganizationAppRepository implements IOrganizationAppRepository {
         return null;
       }
 
-      return OrganizationAppSchema.parseAsync(data);
+      return await OrganizationAppSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -117,7 +117,7 @@ export class OrganizationAppRepository implements IOrganizationAppRepository {
         },
       });
 
-      return OrganizationAppSchema.parseAsync(data);
+      return await OrganizationAppSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -154,7 +154,7 @@ export class OrganizationAppRepository implements IOrganizationAppRepository {
         },
       });
 
-      return OrganizationAppSchema.parseAsync(data);
+      return await OrganizationAppSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

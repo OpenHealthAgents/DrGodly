@@ -15,7 +15,7 @@ export async function unmapAppMenuItemsToRoleController(
   input: any
 ): Promise<TUnMapAppMenuItemsToRoleControllerOutput> {
   const { data, error: inputParseError } =
-    MapOrUnmapAppMenuItemToRoleValidateSchema.safeParseAsync(input);
+    await MapOrUnmapAppMenuItemToRoleValidateSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

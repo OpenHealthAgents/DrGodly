@@ -6,9 +6,11 @@ import { landingButtonVariants } from "./landing-page-button";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 const RootNavBarPage = ({ session }: { session: any | null }) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const t = useTranslations("navbar");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,109 +22,8 @@ const RootNavBarPage = ({ session }: { session: any | null }) => {
     };
   }, []);
 
-  // const { execute, isPending } = useServerAction(signInWithKeycloak);
-
-  // async function handleSignIn(url: string) {
-  //   const authProvider = process.env.NEXT_PUBLIC_AUTH_PROVIDER;
-
-  //   if (authProvider === "keycloak") {
-  //     const [data, error] = await execute();
-
-  //     if (error) {
-  //       toast.error("Failed to do signin");
-  //     }
-
-  //     if (data && data.redirect) {
-  //       window.location.href = data.url;
-  //     }
-  //   }
-  //   router.push(url);
-  // }
-
-  {
-    /* <Button
-                  variant="link"
-                  size="sm"
-                  onClick={() => handleSignIn("/signin")}
-                  disabled={isPending || session.isPending}
-                  className="!no-underline cursor-pointer"
-                >
-                  Sign In
-                </Button>
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={() => handleSignIn("/signup")}
-                  disabled={isPending || session.isPending}
-                  className="!no-underline cursor-pointer"
-                >
-                  Sign Up
-                </Button> */
-  }
-
   return (
     <>
-      {/* <nav className="flex items-center justify-between px-4 py-1.5 bg-white dark:bg-zinc-800/60 shadow-md">
-        <div>
-          <h1>
-            <Link href="/">Bezs</Link>
-          </h1>
-        </div>
-        <ul className="flex items-center gap-2">
-          <li>
-            <LocaleSwitcher />
-          </li>
-          <li>
-            <ThemeSwitcher />
-          </li>
-          <li className="flex items-center gap-2">
-            {!session ? (
-              <>
-                <Link
-                  href="/signin"
-                  className={cn(
-                    "cursor-pointer",
-                    buttonVariants({
-                      variant: "link",
-                      size: "sm",
-                      className: "!no-underline",
-                    })
-                  )}
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/signup"
-                  className={cn(
-                    "cursor-pointer",
-                    buttonVariants({
-                      variant: "default",
-                      size: "sm",
-                      className: "!no-underline",
-                    })
-                  )}
-                >
-                  Sign Up
-                </Link>
-              </>
-            ) : (
-              <Link
-                href="/bezs"
-                className={cn(
-                  "cursor-pointer",
-                  buttonVariants({
-                    variant: "default",
-                    size: "sm",
-                    className: "!no-underline",
-                  })
-                )}
-              >
-                Open
-              </Link>
-            )}
-          </li>
-        </ul>
-      </nav> */}
       <motion.header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
@@ -135,6 +36,7 @@ const RootNavBarPage = ({ session }: { session: any | null }) => {
       >
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
+            {/* Logo */}
             <Link
               href="/"
               className="flex items-center space-x-2 text-[var(--color-landing-primary)]"
@@ -152,31 +54,33 @@ const RootNavBarPage = ({ session }: { session: any | null }) => {
                 />
               </svg>
               <span className="text-2xl font-bold text-[var(--color-landing-foreground)]">
-                Dr. Godly
+                {t("brand")}
               </span>
             </Link>
 
+            {/* Nav Links */}
             <nav className="hidden md:flex items-center space-x-8">
               <a
                 href="#features"
                 className="text-[var(--color-landing-foreground)] font-medium hover:text-[var(--color-landing-primary)] transition-colors"
               >
-                Features
+                {t("features")}
               </a>
               <a
                 href="#how-it-works"
                 className="text-[var(--color-landing-foreground)] font-medium hover:text-[var(--color-landing-primary)] transition-colors"
               >
-                How It Works
+                {t("howItWorks")}
               </a>
               <a
                 href="#testimonials"
                 className="text-[var(--color-landing-foreground)] font-medium hover:text-[var(--color-landing-primary)] transition-colors"
               >
-                Testimonials
+                {t("testimonials")}
               </a>
             </nav>
 
+            {/* Actions */}
             <div className="flex items-center gap-4">
               <LocaleSwitcher />
               <ThemeSwitcher />
@@ -189,7 +93,7 @@ const RootNavBarPage = ({ session }: { session: any | null }) => {
                       size: "sm",
                     })}
                   >
-                    Sign In
+                    {t("signIn")}
                   </Link>
                   <Link
                     href="/signup"
@@ -198,7 +102,7 @@ const RootNavBarPage = ({ session }: { session: any | null }) => {
                       size: "sm",
                     })}
                   >
-                    Sign Up
+                    {t("signUp")}
                   </Link>
                 </>
               ) : (
@@ -209,7 +113,7 @@ const RootNavBarPage = ({ session }: { session: any | null }) => {
                     size: "sm",
                   })}
                 >
-                  Open App
+                  {t("openApp")}
                 </Link>
               )}
             </div>

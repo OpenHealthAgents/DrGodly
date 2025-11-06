@@ -13,7 +13,7 @@ export type TDeleteAppMenuItemControllerOutputType = ReturnType<
 
 export async function deleteAppMenuItemController(input: any) {
   const { data, error: inputParseError } =
-    DeleteAppMenuItemValidationSchema.safeParseAsync(input);
+    await DeleteAppMenuItemValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

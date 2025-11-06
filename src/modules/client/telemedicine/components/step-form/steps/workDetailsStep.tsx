@@ -42,6 +42,8 @@ import {
 } from "@/modules/shared/custom-form-fields";
 import { Car, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 
 const natureOfWorkData = [
   { label: "Administrative", value: "administrative" },
@@ -68,20 +70,7 @@ export function WorkDetailsStep({
     defaultValues: data || {
       currentlyWorking: true,
       about: "",
-      workingFacilityDetails: [
-        {
-          id: "1",
-          facilityId: "",
-          facilityStatus: true,
-          facilityName: "",
-          address: "",
-          state: "",
-          district: "",
-          type: "",
-          department: "",
-          designation: "",
-        },
-      ],
+      experience: "",
     },
   });
 
@@ -96,6 +85,7 @@ export function WorkDetailsStep({
   const governmentCategory = form.watch("governmentCategory");
 
   const handleSubmit = (values: TDoctorWorkDetails) => {
+    console.log(values);
     onNext(values as TDoctorWorkDetails);
   };
 
@@ -113,6 +103,18 @@ export function WorkDetailsStep({
       designation: "",
     });
   };
+
+  const removeAllFacility = () => {
+    for (let i = 0; i < fields.length; i++) {
+      remove(i);
+    }
+  };
+
+  useEffect(() => {
+    if (!currentlyWorking) {
+      removeAllFacility();
+    }
+  }, [currentlyWorking]);
 
   return (
     <Form {...form}>
@@ -149,6 +151,14 @@ export function WorkDetailsStep({
                   <FieldLabel htmlFor="no">No</FieldLabel>
                 </Field>
               </FormRadioGroup>
+
+              <FormInput
+                control={form.control}
+                name="experience"
+                label="Work Experence (Years) *"
+                placeholder="10"
+                className="max-w-24"
+              />
 
               {!currentlyWorking && (
                 <>
@@ -305,25 +315,30 @@ export function WorkDetailsStep({
                 className="gap-2"
               >
                 <Plus className="w-4 h-4" />
-                Add Qualification
+                Add Facilities
               </Button>
             </CardHeader>
             <CardContent className="space-y-6">
+              {fields.length === 0 && (
+                <p className="text-muted-foreground text-center">
+                  Add Facilities
+                </p>
+              )}
               {fields.map((field, index) => (
                 <Card key={field.id}>
                   <CardHeader className="flex items-center justify-between mb-4">
                     <CardTitle>Facility {index + 1}</CardTitle>
-                    {fields.length > 1 && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => remove(index)}
-                        className="text-destructive hover:text-destructive"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    )}
+                    {/* {fields.length > 1 && ( */}
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => remove(index)}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                    {/* )} */}
                   </CardHeader>
                   <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {/* Facility ID */}
@@ -404,7 +419,7 @@ export function WorkDetailsStep({
         )}
 
         {/* About Section */}
-        <Card className="p-6">
+        <Card>
           <CardHeader>
             <CardTitle>About You</CardTitle>
           </CardHeader>
@@ -418,12 +433,17 @@ export function WorkDetailsStep({
                   <FormControl>
                     <Textarea
                       placeholder="Write about your expertise, approach to patient care, areas of interest, and what patients can expect from your consultations..."
-                      className="min-h-[200px] resize-none"
+                      className="h-[200px] resize-none"
                       {...field}
                     />
                   </FormControl>
-                  <p className="text-sm text-muted-foreground">
-                    {field.value?.length || 0} / 1000 characters
+                  <p
+                    className={cn(
+                      "text-sm text-muted-foreground",
+                      field.value?.length > 500 && "text-red-500"
+                    )}
+                  >
+                    {field.value?.length || 0} / 500 characters
                   </p>
                   <FormMessage />
                 </FormItem>

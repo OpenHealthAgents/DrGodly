@@ -15,7 +15,7 @@ export class UserRepository implements IUserRepository {
       const user = await prismaMain.user.findUnique({
         where: { id },
       });
-      return UserSchema.parseAsync(user);
+      return await UserSchema.parseAsync(user);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -38,7 +38,7 @@ export class UserRepository implements IUserRepository {
           OR: [{ email }, { username }],
         },
       });
-      return UserSchema.parseAsync(user);
+      return await UserSchema.parseAsync(user);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

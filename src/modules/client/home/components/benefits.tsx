@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const CheckIcon = () => (
   <svg
@@ -15,21 +16,23 @@ const CheckIcon = () => (
   </svg>
 );
 
-const patientBenefits = [
-  "Save time with automated pre-visit intake.",
-  "Receive more focused and prepared care.",
-  "Access doctors from the comfort of your home.",
-  "Manage all your medical data securely.",
-];
+function LandingPageBenefits() {
+  const t = useTranslations("landing.benefits");
 
-const doctorBenefits = [
-  "Reduce administrative workload significantly.",
-  "Access comprehensive patient summaries.",
-  "Conduct efficient and effective consultations.",
-  "Improve overall workflow and patient outcomes.",
-];
+  const patientBenefits = [
+    t("patients.items.0"),
+    t("patients.items.1"),
+    t("patients.items.2"),
+    t("patients.items.3"),
+  ];
 
-function LangingPageBenefits() {
+  const doctorBenefits = [
+    t("doctors.items.0"),
+    t("doctors.items.1"),
+    t("doctors.items.2"),
+    t("doctors.items.3"),
+  ];
+
   return (
     <section className="py-20 sm:py-28 bg-landing-background">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -42,11 +45,10 @@ function LangingPageBenefits() {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <h2 className="text-3xl sm:text-4xl font-extrabold text-landing-foreground">
-              Empowering Patients
+              {t("patients.title")}
             </h2>
             <p className="mt-4 text-lg text-landing-muted-foreground">
-              Take control of your health with a platform designed around you.
-              Experience convenience, clarity, and care like never before.
+              {t("patients.description")}
             </p>
             <ul className="mt-8 space-y-4">
               {patientBenefits.map((benefit, index) => (
@@ -71,11 +73,10 @@ function LangingPageBenefits() {
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
           >
             <h2 className="text-3xl sm:text-4xl font-extrabold text-landing-foreground">
-              Optimizing for Doctors
+              {t("doctors.title")}
             </h2>
             <p className="mt-4 text-lg text-landing-muted-foreground">
-              Focus on what matters most—your patients. Let our AI handle the
-              administrative tasks and provide you with actionable insights.
+              {t("doctors.description")}
             </p>
             <ul className="mt-8 space-y-4">
               {doctorBenefits.map((benefit, index) => (
@@ -96,4 +97,4 @@ function LangingPageBenefits() {
   );
 }
 
-export default LangingPageBenefits;
+export default LandingPageBenefits;

@@ -15,7 +15,7 @@ export async function addAppToOrganizationController(
   input: any
 ): Promise<TAddAppToOrganizationControllerOutput> {
   const { data, error: inputParseError } =
-    AddAppToOrganizationValidationSchema.safeParseAsync(input);
+    await AddAppToOrganizationValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

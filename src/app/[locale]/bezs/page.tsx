@@ -74,7 +74,6 @@ const projectSchema = z.object({
 type TProject = z.infer<typeof projectSchema>;
 
 const BezsPage = () => {
-  const t = useTranslations("home");
   const { data } = useSession();
   console.log(data);
 
@@ -124,7 +123,7 @@ const BezsPage = () => {
 
   return (
     <div className="h-full p-4">
-      <h1>{t("header")}</h1>
+      <h1>Bezs</h1>
       <Button onClick={getLocation}>Get Location</Button>
       {/* <div className="px-4 mx-auto my-6">
         <form onSubmit={form.handleSubmit(onSubmit)}>

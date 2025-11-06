@@ -1,13 +1,7 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-
-const techItems = [
-  { name: "HIPAA Compliant", icon: "HIPAA" },
-  { name: "GDPR Compliant", icon: "GDPR" },
-  { name: "ABDM Compliant", icon: "ABDM" },
-  { name: "DPDPA Compliant", icon: "DPDPA" },
-];
+import { useTranslations } from "next-intl";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -28,6 +22,15 @@ const itemVariants: Variants = {
 };
 
 function LandingPageIntegrations() {
+  const t = useTranslations("landing.integrations");
+
+  const techItems = [
+    { name: t("items.0.name"), icon: t("items.0.icon") },
+    { name: t("items.1.name"), icon: t("items.1.icon") },
+    { name: t("items.2.name"), icon: t("items.2.icon") },
+    { name: t("items.3.name"), icon: t("items.3.icon") },
+  ];
+
   return (
     <motion.section
       className="py-20 sm:py-28 bg-landing-muted/30"
@@ -43,11 +46,10 @@ function LandingPageIntegrations() {
           className="text-center max-w-3xl mx-auto"
         >
           <h2 className="text-3xl sm:text-4xl font-extrabold text-landing-foreground">
-            Secure, Compliant, and Reliable
+            {t("title")}
           </h2>
           <p className="mt-4 text-lg text-landing-muted-foreground">
-            We are built on a modern, secure technology stack and adhere to the
-            highest industry standards for data privacy and security.
+            {t("description")}
           </p>
         </motion.div>
 
@@ -56,9 +58,9 @@ function LandingPageIntegrations() {
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8"
           variants={containerVariants}
         >
-          {techItems.map((item) => (
+          {techItems.map((item, index) => (
             <motion.div
-              key={item.name}
+              key={index}
               className="flex flex-col items-center justify-center p-6 bg-landing-background rounded-2xl border border-landing-border shadow-sm transition-all duration-300 hover:shadow-lg"
               variants={itemVariants}
               whileHover={{ y: -5, scale: 1.05 }}

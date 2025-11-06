@@ -15,7 +15,7 @@ export async function unmapRbacUserOrganizationRoleController(
   input: any
 ): Promise<TUnMapRbacUserOrganizationRoleControllerOutPut> {
   const { data, error: inputParseError } =
-    MapOrUnMapRbacUserOrgRoleValidationSchema.safeParseAsync(input);
+    await MapOrUnMapRbacUserOrgRoleValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

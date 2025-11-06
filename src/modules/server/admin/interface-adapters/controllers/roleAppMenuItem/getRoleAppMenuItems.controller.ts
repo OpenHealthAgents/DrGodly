@@ -13,7 +13,7 @@ export async function getRoleAppMenuItemsController(
   input: any
 ): Promise<TGetRoleAppMenuItemsControllerOutput> {
   const { data, error: inputParseError } =
-    getRoleAppMenuItemsValidateSchema.safeParseAsync(input);
+    await getRoleAppMenuItemsValidateSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

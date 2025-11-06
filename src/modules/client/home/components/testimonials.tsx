@@ -2,31 +2,9 @@
 
 import { motion, Variants } from "framer-motion";
 import { UserRound, Stethoscope, HeartPulse } from "lucide-react";
-const testimonialIcons = [UserRound, Stethoscope, HeartPulse];
+import { useTranslations } from "next-intl";
 
-const testimonials = [
-  {
-    quote:
-      "Dr. Godly's AI intake has saved me hours of paperwork each week. I can finally focus more on my patients.",
-    name: "Dr. Anya Sharma",
-    title: "General Practitioner",
-    // avatar: <Avatar1 />,
-  },
-  {
-    quote:
-      "As a patient, booking appointments and managing my records has never been easier. The platform is so intuitive and secure.",
-    name: "John Doe",
-    title: "Patient",
-    // avatar: <Avatar2 />,
-  },
-  {
-    quote:
-      "The seamless integration and AI-powered summaries are game-changers for our clinic. Patient outcomes have visibly improved.",
-    name: "Maria Garcia",
-    title: "Clinic Administrator",
-    // avatar: <Avatar3 />,
-  },
-];
+const testimonialIcons = [UserRound, Stethoscope, HeartPulse];
 
 const containerVariants: Variants = {
   hidden: {},
@@ -47,6 +25,26 @@ const itemVariants: Variants = {
 };
 
 function LandingPageTestimonials() {
+  const t = useTranslations("landing.testimonials");
+
+  const testimonials = [
+    {
+      quote: t("items.0.quote"),
+      name: t("items.0.name"),
+      title: t("items.0.title"),
+    },
+    {
+      quote: t("items.1.quote"),
+      name: t("items.1.name"),
+      title: t("items.1.title"),
+    },
+    {
+      quote: t("items.2.quote"),
+      name: t("items.2.name"),
+      title: t("items.2.title"),
+    },
+  ];
+
   return (
     <motion.section
       id="testimonials"
@@ -63,10 +61,10 @@ function LandingPageTestimonials() {
           className="text-center max-w-3xl mx-auto"
         >
           <h2 className="text-3xl sm:text-4xl font-extrabold text-landing-foreground">
-            Trusted by Patients and Professionals
+            {t("title")}
           </h2>
           <p className="mt-4 text-lg text-landing-muted-foreground">
-            Hear what people are saying about their experience with Dr. Godly.
+            {t("description")}
           </p>
         </motion.div>
 

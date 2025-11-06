@@ -13,7 +13,7 @@ export async function createOrganizationController(
   input: any
 ): Promise<TCreateOrganizationControllerOutput> {
   const { data, error: inputParseError } =
-    CreateOrganizationFormSchema.safeParseAsync(input);
+    await CreateOrganizationFormSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

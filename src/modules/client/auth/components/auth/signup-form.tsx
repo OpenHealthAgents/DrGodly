@@ -28,6 +28,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { authClient } from "@/modules/client/auth/betterauth/auth-client";
+import { useTranslations } from "next-intl";
 
 const signUpFormSchema = z.object({
   username: z
@@ -52,6 +53,7 @@ export function SignUpForm({
 }: {
   isAuthCheckPending: boolean;
 }) {
+  const t = useTranslations("auth.signup");
   const router = useRouter();
   const [inputType, setInputType] = useState("password");
 
@@ -103,9 +105,9 @@ export function SignUpForm({
   return (
     <Card className="w-[380px]">
       <CardHeader>
-        <CardTitle className="text-xl">Sign Up</CardTitle>
+        <CardTitle className="text-xl">{t("title")}</CardTitle>
         <CardDescription className="text-xs">
-          Enter your information to create an account
+          {t("description")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -116,9 +118,12 @@ export function SignUpForm({
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>{t("form.fields.username.label")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="username" {...field} />
+                    <Input
+                      placeholder={t("form.fields.username.placeholder")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -129,9 +134,12 @@ export function SignUpForm({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>{t("form.fields.name.label")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="name" {...field} />
+                    <Input
+                      placeholder={t("form.fields.name.placeholder")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -142,9 +150,12 @@ export function SignUpForm({
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t("form.fields.email.label")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="example@gmail.com" {...field} />
+                    <Input
+                      placeholder={t("form.fields.email.placeholder")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -155,11 +166,11 @@ export function SignUpForm({
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{t("form.fields.password.label")}</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
-                        placeholder="******"
+                        placeholder={t("form.fields.password.placeholder")}
                         {...field}
                         type={inputType}
                         maxLength={16}
@@ -192,7 +203,7 @@ export function SignUpForm({
                   <Loader2 className="animate-spin" />
                 </>
               ) : (
-                "Create an account"
+                t("form.button.default")
               )}
             </Button>
           </form>
@@ -201,30 +212,30 @@ export function SignUpForm({
           <div className="flex items-center gap-2">
             <div className="h-[1px] bg-white/20 w-full" />
             <p className="text-nowrap w-fit text-center text-sm text-zinc-500 dark:text-white/70">
-              Or continue with
+              {t("oauth.continueWith")}
             </p>
             <div className="h-[1px] bg-white/20 w-full" />
           </div>
           <div className="flex gap-2 flex-wrap">
             <OauthButton
               oauthName="google"
-              label="Google"
+              label={t("oauth.google")}
               isFormSubmitting={isSubmitting || isAuthCheckPending}
             />
             <OauthButton
               oauthName="github"
-              label="GitHub"
+              label={t("oauth.github")}
               isFormSubmitting={isSubmitting || isAuthCheckPending}
             />
           </div>
         </div>
         <p className="text-center mt-6 text-sm text-zinc-500 dark:text-white/70">
-          Already have an account?{" "}
+          {t("footer.alreadyAccount")}{" "}
           <Link
             href="/signin"
             className="text-black dark:text-white underline-offset-4 underline"
           >
-            Sign In
+            {t("footer.signin")}
           </Link>
         </p>
       </CardContent>

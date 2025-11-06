@@ -3,6 +3,7 @@
 import { Link } from "@/i18n/navigation";
 import { motion, Variants } from "framer-motion";
 import { landingButtonVariants as buttonVariants } from "./landing-page-button";
+import { useTranslations } from "next-intl";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -27,7 +28,9 @@ const itemVariants: Variants = {
   },
 };
 
-function LangingPageCTA({ session }: { session: any | null }) {
+function LandingPageCTA({ session }: { session: any | null }) {
+  const t = useTranslations("landing.cta");
+
   return (
     <section className="py-20 sm:py-28">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -49,16 +52,14 @@ function LangingPageCTA({ session }: { session: any | null }) {
               variants={itemVariants}
               className="text-3xl sm:text-4xl font-extrabold"
             >
-              Ready to Transform Your Healthcare Experience?
+              {t("title")}
             </motion.h2>
 
             <motion.p
               variants={itemVariants}
               className="mt-4 text-lg text-landing-primary-foreground/80"
             >
-              Join the growing number of forward-thinking healthcare providers
-              and patients who are choosing a smarter, more efficient way to
-              manage health.
+              {t("description")}
             </motion.p>
 
             <motion.div
@@ -74,7 +75,7 @@ function LangingPageCTA({ session }: { session: any | null }) {
                       "bg-landing-background text-landing-primary hover:bg-landing-muted px-8 py-4 rounded-full font-semibold shadow-lg transition-transform duration-200 hover:scale-105 text-lg",
                   })}
                 >
-                  Sign Up
+                  {t("buttons.signup")}
                 </Link>
               ) : (
                 <Link
@@ -85,7 +86,7 @@ function LangingPageCTA({ session }: { session: any | null }) {
                       "bg-landing-background text-landing-primary hover:bg-landing-muted px-8 py-4 rounded-full font-semibold shadow-lg transition-transform duration-200 hover:scale-105 text-lg",
                   })}
                 >
-                  Open App
+                  {t("buttons.openApp")}
                 </Link>
               )}
             </motion.div>
@@ -96,4 +97,4 @@ function LangingPageCTA({ session }: { session: any | null }) {
   );
 }
 
-export default LangingPageCTA;
+export default LandingPageCTA;

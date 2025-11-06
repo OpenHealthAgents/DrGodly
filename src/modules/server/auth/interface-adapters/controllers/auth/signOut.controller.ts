@@ -25,7 +25,9 @@ export async function signOutController(
       success,
       data: refreshTokenData,
       error,
-    } = SignOutWithKeycloakGenericOAuthSchema.safeParseAsync({ refreshToken });
+    } = await SignOutWithKeycloakGenericOAuthSchema.safeParseAsync({
+      refreshToken,
+    });
 
     if (error && !success) {
       throw new InputParseError(error.name, { cause: error });

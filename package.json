@@ -11,6 +11,9 @@
     "main-generate": "npx prisma generate --schema ./src/modules/server/prisma/main-database/schema.prisma",
     "main-db-push": "npx prisma db push --schema ./src/modules/server/prisma/main-database/schema.prisma",
     "main-studio": "npx prisma studio --schema ./src/modules/server/prisma/main-database/schema.prisma",
+    "telemedicine-generate": "npx prisma generate --schema ./src/modules/server/prisma/telemedicine-database/schema.prisma",
+    "telemedicine-db-push": "npx prisma db push --schema ./src/modules/server/prisma/telemedicine-database/schema.prisma",
+    "telemedicine-studio": "npx prisma studio --schema ./src/modules/server/prisma/telemedicine-database/schema.prisma",
     "auth:generate": "npx @better-auth/cli@latest generate --config ./src/modules/server/auth/betterauth/auth.ts --output ./auth.prisma --yes"
   },
   "dependencies": {

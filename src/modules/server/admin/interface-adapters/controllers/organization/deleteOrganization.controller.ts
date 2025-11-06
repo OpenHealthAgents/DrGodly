@@ -13,7 +13,7 @@ export async function deleteOrganizationController(
   input: any
 ): Promise<TDeleteOrganizationControllerOutput> {
   const { data, error: inputParseError } =
-    DeleteOrganizationFormSchema.safeParseAsync(input);
+    await DeleteOrganizationFormSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });
