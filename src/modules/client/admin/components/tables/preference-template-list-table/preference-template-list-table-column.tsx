@@ -1,4 +1,3 @@
-import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,115 +23,112 @@ import {
 import Link from "next/link";
 import { TPreferenceTemplate } from "@/modules/shared/entities/models/admin/preferenceTemplete";
 
-export const preferenceTemplateListTableColumn: ColumnDef<TPreferenceTemplate>[] =
-  [
-    {
-      header: "Scope",
-      accessorKey: "scope",
+export const preferenceTemplateListTableColumn = (
+  t: (key: string) => string
+): ColumnDef<TPreferenceTemplate>[] => [
+  {
+    header: t("table.columns.scope"),
+    accessorKey: "scope",
+  },
+  {
+    header: t("table.columns.country"),
+    accessorKey: "country",
+    cell: ({ row }) => {
+      const country: string = row.getValue("country");
+      return <p className="text-center">{country || "-"}</p>;
     },
-    {
-      header: "Country",
-      accessorKey: "country",
-      cell: ({ row }) => {
-        const country: string = row.getValue("country");
-        return <p className="text-center">{country ? country : "-"}</p>;
-      },
-    },
-    {
-      header: ({ column }) => {
-        const isSorted = column.getIsSorted();
+  },
+  {
+    header: ({ column }) => {
+      const isSorted = column.getIsSorted();
 
-        return (
-          <TanstackTableColumnSorting
-            label="Timezone"
-            column={column}
-            isSorted={isSorted}
-          />
-        );
-      },
-      accessorKey: "timezone",
+      return (
+        <TanstackTableColumnSorting
+          label={t("table.columns.timezone")}
+          column={column}
+          isSorted={isSorted}
+        />
+      );
     },
-    {
-      header: "Date Format",
-      accessorKey: "dateFormat",
-    },
-    {
-      header: ({ column }) => {
-        const isSorted = column.getIsSorted();
+    accessorKey: "timezone",
+  },
+  {
+    header: t("table.columns.dateFormat"),
+    accessorKey: "dateFormat",
+  },
+  {
+    header: ({ column }) => {
+      const isSorted = column.getIsSorted();
 
-        return (
-          <TanstackTableColumnSorting
-            label="Currency"
-            column={column}
-            isSorted={isSorted}
-          />
-        );
-      },
-      accessorKey: "currency",
+      return (
+        <TanstackTableColumnSorting
+          label={t("table.columns.currency")}
+          column={column}
+          isSorted={isSorted}
+        />
+      );
     },
-    {
-      header: "Number Format",
-      accessorKey: "numberFormat",
-    },
-    {
-      header: "Week Start Day",
-      accessorKey: "weekStart",
-    },
-    {
-      header: ({ column }) => {
-        const isSorted = column.getIsSorted();
+    accessorKey: "currency",
+  },
+  {
+    header: t("table.columns.numberFormat"),
+    accessorKey: "numberFormat",
+  },
+  {
+    header: t("table.columns.weekStart"),
+    accessorKey: "weekStart",
+  },
+  {
+    header: ({ column }) => {
+      const isSorted = column.getIsSorted();
 
-        return (
-          <TanstackTableColumnSorting
-            label="Created At"
-            column={column}
-            isSorted={isSorted}
-          />
-        );
-      },
-      accessorKey: "createdAt",
-      cell: ({ row }) => {
-        const openModal = adminModalStore((state) => state.onOpen);
+      return (
+        <TanstackTableColumnSorting
+          label={t("table.columns.createdAt")}
+          column={column}
+          isSorted={isSorted}
+        />
+      );
+    },
+    accessorKey: "createdAt",
+    cell: ({ row }) => {
+      const openModal = adminModalStore((state) => state.onOpen);
+      const joinedDate: Date = row.getValue("createdAt");
 
-        const { id } = row.original;
-        const data = row.original;
-        const joinedDate: Date = row.getValue("createdAt");
-        return (
-          <div className="flex items-center justify-between gap-4">
-            {format(joinedDate, "do 'of' MMM, yyyy")}
-            <DropdownMenu>
-              <DropdownMenuTrigger className="cursor-pointer">
-                <Ellipsis className="font-medium" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" side="left">
-                {/* <DropdownMenuItem className="cursor-pointer">
+      return (
+        <div className="flex items-center justify-between gap-4">
+          {format(joinedDate, "do 'of' MMM, yyyy")}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="cursor-pointer">
+              <Ellipsis className="font-medium" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" side="left">
+              {/* <DropdownMenuItem className="cursor-pointer">
                 <Eye />
                 View
               </DropdownMenuItem> */}
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={() => openModal({ type: "editPreferenceTemplate" })}
-                >
-                  <PencilLine />
-                  Edit
-                </DropdownMenuItem>
-                {/* <DropdownMenuSeparator /> */}
-                <DropdownMenuItem
-                  className="space-x-2 cursor-pointer"
-                  onClick={() =>
-                    openModal({ type: "deletePreferenceTemplate" })
-                  }
-                >
-                  <div className="flex items-center gap-2">
-                    <Trash2 />
-                    Delete
-                  </div>
-                  <TriangleAlert className="text-rose-600" />
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        );
-      },
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => openModal({ type: "editPreferenceTemplate" })}
+              >
+                <PencilLine />
+                {t("table.actions.edit")}
+              </DropdownMenuItem>
+              {/* <DropdownMenuSeparator /> */}
+              <DropdownMenuItem
+                className="space-x-2 cursor-pointer"
+                onClick={() => openModal({ type: "deletePreferenceTemplate" })}
+              >
+                <div className="flex items-center gap-2">
+                  <Trash2 />
+                  {t("table.actions.delete")}
+                </div>
+                <TriangleAlert className="text-rose-600" />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
     },
-  ];
+  },
+];

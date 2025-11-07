@@ -13,7 +13,7 @@ import { QualificationStep } from "./steps/qualificationStep";
 import { WorkDetailsStep } from "./steps/workDetailsStep";
 import { PreviewStep } from "./steps/previewStep";
 
-export interface DoctoeProfileData {
+export interface DoctorProfileData {
   personalDetails?: TDoctorPersonalDetails;
   qualificationDetails?: TDoctorQualifications;
   workDetails?: TDoctorWorkDetails;
@@ -23,7 +23,7 @@ export interface DoctoeProfileData {
 function DoctorProfileAndRegister() {
   const [currentStep, setCurrentStep] = useState(4);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
-  const [profileData, setProfileData] = useState<DoctoeProfileData>({
+  const [profileData, setProfileData] = useState<DoctorProfileData>({
     completed: false,
   });
 

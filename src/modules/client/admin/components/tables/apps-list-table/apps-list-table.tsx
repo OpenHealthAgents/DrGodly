@@ -7,6 +7,7 @@ import type { ZSAError } from "zsa";
 import { TAppDatas } from "@/modules/shared/entities/models/admin/app";
 import { clientLogger } from "@/modules/shared/utils/client-logger";
 import { usePathname } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 type TUser = {
   id: string;
@@ -22,6 +23,7 @@ type IAppsListTable = {
 };
 
 export const AppsListTable = ({ appDatas, error, user }: IAppsListTable) => {
+  const t = useTranslations("admin.manageApps");
   const pathname = usePathname();
   const openModal = useAdminModalStore((state) => state.onOpen);
 
@@ -31,20 +33,20 @@ export const AppsListTable = ({ appDatas, error, user }: IAppsListTable) => {
     <>
       <div className="space-y-8 w-full">
         <div className="space-y-1">
-          <h1 className="text-2xl font-semibold">Manage Apps</h1>
-          <p className="text-sm">Manage Apps and its functionality.</p>
+          <h1 className="text-2xl font-semibold">{t("title")}</h1>
+          <p className="text-sm">{t("subtitle")}</p>
         </div>
         <DataTable
-          columns={appsListTableColumn}
+          columns={appsListTableColumn(t)}
           data={appDatas?.appDatas ?? []}
           dataSize={appDatas?.total}
-          label="All Apps"
-          addLabelName="Add App"
+          label={t("table.label")}
+          addLabelName={t("table.addApp")}
           searchField="name"
           error={(!appDatas && error?.message) || null}
           fallbackText={
             (error && error.message) ||
-            (appDatas?.appDatas?.length === 0 && "No Apps") ||
+            (appDatas?.appDatas?.length === 0 && t("table.noApps")) ||
             undefined
           }
           filterField="type"

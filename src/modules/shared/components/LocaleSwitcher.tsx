@@ -8,18 +8,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { usePathname, useRouter } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
 
 export default function LocaleSwitcher() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const switchLocale = (newLocale: string) => {
-    if (newLocale !== locale) {
-      router.replace(pathname, { locale: newLocale });
-      router.refresh();
-    }
+    if (newLocale === locale) return;
+
+    const query: Record<string, any> = {};
+    searchParams.forEach((value, key) => {
+      query[key] = value;
+    });
+
+    router.replace({ pathname, query }, { locale: newLocale });
+    router.refresh();
   };
 
   return (

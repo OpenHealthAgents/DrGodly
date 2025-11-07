@@ -21,4 +21,12 @@ export class MonitoringService implements IMonitoringService {
   report(error: any): string {
     return Sentry.captureException(error);
   }
+
+  setUser(user: { id?: string; email?: string; username?: string }): void {
+    Sentry.setUser(user);
+  }
+
+  clearUser(): void {
+    Sentry.setUser(null);
+  }
 }

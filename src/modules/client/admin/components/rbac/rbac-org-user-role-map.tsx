@@ -31,6 +31,7 @@ import { useServerAction } from "zsa-react";
 import { getOrganizationMembersData } from "../../server-actions/organizationMember-action";
 import { TOrganizationMemberAndUser } from "@/modules/shared/entities/models/admin/organizationMember";
 import { mapRbacUserOrganizationRole } from "../../server-actions/rbac-actions";
+import { useTranslations } from "next-intl";
 
 const formSchema = z.object({
   orgId: z.string().min(1, "Organization is required"),
@@ -46,6 +47,7 @@ type Props = {
 };
 
 export function RBACOrgUserRoleMap({ allOrgs = [], allRoles = [] }: Props) {
+  const t = useTranslations("admin.rbac.map");
   const [selectedOrgUsers, setSelectedOrgUsers] = useState<
     TOrganizationMemberAndUser[] | undefined
   >([]);
@@ -116,7 +118,7 @@ export function RBACOrgUserRoleMap({ allOrgs = [], allRoles = [] }: Props) {
             name="orgId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Organization</FormLabel>
+                <FormLabel>{t("fields.organization.label")}</FormLabel>
                 <Select
                   onValueChange={(val) => field.onChange(val)}
                   value={field.value}
@@ -124,7 +126,9 @@ export function RBACOrgUserRoleMap({ allOrgs = [], allRoles = [] }: Props) {
                 >
                   <FormControl>
                     <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select Organization" />
+                      <SelectValue
+                        placeholder={t("fields.organization.placeholder")}
+                      />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -148,7 +152,7 @@ export function RBACOrgUserRoleMap({ allOrgs = [], allRoles = [] }: Props) {
               name="userId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Org Member</FormLabel>
+                  <FormLabel>{t("fields.user.label")}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     value={field.value}
@@ -156,7 +160,9 @@ export function RBACOrgUserRoleMap({ allOrgs = [], allRoles = [] }: Props) {
                   >
                     <FormControl>
                       <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select User" />
+                        <SelectValue
+                          placeholder={t("fields.user.placeholder")}
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -179,7 +185,7 @@ export function RBACOrgUserRoleMap({ allOrgs = [], allRoles = [] }: Props) {
               name="roleId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role</FormLabel>
+                  <FormLabel>{t("fields.role.label")}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     value={field.value}
@@ -187,7 +193,9 @@ export function RBACOrgUserRoleMap({ allOrgs = [], allRoles = [] }: Props) {
                   >
                     <FormControl>
                       <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select Role" />
+                        <SelectValue
+                          placeholder={t("fields.role.placeholder")}
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -209,10 +217,11 @@ export function RBACOrgUserRoleMap({ allOrgs = [], allRoles = [] }: Props) {
           <Button type="submit" disabled={isLoading} className="cursor-pointer">
             {isLoading ? (
               <>
-                Map <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                {t("buttons.mapping")}{" "}
+                <Loader2 className="animate-spin h-4 w-4 mr-2" />
               </>
             ) : (
-              "Map"
+              t("buttons.map")
             )}
           </Button>
         </form>

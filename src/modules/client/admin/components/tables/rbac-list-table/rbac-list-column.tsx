@@ -4,14 +4,16 @@ import { format } from "date-fns";
 import { TRbac } from "@/modules/shared/entities/models/admin/rbac";
 import { RbacUnmap } from "../../rbac/rbac-unmap";
 
-export const RbacListColumn: ColumnDef<TRbac>[] = [
+export const RbacListColumn = (
+  t: (key: string) => string
+): ColumnDef<TRbac>[] => [
   {
     header: ({ column }) => {
       const isSorted = column.getIsSorted();
 
       return (
         <TanstackTableColumnSorting
-          label="Organization"
+          label={t("columns.organization")}
           column={column}
           isSorted={isSorted}
         />
@@ -28,7 +30,7 @@ export const RbacListColumn: ColumnDef<TRbac>[] = [
     },
   },
   {
-    header: "User",
+    header: t("columns.user"),
     accessorKey: "user",
     filterFn: (row, columnId, filterValue) => {
       const userData: {
@@ -56,7 +58,7 @@ export const RbacListColumn: ColumnDef<TRbac>[] = [
     },
   },
   {
-    header: "Role",
+    header: t("columns.role"),
     accessorKey: "role",
     filterFn: (row, columnId, filterValue) => {
       const roleData: {
@@ -79,7 +81,7 @@ export const RbacListColumn: ColumnDef<TRbac>[] = [
 
       return (
         <TanstackTableColumnSorting
-          label="Created At"
+          label={t("columns.createdAt")}
           column={column}
           isSorted={isSorted}
         />
@@ -92,7 +94,7 @@ export const RbacListColumn: ColumnDef<TRbac>[] = [
     },
   },
   {
-    header: "Action",
+    header: t("columns.action"),
     id: "action",
     cell: ({ row }) => {
       const orgId = row.original.organizationId;
