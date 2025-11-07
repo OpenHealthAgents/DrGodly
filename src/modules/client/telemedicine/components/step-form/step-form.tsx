@@ -21,7 +21,7 @@ export interface DoctorProfileData {
 }
 
 function DoctorProfileAndRegister() {
-  const [currentStep, setCurrentStep] = useState(4);
+  const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [profileData, setProfileData] = useState<DoctorProfileData>({
     completed: false,

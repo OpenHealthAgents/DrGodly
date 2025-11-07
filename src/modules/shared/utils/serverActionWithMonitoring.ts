@@ -11,7 +11,6 @@ import {
 } from "../entities/errors/commonError";
 import { ZSAError } from "zsa";
 
-// Detect special Next.js control flow errors (redirect/notFound)
 function isNextJsControlError(error: any) {
   return (
     error?.digest === "NEXT_REDIRECT" || error?.digest === "NEXT_NOT_FOUND"
@@ -50,7 +49,6 @@ export async function withMonitoring<T>(
       try {
         data = await handler();
       } catch (err) {
-        // Skip Next.js control-flow errors
         if (!isNextJsControlError(err)) {
           monitoringService.report(err);
         }
@@ -68,11 +66,9 @@ export async function withMonitoring<T>(
 
         throw new ZSAError("ERROR", err);
       } finally {
-        // ✅ Always clear user context before possible redirect throw
         monitoringService.clearUser();
       }
 
-      // ✅ Perform post-success actions safely
       if (options?.url) {
         if (options?.revalidatePath) revalidatePath(options.url);
         if (options?.redirect) redirect({ href: options.url, locale });
