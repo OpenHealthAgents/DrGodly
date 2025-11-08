@@ -11,6 +11,7 @@ import {
 } from "../entities/errors/commonError";
 import { ZSAError } from "zsa";
 import { logOperation } from "./server-logger/log-operation";
+import { randomUUID } from "crypto";
 
 function isNextJsControlError(error: any) {
   return (
@@ -33,6 +34,7 @@ export async function withMonitoring<T>(
   const locale = await getLocale();
   const session = await getServerSession();
   const userId = session?.user?.id;
+  const operationId = randomUUID();
 
   // Start log
   const startTimeMs = Date.now();
@@ -40,6 +42,9 @@ export async function withMonitoring<T>(
     name,
     userId,
     startTimeMs,
+    context: {
+      operationId,
+    },
   });
 
   return monitoringService.instrumentServerAction(
@@ -60,7 +65,14 @@ export async function withMonitoring<T>(
         data = await handler();
 
         // Success log
-        logOperation("success", { name, userId, startTimeMs });
+        logOperation("success", {
+          name,
+          userId,
+          startTimeMs,
+          context: {
+            operationId,
+          },
+        });
 
         if (options?.url && options?.revalidatePath) {
           revalidatePath(options.url);
@@ -71,7 +83,15 @@ export async function withMonitoring<T>(
         }
 
         // Error log
-        logOperation("error", { name, userId, startTimeMs, err });
+        logOperation("error", {
+          name,
+          userId,
+          startTimeMs,
+          err,
+          context: {
+            operationId,
+          },
+        });
 
         if (err instanceof InputParseError) {
           throw new ZSAError("INPUT_PARSE_ERROR", err.cause);
