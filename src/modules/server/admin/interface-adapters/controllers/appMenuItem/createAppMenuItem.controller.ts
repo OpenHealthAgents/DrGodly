@@ -13,7 +13,7 @@ export async function createAppMenuItemController(
   input: any
 ): Promise<TCreateAppMenuItemControllerOutput> {
   const { data, error: inputParseError } =
-    CreateAppMenuItemValidationSchema.safeParseAsync(input);
+    await CreateAppMenuItemValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

@@ -14,7 +14,7 @@ export async function createPreferenceTemplateController(
   input: any
 ): Promise<TCreatePreferenceTemplateControllerOutput> {
   const { data, error: inputParseError } =
-    PreferenceTemplateValidationSchema.safeParseAsync(input);
+    await PreferenceTemplateValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

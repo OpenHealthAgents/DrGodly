@@ -33,7 +33,7 @@ export class OrganizationRepository implements IOrganizationRepository {
 
       const total = await prismaMain.organization.count();
 
-      const data = OrganizationsDataSchema.parseAsync({
+      const data = await OrganizationsDataSchema.parseAsync({
         organizationsData,
         total,
       });
@@ -65,7 +65,7 @@ export class OrganizationRepository implements IOrganizationRepository {
         return null;
       }
 
-      return OrganizationSchema.parseAsync(data);
+      return await OrganizationSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -87,7 +87,7 @@ export class OrganizationRepository implements IOrganizationRepository {
         },
       });
 
-      return OrganizationSchema.parseAsync(data);
+      return await OrganizationSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -114,7 +114,7 @@ export class OrganizationRepository implements IOrganizationRepository {
         },
       });
 
-      return OrganizationSchema.parseAsync(data);
+      return await OrganizationSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -134,7 +134,7 @@ export class OrganizationRepository implements IOrganizationRepository {
         },
       });
 
-      return OrganizationSchema.parseAsync(data);
+      return await OrganizationSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

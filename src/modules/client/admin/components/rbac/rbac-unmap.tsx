@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useServerAction } from "zsa-react";
 import { unmapRbacUserOrganizationRole } from "../../server-actions/rbac-actions";
+import { useTranslations } from "next-intl";
 
 export function RbacUnmap({
   orgId,
@@ -15,6 +15,8 @@ export function RbacUnmap({
   roleId: string;
   userId: string;
 }) {
+  const t = useTranslations("admin.rbac.unmap");
+
   const { execute, isPending } = useServerAction(
     unmapRbacUserOrganizationRole,
     {
@@ -55,7 +57,7 @@ export function RbacUnmap({
       }
       disabled={isPending}
     >
-      UnMap
+      {t("button")}
     </Button>
   );
 }

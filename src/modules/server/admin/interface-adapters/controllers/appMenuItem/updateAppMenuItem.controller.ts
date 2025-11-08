@@ -13,7 +13,7 @@ export async function updateAppMenuItemController(
   input: any
 ): Promise<TUpdateAppMenuItemControllerOutput> {
   const { data, error: inputParseError } =
-    UpdateAppMenuItemValidationSchema.safeParseAsync(input);
+    await UpdateAppMenuItemValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

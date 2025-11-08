@@ -122,7 +122,7 @@ export function StepProgressBar({
         </div>
         <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
           <div
-            className="h-full bg-gradient-primary transition-all duration-500 ease-out"
+            className="h-full bg-primary transition-all duration-500 ease-out"
             style={{
               width: `${(completedSteps.length / steps.length) * 100}%`,
             }}

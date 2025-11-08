@@ -37,7 +37,7 @@ import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useServerAction } from "zsa-react";
 import { updateUserPreference } from "../../server-actions/userPreference-actions";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export function UserPreferences({
   preference,
@@ -46,6 +46,8 @@ export function UserPreferences({
   preference: TUserPreference | null;
   error: ZSAError | null;
 }) {
+  const t = useTranslations("settings.UserPreferences");
+
   useEffect(() => {
     if (error) {
       toast.error(
@@ -151,11 +153,9 @@ export function UserPreferences({
         <div className="flex items-start justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              User Preferences
+              {t("title")}
             </h1>
-            <p className="text-muted-foreground">
-              Customize how dates, times, and numbers are displayed
-            </p>
+            <p className="text-muted-foreground">{t("subtitle")}</p>
           </div>
         </div>
 
@@ -170,9 +170,11 @@ export function UserPreferences({
                 {/* Country Section */}
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-xl">Country</CardTitle>
+                    <CardTitle className="text-xl">
+                      {t("country.title")}
+                    </CardTitle>
                     <CardDescription>
-                      Configure your all fields based on your country
+                      {t("country.description")}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -181,9 +183,9 @@ export function UserPreferences({
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <FormSelect
                           control={form.control}
-                          label="Country"
+                          label={t("fields.country.label")}
                           name="country"
-                          placeholder="Select Country"
+                          placeholder={t("fields.country.placeholder")}
                         >
                           {countryOptions.map((country) => (
                             <SelectItem
@@ -202,9 +204,11 @@ export function UserPreferences({
                 {/* Localization Section */}
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-xl">Localization</CardTitle>
+                    <CardTitle className="text-xl">
+                      {t("localization.title")}
+                    </CardTitle>
                     <CardDescription>
-                      Configure your timezone and date/time formats
+                      {t("localization.description")}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -213,9 +217,9 @@ export function UserPreferences({
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <FormSelect
                           control={form.control}
-                          label="Timezone"
+                          label={t("fields.timezone.label")}
                           name="timezone"
-                          placeholder="Select Timezone"
+                          placeholder={t("fields.timezone.placeholder")}
                         >
                           {timezoneOptions.map((tz) => (
                             <SelectItem key={tz.value} value={tz.value}>
@@ -226,9 +230,9 @@ export function UserPreferences({
 
                         <FormSelect
                           control={form.control}
-                          label="Date Format"
+                          label={t("fields.dateFormat.label")}
                           name="dateFormat"
-                          placeholder="Select Date Format"
+                          placeholder={t("fields.dateFormat.placeholder")}
                         >
                           {dateFormatOptions.map((df) => (
                             <SelectItem key={df.value} value={df.value}>
@@ -244,9 +248,9 @@ export function UserPreferences({
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <FormSelect
                           control={form.control}
-                          label="Time Format"
+                          label={t("fields.timeFormat.label")}
                           name="timeFormat"
-                          placeholder="Select Time Format"
+                          placeholder={t("fields.timeFormat.placeholder")}
                         >
                           {timeFormatOptions.map((tf) => (
                             <SelectItem key={tf.value} value={tf.value}>
@@ -257,9 +261,9 @@ export function UserPreferences({
 
                         <FormSelect
                           control={form.control}
-                          label="Week Start Day"
+                          label={t("fields.weekStart.label")}
                           name="weekStart"
-                          placeholder="Select Week Start"
+                          placeholder={t("fields.weekStart.placeholder")}
                         >
                           {weekStartOptions.map((week) => (
                             <SelectItem key={week.value} value={week.value}>
@@ -275,9 +279,11 @@ export function UserPreferences({
                 {/* Regional Settings Section */}
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-xl">Regional Settings</CardTitle>
+                    <CardTitle className="text-xl">
+                      {t("regional.title")}
+                    </CardTitle>
                     <CardDescription>
-                      Configure currency and measurement preferences
+                      {t("regional.description")}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -286,9 +292,9 @@ export function UserPreferences({
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <FormSelect
                           control={form.control}
-                          label="Currency"
+                          label={t("fields.currency.label")}
                           name="currency"
-                          placeholder="Select Currency"
+                          placeholder={t("fields.currency.placeholder")}
                         >
                           {currencyOptions.map((currency) => (
                             <SelectItem
@@ -302,9 +308,9 @@ export function UserPreferences({
 
                         <FormSelect
                           control={form.control}
-                          label="Number Format"
+                          label={t("fields.numberFormat.label")}
                           name="numberFormat"
-                          placeholder="Select Number Format"
+                          placeholder={t("fields.numberFormat.placeholder")}
                         >
                           {numberFormatOptions.map((nf) => (
                             <SelectItem key={nf.value} value={nf.value}>
@@ -318,16 +324,17 @@ export function UserPreferences({
                 </Card>
 
                 {/* Action Buttons */}
-                <div className="flex gap-4">
+                <div className="flex gap-4 flex-wrap">
                   <Button
                     type="submit"
-                    className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
+                    className="flex-3 bg-primary text-primary-foreground hover:bg-primary/90"
                     disabled={isPending}
                   >
-                    Save Preferences
+                    {t("buttons.save")}
                   </Button>
                   <Button
                     type="button"
+                    className="flex-1"
                     variant="outline"
                     onClick={() => {
                       // isManualReset.current = true;
@@ -335,7 +342,7 @@ export function UserPreferences({
                     }}
                     disabled={isPending}
                   >
-                    Reset to Defaults
+                    {t("buttons.reset")}
                   </Button>
                 </div>
               </form>
@@ -346,10 +353,8 @@ export function UserPreferences({
           <div>
             <Card className="sticky top-20">
               <CardHeader>
-                <CardTitle className="text-xl">Preview</CardTitle>
-                <CardDescription>
-                  See how your preferences will format data
-                </CardDescription>
+                <CardTitle className="text-xl">{t("preview.title")}</CardTitle>
+                <CardDescription>{t("preview.description")}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Date and Time Preview */}
@@ -357,7 +362,7 @@ export function UserPreferences({
                   <div className="bg-muted p-4 rounded-lg">
                     <div className="flex items-center gap-2 text-muted-foreground text-sm mb-2">
                       <Calendar className="w-4 h-4" />
-                      <span>Date</span>
+                      <span>{t("preview.date")}</span>
                     </div>
                     <div className="text-lg font-semibold">
                       {formatDate(new Date())}
@@ -366,7 +371,7 @@ export function UserPreferences({
                   <div className="bg-muted p-4 rounded-lg">
                     <div className="flex items-center gap-2 text-muted-foreground text-sm mb-2">
                       <Clock className="w-4 h-4" />
-                      <span>Time</span>
+                      <span>{t("preview.time")}</span>
                     </div>
                     <div className="text-lg font-semibold">
                       {formatTime(new Date())}
@@ -379,7 +384,7 @@ export function UserPreferences({
                   <div className="bg-muted p-4 rounded-lg">
                     <div className="flex items-center gap-2 text-muted-foreground text-sm mb-2">
                       <DollarSign className="w-4 h-4" />
-                      <span>Currency</span>
+                      <span>{t("preview.currency")}</span>
                     </div>
                     <div className="text-lg font-semibold">
                       {formatCurrency(1224.87)}
@@ -388,7 +393,7 @@ export function UserPreferences({
                   <div className="bg-muted p-4 rounded-lg">
                     <div className="flex items-center gap-2 text-muted-foreground text-sm mb-2">
                       <Hash className="w-4 h-4" />
-                      <span>Number</span>
+                      <span>{t("preview.number")}</span>
                     </div>
                     <div className="text-lg font-semibold">
                       {formatNumber(1224.87)}

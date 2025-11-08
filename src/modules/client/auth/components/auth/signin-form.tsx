@@ -35,6 +35,7 @@ import Link from "next/link";
 import { authClient } from "@/modules/client/auth/betterauth/auth-client";
 import { useServerAction } from "zsa-react";
 import { signIn } from "@/modules/client/auth/server-actions/auth-actions";
+import { useTranslations } from "next-intl";
 
 const usernameOrEmailSchema = z.string().refine(
   (value) => {
@@ -62,6 +63,8 @@ export function SignInForm({
 }: {
   isAuthCheckPending: boolean;
 }) {
+  const t = useTranslations("auth.signin");
+
   const [isForgetClick, setIsForgetClick] = useState(false);
   const [inputType, setInputType] = useState("password");
 
@@ -100,9 +103,9 @@ export function SignInForm({
     <>
       <Card className="w-[380px]">
         <CardHeader>
-          <CardTitle className="text-xl">Sign In</CardTitle>
+          <CardTitle className="text-xl">{t("title")}</CardTitle>
           <CardDescription className="text-xs">
-            Enter your email below to login to your account
+            {t("description")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -113,10 +116,14 @@ export function SignInForm({
                 name="usernameOrEmail"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email or Username</FormLabel>
+                    <FormLabel>
+                      {t("form.fields.usernameOrEmail.label")}
+                    </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="@username or example@gmail.com"
+                        placeholder={t(
+                          "form.fields.usernameOrEmail.placeholder"
+                        )}
                         {...field}
                       />
                     </FormControl>
@@ -129,11 +136,11 @@ export function SignInForm({
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>{t("form.fields.password.label")}</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input
-                          placeholder="password"
+                          placeholder={t("form.fields.password.placeholder")}
                           {...field}
                           type={inputType}
                           maxLength={16}
@@ -160,7 +167,7 @@ export function SignInForm({
                         className="cursor-pointer text-zinc-500 dark:text-white/70 p-0 h-fit pr-1"
                         onClick={() => setIsForgetClick(true)}
                       >
-                        Forget Password?
+                        {t("form.fields.password.forget")}
                       </Button>
                     </div>
                   </FormItem>
@@ -173,15 +180,16 @@ export function SignInForm({
               >
                 {isSubmitting || isPending || !isAuthCheckPending ? (
                   <>
-                    <Loader2 className="animate-spin" /> Login
+                    <Loader2 className="animate-spin" />{" "}
+                    {t("form.button.loading")}
                   </>
                 ) : isAuthCheckPending ? (
                   <>
                     <Loader2 className="animate-spin" />
-                    Checking Auth Provider
+                    {t("form.button.checking")}
                   </>
                 ) : (
-                  "Login"
+                  t("form.button.default")
                 )}
               </Button>
             </form>
@@ -190,21 +198,21 @@ export function SignInForm({
             <div className="flex items-center gap-2">
               <div className="h-[1px] bg-white/20 w-full" />
               <p className="text-nowrap w-fit text-center text-sm text-zinc-500 dark:text-white/70">
-                Or continue with
+                {t("oauth.continueWith")}
               </p>
               <div className="h-[1px] bg-white/20 w-full" />
             </div>
             <div className="flex gap-2 flex-wrap w-full">
               <OauthButton
                 oauthName="google"
-                label="Google"
+                label={t("oauth.google")}
                 isFormSubmitting={
                   isSubmitting || isPending || isAuthCheckPending
                 }
               />
               <OauthButton
                 oauthName="github"
-                label="GitHub"
+                label={t("oauth.github")}
                 isFormSubmitting={
                   isSubmitting || isPending || isAuthCheckPending
                 }
@@ -212,12 +220,12 @@ export function SignInForm({
             </div>
           </div>
           <p className="text-center mt-6 text-sm text-zinc-500 dark:text-white/70">
-            Don&apos;t have an account?{" "}
+            {t("footer.noAccount")}{" "}
             <Link
               href="/signup"
               className="text-black dark:text-white underline-offset-4 underline"
             >
-              Sign Up
+              {t("footer.signup")}
             </Link>
           </p>
         </CardContent>
@@ -245,6 +253,8 @@ export function ForgetPasswordAlert({
   isForgetClick: boolean;
   setIsForgetClick: Dispatch<SetStateAction<boolean>>;
 }) {
+  const t = useTranslations("auth.signin.forgetDialog");
+
   const form = useForm<ForgetPasswordForm>({
     resolver: zodResolver(forgetPasswordAlertSchema),
     defaultValues: {
@@ -284,7 +294,7 @@ export function ForgetPasswordAlert({
     <Dialog open={isForgetClick} onOpenChange={setIsForgetClick}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="mb-4">Forget Password</DialogTitle>
+          <DialogTitle className="mb-4">{t("title")}</DialogTitle>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
@@ -292,9 +302,12 @@ export function ForgetPasswordAlert({
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{t("form.email.label")}</FormLabel>
                     <FormControl>
-                      <Input placeholder="example@gmail.com" {...field} />
+                      <Input
+                        placeholder={t("form.email.placeholder")}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -306,7 +319,14 @@ export function ForgetPasswordAlert({
                 disabled={isSubmitting}
               >
                 {" "}
-                {isSubmitting ? <Loader2 className="animate-spin" /> : "Submit"}
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="animate-spin" />{" "}
+                    {t("form.submit.loading")}
+                  </>
+                ) : (
+                  t("form.submit.default")
+                )}
               </Button>
             </form>
           </Form>

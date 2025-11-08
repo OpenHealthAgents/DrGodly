@@ -1,13 +1,14 @@
 import RootNavBarPage from "@/modules/client/home/components/root-navbar";
+import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
 
-const AuthLayout = ({ children }: { children: React.ReactNode }) => {
+const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
+  const session = await getServerSession();
+
   return (
     <>
       <main className="w-full min-h-screen">
-        <RootNavBarPage />
-        <div className="flex items-center justify-center min-h-[calc(100vh-48px)] p-4">
-          {children}
-        </div>
+        <RootNavBarPage session={session} />
+        <div className="flex items-center justify-center p-32">{children}</div>
       </main>
     </>
   );

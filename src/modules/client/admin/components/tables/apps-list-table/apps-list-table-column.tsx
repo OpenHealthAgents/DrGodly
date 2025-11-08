@@ -24,14 +24,16 @@ import {
 import Link from "next/link";
 import { TAppsListTableColumn } from "@/modules/shared/entities/models/admin/app";
 
-export const appsListTableColumn: ColumnDef<TAppsListTableColumn>[] = [
+export const appsListTableColumn = (
+  t: (key: string) => string
+): ColumnDef<TAppsListTableColumn>[] => [
   {
     header: ({ column }) => {
       const isSorted = column.getIsSorted();
 
       return (
         <TanstackTableColumnSorting
-          label="Name"
+          label={t("table.columns.name")}
           column={column}
           isSorted={isSorted}
         />
@@ -40,7 +42,7 @@ export const appsListTableColumn: ColumnDef<TAppsListTableColumn>[] = [
     accessorKey: "name",
   },
   {
-    header: "Description",
+    header: t("table.columns.description"),
     accessorKey: "description",
     cell: ({ row }) => {
       const desc: string = row.getValue("description");
@@ -57,7 +59,7 @@ export const appsListTableColumn: ColumnDef<TAppsListTableColumn>[] = [
 
       return (
         <TanstackTableColumnSorting
-          label="Slug"
+          label={t("table.columns.slug")}
           column={column}
           isSorted={isSorted}
         />
@@ -66,18 +68,13 @@ export const appsListTableColumn: ColumnDef<TAppsListTableColumn>[] = [
     accessorKey: "slug",
   },
   {
-    header: "Type",
+    header: t("table.columns.type"),
     accessorKey: "type",
   },
   {
-    header: "Menu Items",
+    header: t("table.columns.menuItems"),
     cell: ({ row }) => {
-      type CountType = {
-        appMenuItems: number;
-        appActions: number;
-      };
-
-      const count: CountType = row.original._count;
+      const count = row.original._count;
       const appId = row.original.id;
 
       return (
@@ -127,7 +124,7 @@ export const appsListTableColumn: ColumnDef<TAppsListTableColumn>[] = [
 
       return (
         <TanstackTableColumnSorting
-          label="Created At"
+          label={t("table.columns.createdAt")}
           column={column}
           isSorted={isSorted}
         />
@@ -157,7 +154,7 @@ export const appsListTableColumn: ColumnDef<TAppsListTableColumn>[] = [
                 onClick={() => openModal({ type: "editApp", appData })}
               >
                 <PencilLine />
-                Edit
+                {t("table.actions.edit")}
               </DropdownMenuItem>
               {/* <DropdownMenuSeparator /> */}
               <DropdownMenuItem
@@ -166,7 +163,7 @@ export const appsListTableColumn: ColumnDef<TAppsListTableColumn>[] = [
               >
                 <div className="flex items-center gap-2">
                   <Trash2 />
-                  Delete
+                  {t("table.actions.delete")}
                 </div>
                 <TriangleAlert className="text-rose-600" />
               </DropdownMenuItem>

@@ -1,0 +1,243 @@
+generator client {
+    provider      = "prisma-client-js"
+    output        = "../generated/telemedicine-database"
+    binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL_TELEMEDICINE")
+}
+
+// ───────────────────────────
+// ENUMS
+// ───────────────────────────
+
+enum RegistrationType {
+    permanent
+    renewal
+}
+
+enum WorkStatus {
+    government
+    private
+    both
+}
+
+enum GovernmentCategory {
+    central
+    state
+}
+
+// ───────────────────────────
+// ROOT DOCTOR
+// ───────────────────────────
+
+model Doctor {
+    id     String @id @default(uuid())
+    orgId  String
+    userId String
+
+    doctorId String @unique
+
+    personal       DoctorPersonalDetail?
+    qualifications DoctorQualification?
+    workDetails    DoctorWorkDetail?
+    status         Boolean               @default(false)
+
+    createdBy String
+    updatedBy String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// ───────────────────────────
+// PERSONAL DETAILS
+// ───────────────────────────
+
+model DoctorPersonalDetail {
+    id              String     @id @default(uuid())
+    orgId           String
+    title           String
+    fullName        String
+    nationality     String
+    languagesSpoken Language[]
+    dateOfBirth     DateTime
+    gender          String
+    mobileNumber    String
+    email           String
+
+    doctorId String @unique
+    doctor   Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+    KYCAddress           KYCAddress?
+    CommunicationAddress CommunicationAddress?
+
+    createdBy String
+    updatedBy String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// mobile number (primary / secondary multiple)
+
+// ──────────────────────────────────────────────────────────────
+// Languages Spoken (junction table)
+// ──────────────────────────────────────────────────────────────
+model Language {
+    id       String @id @default(uuid())
+    orgId    String
+    langCode String
+
+    doctorPersonalDetailId String
+    doctorPersonalDetail   DoctorPersonalDetail @relation(fields: [doctorPersonalDetailId], references: [id], onDelete: Cascade)
+
+    createdBy String
+    updatedBy String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// ───────────────────────────
+// ADDRESS
+// ───────────────────────────
+
+model KYCAddress {
+    id          String @id @default(cuid())
+    orgId       String
+    careOf      String
+    addressLine String
+    city        String
+    district    String
+    state       String
+    pincode     String // 6-digit Indian pincode
+
+    doctorPersonalDetailId String               @unique
+    doctorPersonalDetail   DoctorPersonalDetail @relation(fields: [doctorPersonalDetailId], references: [id], onDelete: Cascade)
+
+    createdBy String
+    updatedBy String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([pincode])
+}
+
+model CommunicationAddress {
+    id          String  @id @default(cuid())
+    orgId       String
+    sameAsKyc   Boolean @default(false)
+    careOf      String?
+    addressLine String?
+    city        String?
+    district    String?
+    state       String?
+    pincode     String?
+
+    doctorPersonalDetailId String               @unique
+    doctorPersonalDetail   DoctorPersonalDetail @relation(fields: [doctorPersonalDetailId], references: [id], onDelete: Cascade)
+
+    createdBy String
+    updatedBy String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([pincode])
+}
+
+// ───────────────────────────
+// QUALIFICATION GROUP
+// ───────────────────────────
+
+model DoctorQualification {
+    id                      String           @id @default(uuid())
+    orgId                   String
+    systemOfMedicine        String
+    category                String
+    councilName             String
+    registrationNumber      String
+    dateOfFirstRegistration DateTime
+    registrationType        RegistrationType
+    registrationValidDate   DateTime?
+    nameMatchesAadhaar      Boolean
+
+    doctorId       String          @unique
+    doctor         Doctor          @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+    qualifications Qualification[]
+
+    createdBy String
+    updatedBy String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Qualification {
+    id                     String  @id @default(uuid())
+    orgId                  String
+    countryOfQualification String
+    degreeName             String
+    country                String
+    state                  String
+    college                String
+    university             String
+    passingMonth           String
+    passingYear            String
+    nameMatchesAadhaar     Boolean
+
+    doctorQualificationId String
+    doctorQualification   DoctorQualification @relation(fields: [doctorQualificationId], references: [id], onDelete: Cascade)
+
+    createdBy String
+    updatedBy String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// ───────────────────────────
+// WORK DETAILS + FACILITIES
+// ───────────────────────────
+
+model DoctorWorkDetail {
+    id                  String              @id @default(uuid())
+    orgId               String
+    currentlyWorking    Boolean
+    reasonForNotWorking String?
+    otherReason         String?
+    natureOfWork        String?
+    teleConsultationURL String?
+    workStatus          WorkStatus?
+    governmentCategory  GovernmentCategory?
+    centralGovernment   String?
+    about               String
+
+    doctorId          String                        @unique
+    doctor            Doctor                        @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+    workingFacilities DoctorWorkingFacilityDetail[]
+
+    createdBy String
+    updatedBy String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model DoctorWorkingFacilityDetail {
+    id             String  @id @default(uuid())
+    orgId          String
+    facilityId     String
+    facilityStatus Boolean
+    facilityName   String
+    address        String
+    state          String
+    district       String
+    type           String
+    department     String
+    designation    String
+
+    doctorWorkId String
+    doctorWork   DoctorWorkDetail @relation(fields: [doctorWorkId], references: [id])
+
+    createdBy String
+    updatedBy String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

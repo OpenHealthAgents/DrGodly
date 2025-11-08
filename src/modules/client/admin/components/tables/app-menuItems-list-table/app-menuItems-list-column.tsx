@@ -18,14 +18,16 @@ import {
 } from "lucide-react";
 import { TAppMenuItem } from "@/modules/shared/entities/models/admin/appMenuItem";
 
-export const appMenuItemsListColumn: ColumnDef<TAppMenuItem>[] = [
+export const appMenuItemsListColumn = (
+  t: (key: string) => string
+): ColumnDef<TAppMenuItem>[] => [
   {
     header: ({ column }) => {
       const isSorted = column.getIsSorted();
 
       return (
         <TanstackTableColumnSorting
-          label="Name"
+          label={t("table.columns.name")}
           column={column}
           isSorted={isSorted}
         />
@@ -34,7 +36,7 @@ export const appMenuItemsListColumn: ColumnDef<TAppMenuItem>[] = [
     accessorKey: "name",
   },
   {
-    header: "Description",
+    header: t("table.columns.description"),
     accessorKey: "description",
     cell: ({ row }) => {
       const desc: string = row.getValue("description");
@@ -54,7 +56,7 @@ export const appMenuItemsListColumn: ColumnDef<TAppMenuItem>[] = [
 
       return (
         <TanstackTableColumnSorting
-          label="Slug"
+          label={t("table.columns.slug")}
           column={column}
           isSorted={isSorted}
         />
@@ -68,7 +70,7 @@ export const appMenuItemsListColumn: ColumnDef<TAppMenuItem>[] = [
 
       return (
         <TanstackTableColumnSorting
-          label="Created At"
+          label={t("table.columns.createdAt")}
           column={column}
           isSorted={isSorted}
         />
@@ -77,10 +79,9 @@ export const appMenuItemsListColumn: ColumnDef<TAppMenuItem>[] = [
     accessorKey: "createdAt",
     cell: ({ row }) => {
       const openModal = adminModalStore((state) => state.onOpen);
-
-      const appMenuItemId: string | undefined = row.original.id;
       const appMenuItemData = row.original;
       const joinedDate: Date = row.getValue("createdAt");
+
       return (
         <div className="flex items-center justify-between gap-4">
           {format(joinedDate, "do 'of' MMM, yyyy")}
@@ -100,7 +101,7 @@ export const appMenuItemsListColumn: ColumnDef<TAppMenuItem>[] = [
                 }
               >
                 <PencilLine />
-                Edit
+                {t("table.actions.edit")}
               </DropdownMenuItem>
               {/* <DropdownMenuSeparator /> */}
               <DropdownMenuItem
@@ -115,7 +116,7 @@ export const appMenuItemsListColumn: ColumnDef<TAppMenuItem>[] = [
               >
                 <div className="flex items-center gap-2">
                   <Trash2 />
-                  Delete
+                  {t("table.actions.delete")}
                 </div>
                 <TriangleAlert className="text-rose-600" />
               </DropdownMenuItem>

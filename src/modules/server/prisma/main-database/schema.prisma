@@ -44,9 +44,9 @@ model User {
 model UserPreference {
   id           String   @id @default(uuid())
   userId       String   @unique
-  timezone     String?  @default("UTC")
+  timezone     String?  @default("Asia/Kolkata")
   dateFormat   String?  @default("DD/MM/YYYY")
-  timeFormat   String?  @default("24h")
+  timeFormat   String?  @default("hh:mm A")
   country      String?  @default("IN")
   currency     String?  @default("INR")
   // measurementSystem String?  @default("metric")

@@ -14,7 +14,7 @@ export async function deleteAppController(
 ): Promise<DeleteAppControllerOutput> {
   // TODO validate input, orchestrate use-cases
   const { data, error: inputParseError } =
-    DeleteAppValidationSchema.safeParseAsync(input);
+    await DeleteAppValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

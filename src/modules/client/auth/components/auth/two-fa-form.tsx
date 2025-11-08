@@ -29,8 +29,10 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/modules/client/auth/betterauth/auth-client";
+import { useTranslations } from "next-intl";
 
 const TwoFaForm = () => {
+  const t = useTranslations("auth.twofa");
   const router = useRouter();
 
   const FormSchema = z.object({
@@ -68,23 +70,20 @@ const TwoFaForm = () => {
   }
 
   return (
-    <Card>
+    <Card className="max-w-96 mx-auto">
       <CardHeader>
-        <CardTitle>2FA Authentication</CardTitle>
-        <CardDescription>Enter your OTP to verify yourself</CardDescription>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmitOtp)}
-            className="w-2/3 space-y-6"
-          >
+          <form onSubmit={form.handleSubmit(onSubmitOtp)} className="space-y-6">
             <FormField
               control={form.control}
               name="otp"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>One-Time Password</FormLabel>
+                  <FormLabel>{t("form.label")}</FormLabel>
                   <FormControl>
                     <InputOTP maxLength={6} {...field}>
                       <InputOTPGroup>
@@ -97,9 +96,7 @@ const TwoFaForm = () => {
                       </InputOTPGroup>
                     </InputOTP>
                   </FormControl>
-                  <FormDescription>
-                    Please enter the one-time password sent to your phone.
-                  </FormDescription>
+                  <FormDescription>{t("form.helper")}</FormDescription>
                   <FormMessage />
                   <div>
                     <Button
@@ -107,39 +104,36 @@ const TwoFaForm = () => {
                       variant="link"
                       className="cursor-pointer pl-0 underline hover:text-blue-600"
                       onClick={async () => {
-                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         const { data, error } =
                           await authClient.twoFactor.sendOtp();
 
                         if (error) {
-                          toast("An error occurred!", {
-                            description: (
-                              <span className="dark:text-zinc-400">
-                                {error.message}
-                              </span>
-                            ),
+                          toast(t("toast.errorTitle"), {
+                            description:
+                              error.message || t("toast.errorDescription"),
                           });
                           return;
                         }
 
-                        toast("OTP Sent Successfully!", {
-                          description: <span>{"Check your email."}</span>,
+                        toast(t("toast.otpSentTitle"), {
+                          description: (
+                            <span>{t("toast.otpSentDescription")}</span>
+                          ),
                         });
                       }}
                     >
-                      Request OTP
+                      {t("form.requestOtp")}
                     </Button>
                   </div>
                 </FormItem>
               )}
             />
-
             <Button
               type="submit"
               className="cursor-pointer"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Submitting..." : "Submit"}
+              {isSubmitting ? t("form.submitting") : t("form.submit")}
             </Button>
           </form>
         </Form>

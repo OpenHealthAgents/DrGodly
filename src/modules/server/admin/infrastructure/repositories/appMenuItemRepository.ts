@@ -33,7 +33,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         },
       });
 
-      const data = AppMenuItemsDataSchema.parseAsync({
+      const data = await AppMenuItemsDataSchema.parseAsync({
         appMenuItemsData: appMenuItems,
         total,
       });
@@ -60,7 +60,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         },
       });
 
-      return AppMenuItemSchema.parseAsync(data);
+      return await AppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -89,7 +89,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         return null;
       }
 
-      return AppMenuItemSchema.parseAsync(data);
+      return await AppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -117,7 +117,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         },
       });
 
-      return AppMenuItemSchema.parseAsync(data);
+      return await AppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -140,7 +140,7 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
         },
       });
 
-      return AppMenuItemSchema.parseAsync(data);
+      return await AppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

@@ -46,7 +46,7 @@ export class RbacRepository implements IrbacRepository {
 
       const total = await prismaMain.rBAC.count();
 
-      return RbacDatasSchema.parseAsync({
+      return await RbacDatasSchema.parseAsync({
         rbacDatas: data,
         total,
       });
@@ -93,7 +93,7 @@ export class RbacRepository implements IrbacRepository {
         },
       });
 
-      return RbacSchema.parseAsync(data);
+      return await RbacSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -139,7 +139,7 @@ export class RbacRepository implements IrbacRepository {
         },
       });
 
-      return RbacSchema.parseAsync(data);
+      return await RbacSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

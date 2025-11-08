@@ -19,7 +19,7 @@ export async function signInWithUsernameController(
     "IBetterauthAuthenticationService"
   );
   const { data, error: inputParseError } =
-    SignInWithUsernameSchema.safeParseAsync(input);
+    await SignInWithUsernameSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

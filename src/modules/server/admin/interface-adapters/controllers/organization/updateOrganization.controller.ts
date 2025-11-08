@@ -13,7 +13,7 @@ export async function updateOrganizationController(
   input: any
 ): Promise<TUpdateOrganizationControllerOutput> {
   const { data, error: inputParseError } =
-    UpdateOrganizationFormSchema.safeParseAsync(input);
+    await UpdateOrganizationFormSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

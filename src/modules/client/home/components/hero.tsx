@@ -3,6 +3,7 @@
 import { landingButtonVariants as buttonVariants } from "./landing-page-button";
 import { Link } from "@/i18n/navigation";
 import { Variants, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -27,6 +28,8 @@ const itemVariants: Variants = {
 };
 
 function LandingPageHero({ session }: { session: any | null }) {
+  const t = useTranslations("landing.hero");
+
   return (
     <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 overflow-hidden">
       {/* Subtle grid background */}
@@ -43,18 +46,16 @@ function LandingPageHero({ session }: { session: any | null }) {
           <div className="text-center lg:text-left">
             <motion.h1
               variants={itemVariants}
-              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-landing-foreground tracking-tight"
+              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-landing-foreground tracking-tight leading-16"
             >
-              The Future of Intelligent Healthcare
+              {t("title")}
             </motion.h1>
 
             <motion.p
               variants={itemVariants}
               className="mt-6 text-lg sm:text-xl text-landing-muted-foreground max-w-xl mx-auto lg:mx-0"
             >
-              Dr. Godly is a secure, AI-powered platform that streamlines
-              patient intake, enhances consultations, and empowers both doctors
-              and patients.
+              {t("description")}
             </motion.p>
 
             {/* Buttons */}
@@ -72,7 +73,7 @@ function LandingPageHero({ session }: { session: any | null }) {
                         "w-full sm:w-auto text-lg px-8 py-4 rounded-full shadow-lg transition-transform duration-200 hover:scale-105",
                     })}
                   >
-                    Sign In
+                    {t("buttons.signin")}
                   </Link>
 
                   <Link
@@ -83,7 +84,7 @@ function LandingPageHero({ session }: { session: any | null }) {
                         "w-full sm:w-auto text-lg px-8 py-4 rounded-full",
                     })}
                   >
-                    Sign Up
+                    {t("buttons.signup")}
                   </Link>
                 </>
               ) : (
@@ -95,7 +96,7 @@ function LandingPageHero({ session }: { session: any | null }) {
                       "w-full sm:w-auto text-lg px-8 py-4 rounded-full shadow-lg transition-transform duration-200 hover:scale-105",
                   })}
                 >
-                  Open App
+                  {t("buttons.openApp")}
                 </Link>
               )}
             </motion.div>

@@ -20,14 +20,16 @@ import {
 } from "lucide-react";
 import { TRole } from "@/modules/shared/entities/models/admin/role";
 
-export const rolesListTableColumn: ColumnDef<TRole>[] = [
+export const rolesListTableColumn = (
+  t: (key: string) => string
+): ColumnDef<TRole>[] => [
   {
     header: ({ column }) => {
       const isSorted = column.getIsSorted();
 
       return (
         <TanstackTableColumnSorting
-          label="Name"
+          label={t("table.columns.name")}
           column={column}
           isSorted={isSorted}
         />
@@ -36,7 +38,7 @@ export const rolesListTableColumn: ColumnDef<TRole>[] = [
     accessorKey: "name",
   },
   {
-    header: "Description",
+    header: t("table.columns.description"),
     accessorKey: "description",
     cell: ({ row }) => {
       const desc: string = row.getValue("description");
@@ -48,7 +50,7 @@ export const rolesListTableColumn: ColumnDef<TRole>[] = [
     },
   },
   {
-    header: "App Menus",
+    header: t("table.columns.appMenus"),
     cell: ({ row }) => {
       const openModal = adminModalStore((state) => state.onOpen);
 
@@ -72,7 +74,7 @@ export const rolesListTableColumn: ColumnDef<TRole>[] = [
 
       return (
         <TanstackTableColumnSorting
-          label="Created At"
+          label={t("table.columns.createdAt")}
           column={column}
           isSorted={isSorted}
         />
@@ -106,7 +108,7 @@ export const rolesListTableColumn: ColumnDef<TRole>[] = [
                 }
               >
                 <PencilLine />
-                Edit
+                {t("table.actions.edit")}
               </DropdownMenuItem>
               {/* <DropdownMenuSeparator /> */}
               <DropdownMenuItem
@@ -120,7 +122,7 @@ export const rolesListTableColumn: ColumnDef<TRole>[] = [
               >
                 <div className="flex items-center gap-2">
                   <Trash2 />
-                  Delete
+                  {t("table.actions.delete")}
                 </div>
                 <TriangleAlert className="text-rose-600" />
               </DropdownMenuItem>

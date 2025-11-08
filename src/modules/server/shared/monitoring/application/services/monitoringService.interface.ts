@@ -9,4 +9,6 @@ export interface IMonitoringService {
     callback: () => T
   ): Promise<T>;
   report(error: any): string;
+  setUser(user: { id?: string; email?: string; username?: string }): void;
+  clearUser(): void;
 }

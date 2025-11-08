@@ -25,7 +25,7 @@ export class RoleAppMenuItemRepository implements IRoleAppMenuItemRepository {
         },
       });
 
-      return RoleAppMenuItemsDataSchema.parseAsync(data);
+      return await RoleAppMenuItemsDataSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -47,7 +47,7 @@ export class RoleAppMenuItemRepository implements IRoleAppMenuItemRepository {
         },
       });
 
-      return RoleAppMenuItemSchema.parseAsync(data);
+      return await RoleAppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -71,7 +71,7 @@ export class RoleAppMenuItemRepository implements IRoleAppMenuItemRepository {
         },
       });
 
-      return RoleAppMenuItemSchema.parseAsync(data);
+      return await RoleAppMenuItemSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

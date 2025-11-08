@@ -15,7 +15,7 @@ export async function getOrganizationMembersController(
   input: any
 ): Promise<TGetOrganizationMembersControllerOutput> {
   const { data, error: inputParseError } =
-    GetOrganizationMembersValidationSchema.safeParseAsync(input);
+    await GetOrganizationMembersValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

@@ -1,33 +1,7 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-
-const steps = [
-  {
-    number: "01",
-    title: "Sign Up & AI Intake",
-    description:
-      "Patients create an account and interact with our friendly AI to provide their medical history and current symptoms.",
-  },
-  {
-    number: "02",
-    title: "Doctor Review",
-    description:
-      "Your doctor receives an AI-generated, concise pre-visit summary, allowing for a more prepared and focused consultation.",
-  },
-  {
-    number: "03",
-    title: "Virtual Consultation",
-    description:
-      "Connect with your doctor through a secure, high-quality video call, enhanced with real-time AI clinical support tools.",
-  },
-  {
-    number: "04",
-    title: "Automated Follow-up",
-    description:
-      "AI assists in generating SOAP notes, prescriptions, and follow-up instructions, ensuring clarity and continuity of care.",
-  },
-];
+import { useTranslations } from "next-intl";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -39,7 +13,32 @@ const itemVariants: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
-function LangingPageHowItWorks() {
+function LandingPageHowItWorks() {
+  const t = useTranslations("landing.howItWorks");
+
+  const steps = [
+    {
+      number: "01",
+      title: t("steps.0.title"),
+      description: t("steps.0.description"),
+    },
+    {
+      number: "02",
+      title: t("steps.1.title"),
+      description: t("steps.1.description"),
+    },
+    {
+      number: "03",
+      title: t("steps.2.title"),
+      description: t("steps.2.description"),
+    },
+    {
+      number: "04",
+      title: t("steps.3.title"),
+      description: t("steps.3.description"),
+    },
+  ];
+
   return (
     <motion.section
       id="how-it-works"
@@ -56,11 +55,10 @@ function LangingPageHowItWorks() {
           className="text-center max-w-3xl mx-auto"
         >
           <h2 className="text-3xl sm:text-4xl font-extrabold text-landing-foreground">
-            Simple Steps to Better Care
+            {t("title")}
           </h2>
           <p className="mt-4 text-lg text-landing-muted-foreground">
-            We’ve designed a straightforward process to make your healthcare
-            journey as smooth as possible.
+            {t("description")}
           </p>
         </motion.div>
 
@@ -128,4 +126,4 @@ function LangingPageHowItWorks() {
   );
 }
 
-export default LangingPageHowItWorks;
+export default LandingPageHowItWorks;

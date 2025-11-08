@@ -1,4 +1,4 @@
-import { prismaMain } from "@/modules/server/prisma/prisma";
+import { prismaMain } from "../../prisma/prisma";
 import axios from "axios";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";

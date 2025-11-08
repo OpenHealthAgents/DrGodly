@@ -41,12 +41,12 @@ export class OrganizationMemberRepository
         },
       });
 
-      const dataWithTotal = OrganizationMembersAndUsersSchema.parseAsync({
+      const dataWithTotal = await OrganizationMembersAndUsersSchema.parseAsync({
         organizationMembersAndUsers: data,
         total,
       });
 
-      return OrganizationMembersAndUsersSchema.parseAsync(dataWithTotal);
+      return dataWithTotal;
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -82,7 +82,7 @@ export class OrganizationMemberRepository
         },
       });
 
-      return OrganizationMemberAndUserSchema.parseAsync(data);
+      return await OrganizationMemberAndUserSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -118,7 +118,7 @@ export class OrganizationMemberRepository
         },
       });
 
-      return OrganizationMemberAndUserSchema.parseAsync(data);
+      return await OrganizationMemberAndUserSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -154,7 +154,7 @@ export class OrganizationMemberRepository
         },
       });
 
-      return OrganizationMemberAndUserSchema.parseAsync(data);
+      return await OrganizationMemberAndUserSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
@@ -192,7 +192,7 @@ export class OrganizationMemberRepository
         return null;
       }
 
-      return OrganizationMemberAndUserSchema.parseAsync(data);
+      return await OrganizationMemberAndUserSchema.parseAsync(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });

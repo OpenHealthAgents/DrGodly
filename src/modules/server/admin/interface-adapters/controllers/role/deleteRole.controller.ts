@@ -13,7 +13,7 @@ export async function deleteRoleController(
   input: any
 ): Promise<TDeleteRoleControllerOutput> {
   const { data, error: inputParseError } =
-    DeleteRoleValidationSchema.safeParseAsync(input);
+    await DeleteRoleValidationSchema.safeParseAsync(input);
 
   if (inputParseError) {
     throw new InputParseError(inputParseError.name, { cause: inputParseError });

@@ -95,6 +95,7 @@ const workStatus = ["government", "private", "both"] as const;
 export const DoctorWorkDetailsSchema = z
   .object({
     currentlyWorking: z.boolean(),
+    experience: z.string().min(1, "Experience is required"),
     reasonForNotWorking: z.string().optional(),
     otherReason: z.string().optional(),
 
@@ -112,10 +113,10 @@ export const DoctorWorkDetailsSchema = z
     about: z
       .string()
       .min(50, "About section should be at least 50 characters")
-      .max(1000, "About section should not exceed 1000 characters"),
+      .max(500, "About section should not exceed 1000 characters"),
   })
   .superRefine((data, ctx) => {
-    // 1️⃣ currentlyWorking = false → reasonForNotWorking required
+    // 1️⃣ When not currently working → must specify reason
     if (!data.currentlyWorking && !data.reasonForNotWorking) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -124,7 +125,7 @@ export const DoctorWorkDetailsSchema = z
       });
     }
 
-    // 2️⃣ reasonForNotWorking = "other" → otherReason required
+    // 2️⃣ When reason = "other" → require 'otherReason'
     if (
       !data.currentlyWorking &&
       data.reasonForNotWorking === "other" &&
@@ -132,31 +133,30 @@ export const DoctorWorkDetailsSchema = z
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Please specify the reason",
+        message: "Please specify the reason for not working",
         path: ["otherReason"],
       });
     }
 
-    // 3️⃣ currentlyWorking = true → natureOfWork & workStatus required
+    // 3️⃣ When currently working → require key work fields
     if (data.currentlyWorking) {
       if (!data.natureOfWork) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Nature of work is required when currently working",
+          message: "Nature of work is required",
           path: ["natureOfWork"],
         });
       }
-
       if (!data.workStatus) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Work status is required when currently working",
+          message: "Work status is required",
           path: ["workStatus"],
         });
       }
     }
 
-    // 4️⃣ If workStatus = government or both → governmentCategory required
+    // 4️⃣ Government category validation
     if (data.workStatus === "government" || data.workStatus === "both") {
       if (!data.governmentCategory) {
         ctx.addIssue({
@@ -166,7 +166,6 @@ export const DoctorWorkDetailsSchema = z
         });
       }
 
-      // 5️⃣ If governmentCategory = central → centralGovernment required
       if (data.governmentCategory === "central" && !data.centralGovernment) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -176,18 +175,47 @@ export const DoctorWorkDetailsSchema = z
       }
     }
 
-    // 6️⃣ For any workStatus (government/private/both)
-    // workingFacilityDetails must contain at least one entry
-    if (
-      !data.workingFacilityDetails ||
-      data.workingFacilityDetails.length === 0
-    ) {
+    // 5️⃣ When currently working → require at least one facility
+    if (data.currentlyWorking) {
+      if (
+        !data.workingFacilityDetails ||
+        data.workingFacilityDetails.length === 0
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "At least one working facility detail is required",
+          path: ["workingFacilityDetails"],
+        });
+      }
+    }
+
+    // 6️⃣ When not working → workingFacilityDetails must be empty or ignored
+    if (!data.currentlyWorking && data.workingFacilityDetails?.length) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "At least one working facility detail is required",
+        message:
+          "Working facility details should be empty when not currently working",
         path: ["workingFacilityDetails"],
       });
     }
   });
 
 export type TDoctorWorkDetails = z.infer<typeof DoctorWorkDetailsSchema>;
+
+export const DoctorConcentSchema = z.object({
+  isAgreeToShowDetailsPublic: z.boolean().optional(),
+  name: z.boolean(),
+  systemOfMedicine: z.boolean(),
+  qualification: z.boolean(),
+  experience: z.boolean(),
+  showToPublic: z.boolean().optional(),
+  email: z.boolean().optional(),
+  contactNumber: z.boolean().optional(),
+  placeOfWork: z.boolean().optional(),
+  profilePicture: z.boolean().optional(),
+  languageSpoken: z.boolean().optional(),
+  workStatus: z.boolean().optional(),
+  teleConsultation: z.boolean().optional(),
+  isDeclearedToCreateDoctorAccount: z.boolean(),
+});
+export type TDoctorConcent = z.infer<typeof DoctorConcentSchema>;
