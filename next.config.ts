@@ -10,15 +10,15 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  experimental: {
-    optimizeCss: false,
-    webpackMemoryOptimizations: true,
-  },
-  webpack: (config) => {
-    config.cache = false;
-    return config;
-  },
-  productionBrowserSourceMaps: false,
+  // experimental: {
+  //   optimizeCss: false,
+  //   webpackMemoryOptimizations: true,
+  // },
+  // webpack: (config) => {
+  //   config.cache = false;
+  //   return config;
+  // },
+  // productionBrowserSourceMaps: false,
 };
 
 const withNextIntl = createNectIntlPlugin();

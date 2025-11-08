@@ -10,6 +10,7 @@ import {
   OperationError,
 } from "../entities/errors/commonError";
 import { ZSAError } from "zsa";
+import { logOperation } from "./server-logger/log-operation";
 
 function isNextJsControlError(error: any) {
   return (
@@ -25,17 +26,26 @@ export async function withMonitoring<T>(
     revalidatePath?: boolean;
     redirect?: boolean;
     operationErrorMessage?: string;
+    inputData?: Record<string, unknown>;
   }
 ): Promise<T> {
   const monitoringService = getSharedInjection("IMonitoringService");
   const locale = await getLocale();
+  const session = await getServerSession();
+  const userId = session?.user?.id;
+
+  // Start log
+  const startTimeMs = Date.now();
+  logOperation("start", {
+    name,
+    userId,
+    startTimeMs,
+  });
 
   return monitoringService.instrumentServerAction(
     name,
     { op: "server.action" },
     async () => {
-      const session = await getServerSession();
-
       if (session?.user) {
         monitoringService.setUser({
           id: session.user.id,
@@ -48,10 +58,20 @@ export async function withMonitoring<T>(
 
       try {
         data = await handler();
+
+        // Success log
+        logOperation("success", { name, userId, startTimeMs });
+
+        if (options?.url && options?.revalidatePath) {
+          revalidatePath(options.url);
+        }
       } catch (err) {
         if (!isNextJsControlError(err)) {
           monitoringService.report(err);
         }
+
+        // Error log
+        logOperation("error", { name, userId, startTimeMs, err });
 
         if (err instanceof InputParseError) {
           throw new ZSAError("INPUT_PARSE_ERROR", err.cause);
@@ -69,9 +89,8 @@ export async function withMonitoring<T>(
         monitoringService.clearUser();
       }
 
-      if (options?.url) {
-        if (options?.revalidatePath) revalidatePath(options.url);
-        if (options?.redirect) redirect({ href: options.url, locale });
+      if (options?.url && options?.redirect && data) {
+        redirect({ href: options.url, locale });
       }
 
       return data;
