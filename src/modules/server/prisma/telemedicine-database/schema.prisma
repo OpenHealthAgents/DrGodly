@@ -34,19 +34,54 @@ enum GovernmentCategory {
 // ───────────────────────────
 
 model Doctor {
-    id     String @id @default(uuid())
+    id     String  @id @default(uuid())
     orgId  String
-    userId String
+    userId String?
+
+    doctorId Int @default(autoincrement())
+
+    registrationNumber   String?
+    registrationProvider String?
+
+    isCompleted Boolean @default(false)
+
+    personal      DoctorPersonalDetail?
+    qualification DoctorQualification?
+    workDetail    DoctorWorkDetail?
+    concent       DoctorConcent?
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// ───────────────────────────
+// Doctor Concent
+// ───────────────────────────
+model DoctorConcent {
+    id                               String   @id @default(uuid())
+    orgId                            String
+    isAgreeToShowDetailsPublic       Boolean
+    name                             Boolean
+    systemOfMedicine                 Boolean
+    qualification                    Boolean
+    experience                       Boolean
+    showToPublic                     Boolean?
+    email                            Boolean?
+    contactNumber                    Boolean?
+    placeOfWork                      Boolean?
+    profilePicture                   Boolean?
+    languageSpoken                   Boolean?
+    workStatus                       Boolean?
+    teleConsultation                 Boolean?
+    isDeclearedToCreateDoctorAccount Boolean?
 
     doctorId String @unique
+    doctor   Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
 
-    personal       DoctorPersonalDetail?
-    qualifications DoctorQualification?
-    workDetails    DoctorWorkDetail?
-    status         Boolean               @default(false)
-
-    createdBy String
-    updatedBy String
+    createdBy String?
+    updatedBy String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -56,30 +91,51 @@ model Doctor {
 // ───────────────────────────
 
 model DoctorPersonalDetail {
-    id              String     @id @default(uuid())
-    orgId           String
-    title           String
-    fullName        String
-    nationality     String
-    languagesSpoken Language[]
-    dateOfBirth     DateTime
-    gender          String
-    mobileNumber    String
-    email           String
+    id                      String   @id @default(uuid())
+    orgId                   String
+    title                   String
+    fullName                String
+    nationality             String
+    dateOfBirth             DateTime
+    gender                  String
+    mobileNumber            String
+    alternativeMobileNumber String?
+    alternativeEmail        String?
+    email                   String
 
     doctorId String @unique
     doctor   Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
 
-    KYCAddress           KYCAddress?
-    CommunicationAddress CommunicationAddress?
+    kycAddress           KYCAddress?
+    communicationAddress CommunicationAddress?
+    languagesSpoken      Language[]
+    socialAccounts       SocialAccount[]
 
-    createdBy String
-    updatedBy String
+    createdBy String?
+    updatedBy String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 // mobile number (primary / secondary multiple)
+
+// ──────────────────────────────────────────────────────────────
+// Social Platform
+// ──────────────────────────────────────────────────────────────
+model SocialAccount {
+    id       String @id @default(uuid())
+    orgId    String
+    platform String
+    url      String
+
+    doctorPersonalDetailId String
+    doctorPersonalDetail   DoctorPersonalDetail @relation(fields: [doctorPersonalDetailId], references: [id], onDelete: Cascade)
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
 
 // ──────────────────────────────────────────────────────────────
 // Languages Spoken (junction table)
@@ -92,8 +148,8 @@ model Language {
     doctorPersonalDetailId String
     doctorPersonalDetail   DoctorPersonalDetail @relation(fields: [doctorPersonalDetailId], references: [id], onDelete: Cascade)
 
-    createdBy String
-    updatedBy String
+    createdBy String?
+    updatedBy String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -115,8 +171,8 @@ model KYCAddress {
     doctorPersonalDetailId String               @unique
     doctorPersonalDetail   DoctorPersonalDetail @relation(fields: [doctorPersonalDetailId], references: [id], onDelete: Cascade)
 
-    createdBy String
-    updatedBy String
+    createdBy String?
+    updatedBy String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -137,8 +193,8 @@ model CommunicationAddress {
     doctorPersonalDetailId String               @unique
     doctorPersonalDetail   DoctorPersonalDetail @relation(fields: [doctorPersonalDetailId], references: [id], onDelete: Cascade)
 
-    createdBy String
-    updatedBy String
+    createdBy String?
+    updatedBy String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -165,8 +221,8 @@ model DoctorQualification {
     doctor         Doctor          @relation(fields: [doctorId], references: [id], onDelete: Cascade)
     qualifications Qualification[]
 
-    createdBy String
-    updatedBy String
+    createdBy String?
+    updatedBy String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -187,8 +243,8 @@ model Qualification {
     doctorQualificationId String
     doctorQualification   DoctorQualification @relation(fields: [doctorQualificationId], references: [id], onDelete: Cascade)
 
-    createdBy String
-    updatedBy String
+    createdBy String?
+    updatedBy String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -201,6 +257,7 @@ model DoctorWorkDetail {
     id                  String              @id @default(uuid())
     orgId               String
     currentlyWorking    Boolean
+    experience          String
     reasonForNotWorking String?
     otherReason         String?
     natureOfWork        String?
@@ -214,8 +271,8 @@ model DoctorWorkDetail {
     doctor            Doctor                        @relation(fields: [doctorId], references: [id], onDelete: Cascade)
     workingFacilities DoctorWorkingFacilityDetail[]
 
-    createdBy String
-    updatedBy String
+    createdBy String?
+    updatedBy String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -234,10 +291,10 @@ model DoctorWorkingFacilityDetail {
     designation    String
 
     doctorWorkId String
-    doctorWork   DoctorWorkDetail @relation(fields: [doctorWorkId], references: [id])
+    doctorWork   DoctorWorkDetail @relation(fields: [doctorWorkId], references: [id], onDelete: Cascade)
 
-    createdBy String
-    updatedBy String
+    createdBy String?
+    updatedBy String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }

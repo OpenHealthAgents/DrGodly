@@ -10,13 +10,15 @@ export interface LogOperationOptions {
   userId?: string;
   startTimeMs: number;
   err?: unknown;
+  errName?: string;
   data?: unknown;
   inputData?: Record<string, unknown>;
   context?: Record<string, unknown>;
 }
 
 export function logOperation(stage: LogStage, opts: LogOperationOptions) {
-  const { name, userId, startTimeMs, err, data, inputData, context } = opts;
+  const { name, userId, startTimeMs, err, errName, data, inputData, context } =
+    opts;
 
   const now = Date.now();
   const formattedNow = moment(now).format("DD-MM-YYYY HH:mm:ss.SSS");
@@ -57,7 +59,7 @@ export function logOperation(stage: LogStage, opts: LogOperationOptions) {
       logger.error(`[ERROR] ${name}`, {
         ...baseMeta,
         error: (err as Error)?.message,
-        errorName: (err as any)?.name ?? "Unknown Error",
+        errorName: errName ?? (err as any)?.name ?? "Unknown Error",
         // stack: (err as Error)?.stack, // optional
       });
       break;

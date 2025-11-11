@@ -180,9 +180,8 @@ const LandingPageFooter = () => {
             &copy; {new Date().getFullYear()} {t("brand")}. {t("rights")}
           </p>
 
-          <div className="flex space-x-6 mt-4 sm:mt-0 text-[var(--color-landing-primary)]">
+          {/* <div className="flex space-x-6 mt-4 sm:mt-0 text-[var(--color-landing-primary)]">
             <SocialIcon href="#">
-              {/* Twitter */}
               <svg
                 className="h-5 w-5"
                 fill="currentColor"
@@ -193,7 +192,6 @@ const LandingPageFooter = () => {
               </svg>
             </SocialIcon>
             <SocialIcon href="#">
-              {/* LinkedIn */}
               <svg
                 className="h-5 w-5"
                 fill="currentColor"
@@ -204,7 +202,6 @@ const LandingPageFooter = () => {
               </svg>
             </SocialIcon>
             <SocialIcon href="#">
-              {/* Facebook */}
               <svg
                 className="h-5 w-5"
                 fill="currentColor"
@@ -214,7 +211,7 @@ const LandingPageFooter = () => {
                 <path d="M22 12c0-5.523-4.477-10-10-10..." />
               </svg>
             </SocialIcon>
-          </div>
+          </div> */}
         </div>
       </div>
     </motion.footer>

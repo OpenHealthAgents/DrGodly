@@ -2,37 +2,79 @@
 
 import { useState } from "react";
 import {
+  TDoctorConcent,
   TDoctorPersonalDetails,
   TDoctorQualifications,
   TDoctorWorkDetails,
-} from "../schemas/doctor/doctor-register-profile-schema";
+} from "../../../../../modules/shared/schemas/telemedicine/doctorProfile/doctorProfileValidationSchema";
 import { toast } from "sonner";
 import { StepProgressBar } from "./step-progress-bar";
 import { PersonalDetailsStep } from "./steps/personalDetailsStep";
 import { QualificationStep } from "./steps/qualificationStep";
 import { WorkDetailsStep } from "./steps/workDetailsStep";
 import { PreviewStep } from "./steps/previewStep";
+import { TDoctor } from "@/modules/shared/entities/models/telemedicine/doctorProfile";
+import { useServerAction } from "zsa-react";
+import { createOrUpdateDoctorPersonalDetails } from "../../server-actions/doctorProfile-actions/doctorProfile-actions";
 
 export interface DoctorProfileData {
   personalDetails?: TDoctorPersonalDetails;
   qualificationDetails?: TDoctorQualifications;
   workDetails?: TDoctorWorkDetails;
+  doctorConcent?: TDoctorConcent;
   completed: boolean;
 }
 
-function DoctorProfileAndRegister() {
+type TUser = {
+  id: string;
+  name: string;
+  username?: string | null;
+  currentOrgId?: string | null;
+};
+
+function DoctorProfileAndRegister({
+  doctorData,
+  id,
+  user,
+}: {
+  doctorData: TDoctor | null;
+  id: string;
+  user: TUser;
+}) {
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [profileData, setProfileData] = useState<DoctorProfileData>({
     completed: false,
   });
 
-  const handleStepComplete = (step: number, data: any) => {
+  const { execute, error, isPending } = useServerAction(
+    createOrUpdateDoctorPersonalDetails,
+    {
+      onSuccess() {
+        toast.success("Personal details updated successfully");
+      },
+    }
+  );
+
+  console.log({ error });
+
+  const handleStepComplete = async (step: number, data: any) => {
+    if (step === 1) {
+      await execute({
+        ...data,
+        id: doctorData?.personal?.id ?? null,
+        doctorId: id,
+        operationBy: user.id,
+        orgId: user.currentOrgId,
+      });
+    }
+
     setProfileData((prev) => ({
       ...prev,
       ...(step === 1 && { personalDetails: data }),
       ...(step === 2 && { qualificationDetails: data }),
       ...(step === 3 && { workDetails: data }),
+      ...(step === 4 && { doctorConcent: data }),
     }));
 
     if (!completedSteps.includes(step)) {
@@ -75,6 +117,7 @@ function DoctorProfileAndRegister() {
             data={profileData.personalDetails}
             onNext={(data) => handleStepComplete(1, data)}
             onSaveDraft={handleSaveDraft}
+            profileData={doctorData?.personal}
           />
         )}
 

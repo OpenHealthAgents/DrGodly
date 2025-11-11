@@ -23,13 +23,23 @@ import {
   Wrench,
 } from "lucide-react";
 import { usePathname } from "@/i18n/navigation";
+import { OrgSwitcher } from "./org-switcher";
 
 type TUser = {
-  name?: string;
-  email?: string;
-  image?: string | null | undefined;
-  username?: string | null | undefined;
+  name: string;
+  email: string;
+  image?: string | null;
+  username?: string | null;
+  currentOrgId?: string | null;
 };
+
+type TOrgs = {
+  name: string;
+  id: string;
+  metadata: string | null;
+  slug: string;
+  logo: string | null;
+}[];
 
 const homeSidebarData = {
   navGroups: [
@@ -112,7 +122,7 @@ const adminSidebarData = {
   ],
 };
 
-export function AppSidebar({ user }: { user: TUser }) {
+export function AppSidebar({ user, orgs }: { user: TUser; orgs: TOrgs }) {
   const pathname = usePathname();
   const sidebarData = pathname.includes("admin")
     ? adminSidebarData
@@ -121,7 +131,11 @@ export function AppSidebar({ user }: { user: TUser }) {
   return (
     <Sidebar collapsible="icon" side="left">
       <SidebarHeader>
-        <AppTitle />
+        {orgs.length > 0 ? (
+          <OrgSwitcher orgs={orgs} currentOrgId={user?.currentOrgId} />
+        ) : (
+          <AppTitle />
+        )}
       </SidebarHeader>
       <SidebarContent>
         {sidebarData.navGroups.map((props) => (

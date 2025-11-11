@@ -33,7 +33,7 @@ export function StepNavigation({
         Previous
       </Button>
 
-      <Button
+      {/* <Button
         type="button"
         variant="outline"
         onClick={onSaveDraft}
@@ -41,7 +41,7 @@ export function StepNavigation({
       >
         <Save className="w-4 h-4" />
         Save Draft
-      </Button>
+      </Button> */}
 
       <Button
         type="submit"

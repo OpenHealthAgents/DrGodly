@@ -14,20 +14,24 @@ const AppListingLayout = async ({
   const session = await getServerSession();
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
-  const user = {
-    name: session?.user.name,
-    email: session?.user.email,
-    image: session?.user.image,
-    username: session?.user.username,
-  };
 
   if (!session) {
     redirect("/signin");
   }
 
+  const user = {
+    name: session?.user.name,
+    email: session?.user.email,
+    image: session?.user.image,
+    username: session?.user.username,
+    currentOrgId: session?.user.currentOrgId,
+  };
+
+  const orgs = session.organizations;
+
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar user={user} />
+      <AppSidebar user={user} orgs={orgs} />
       <SidebarInset className="min-w-0">
         <AppNavbar user={user} />
         <main className="mx-auto px-8 max-w-[110rem] space-y-6 w-full">

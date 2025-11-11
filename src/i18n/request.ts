@@ -20,7 +20,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
   // Merge all files into one object
   const messages = files.reduce((acc, file) => {
     const filePath = path.join(localeDir, file);
-    const content = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+    const buffer = fs.readFileSync(filePath);
+    const content = JSON.parse(buffer.toString("utf-8"));
+    // const content = JSON.parse(fs.readFileSync(filePath, "utf-8"));
     return { ...acc, ...content };
   }, {});
 

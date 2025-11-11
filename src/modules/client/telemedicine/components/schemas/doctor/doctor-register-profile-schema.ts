@@ -1,5 +1,24 @@
 import z from "zod";
 
+const SocialPlatform = z.enum([
+  "github",
+  "twitter",
+  "facebook",
+  "linkedin",
+  "instagram",
+  "youtube",
+  "tiktok",
+  "other",
+]);
+
+const socialSchema = z.object({
+  id: z.string(),
+  platform: SocialPlatform.optional().or(z.literal("")),
+  url: z.string().optional(),
+});
+
+export const socialProviderData = Object.values(SocialPlatform.Enum);
+
 export const DoctorPersonalDetailsSchema = z.object({
   title: z.string().min(1, "Title is required"),
   fullName: z.string().min(1, "Full name is required"),
@@ -8,6 +27,7 @@ export const DoctorPersonalDetailsSchema = z.object({
   dateOfBirth: z.date({ required_error: "Date of birth is required" }),
   gender: z.string().min(1, "Gender is required"),
   // fatherName: z.string().min(1, "Father's name is required"),
+  socialAccounts: z.array(socialSchema).optional(),
   kycAddress: z.object({
     careOf: z.string().min(1, "Care of is required"),
     addressLine: z.string().min(1, "Address is required"),
@@ -25,8 +45,21 @@ export const DoctorPersonalDetailsSchema = z.object({
     state: z.string().optional(),
     pincode: z.string().optional(),
   }),
-  mobileNumber: z.string().regex(/^\+91\s\d{10}$/, "Invalid mobile number"),
+  mobileNumber: z.string().regex(/^\d{10}$/, "Invalid mobile number"),
   email: z.string().email("Invalid email address"),
+  alternativeMobileNumber: z
+    .string()
+    .transform((val) => (val === "" ? null : val))
+    .refine((val) => !val || /^\d{10}$/.test(val), "Invalid mobile number")
+    .nullable(),
+  alternativeEmail: z
+    .string()
+    .transform((val) => (val === "" ? null : val))
+    .refine(
+      (val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+      "Invalid mobile number"
+    )
+    .nullable(),
 });
 export type TDoctorPersonalDetails = z.infer<
   typeof DoctorPersonalDetailsSchema

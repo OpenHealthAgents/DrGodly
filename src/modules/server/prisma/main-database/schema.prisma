@@ -25,6 +25,7 @@ model User {
   username          String?
   keycloakUserid    String?
   displayUsername   String?
+  currentOrgId      String?
   sessions          Session[]
   accounts          Account[]
   twofactors        TwoFactor[]

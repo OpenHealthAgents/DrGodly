@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -24,38 +24,51 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Plus, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { StepNavigation } from "./stepNavigation";
 import {
   DoctorPersonalDetailsSchema,
+  socialProviderData,
   TDoctorPersonalDetails,
-} from "../../schemas/doctor/doctor-register-profile-schema";
+} from "../../../../../../modules/shared/schemas/telemedicine/doctorProfile/doctorProfileValidationSchema";
+import { TDoctorPersonalDetails as TProfileDetails } from "@/modules/shared/entities/models/telemedicine/doctorProfile";
 import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
 import { langSpoken, titles } from "../../../datas/doctor-profile-datas";
 import { FormInput, FormSelect } from "@/modules/shared/custom-form-fields";
 import { FieldGroup } from "@/components/ui/field";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useEffect, useState } from "react";
 
 interface PersonalDetailsStepProps {
   data?: TDoctorPersonalDetails;
   onNext: (data: TDoctorPersonalDetails) => void;
   onSaveDraft: (data: Partial<TDoctorPersonalDetails>) => void;
+  profileData?: TProfileDetails | null;
 }
 
 export function PersonalDetailsStep({
   data,
   onNext,
   onSaveDraft,
+  profileData,
 }: PersonalDetailsStepProps) {
+  const [open, setOpen] = useState(false);
+
   const form = useForm<TDoctorPersonalDetails>({
     resolver: zodResolver(DoctorPersonalDetailsSchema),
     defaultValues: data || {
-      title: "",
+      title: profileData?.title ?? "",
       fullName: "",
       nationality: "Indian",
       languagesSpoken: [],
-      gender: "",
+      gender: profileData?.gender ?? "",
       // fatherName: "",
       kycAddress: {
         careOf: "",
@@ -65,19 +78,89 @@ export function PersonalDetailsStep({
         state: "",
         pincode: "",
       },
+      socialAccounts: [
+        {
+          id: "1",
+          platform: "",
+          url: "",
+        },
+      ],
       communicationAddress: {
         sameAsKyc: true,
       },
-      mobileNumber: "+91 ",
+      mobileNumber: "",
       email: "",
+      alternativeMobileNumber: "",
+      alternativeEmail: "",
     },
   });
 
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "socialAccounts",
+  });
   const sameAsKyc = form.watch("communicationAddress.sameAsKyc");
 
   const handleSubmit = (values: TDoctorPersonalDetails) => {
     onNext(values as TDoctorPersonalDetails);
   };
+
+  const addSocial = () => {
+    append({
+      id: Date.now().toString(),
+      platform: "",
+      url: "",
+    });
+  };
+
+  useEffect(() => {
+    console.log("----------Running useEffect----------");
+    if (profileData) {
+      const languagesSpoken = profileData?.languagesSpoken.map(
+        (l) => l.langCode
+      );
+      const socialAccounts = profileData?.socialAccounts.map((s) => ({
+        id: s.id,
+        platform: s.platform,
+        url: s.url,
+      }));
+      const kycAddress = {
+        careOf: profileData.kycAddress?.careOf,
+        addressLine: profileData.kycAddress?.addressLine,
+        city: profileData.kycAddress?.city,
+        district: profileData.kycAddress?.district,
+        state: profileData.kycAddress?.state,
+        pincode: profileData.kycAddress?.pincode,
+      };
+      const communicationAddress = {
+        sameAsKyc: profileData.communicationAddress?.sameAsKyc,
+        careOf: profileData.kycAddress?.careOf,
+        addressLine: profileData.kycAddress?.addressLine,
+        city: profileData.kycAddress?.city,
+        district: profileData.kycAddress?.district,
+        state: profileData.kycAddress?.state,
+        pincode: profileData.kycAddress?.pincode,
+      };
+
+      form.reset({
+        title: profileData.title ?? "",
+        fullName: profileData.fullName,
+        nationality: profileData.nationality,
+        languagesSpoken,
+        dateOfBirth: profileData.dateOfBirth,
+        gender: profileData.gender ?? "",
+        socialAccounts,
+        kycAddress,
+        communicationAddress,
+        mobileNumber: profileData.mobileNumber,
+        email: profileData.email,
+        alternativeEmail: profileData.alternativeEmail ?? "",
+        alternativeMobileNumber: profileData.alternativeMobileNumber ?? "",
+      });
+    }
+  }, [form, profileData]);
+
+  console.log(profileData);
 
   return (
     <Form {...form}>
@@ -127,7 +210,7 @@ export function PersonalDetailsStep({
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Date of Birth *</FormLabel>
-                <Popover>
+                <Popover open={open} onOpenChange={setOpen}>
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
@@ -148,7 +231,10 @@ export function PersonalDetailsStep({
                     <Calendar
                       mode="single"
                       selected={field.value}
-                      onSelect={field.onChange}
+                      onSelect={(date) => {
+                        setOpen(false);
+                        field.onChange(date);
+                      }}
                       disabled={(date) =>
                         date > new Date() || date < new Date("1900-01-01")
                       }
@@ -258,6 +344,13 @@ export function PersonalDetailsStep({
             )}
           />
 
+          <FormInput
+            control={form.control}
+            name="alternativeMobileNumber"
+            placeholder="+91 9876543210"
+            label="Alternative Mobile Number"
+          />
+
           <FormField
             control={form.control}
             name="email"
@@ -275,7 +368,73 @@ export function PersonalDetailsStep({
               </FormItem>
             )}
           />
+
+          <FormInput
+            control={form.control}
+            name="alternativeEmail"
+            placeholder="your.email@example.com"
+            label="Alternative Email Address"
+          />
         </div>
+
+        <Card>
+          <CardHeader className="flex items-center justify-between">
+            <CardTitle>Social Account Details</CardTitle>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={addSocial}
+              className="gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add Qualification
+            </Button>
+          </CardHeader>
+          <CardDescription className="px-5 space-y-5">
+            {fields.map((field, index) => (
+              <Card key={field.id}>
+                <CardHeader className="flex items-center justify-between">
+                  <CardTitle>Social {index + 1}</CardTitle>
+                  {fields.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => remove(index)}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  )}
+                </CardHeader>
+                <div className="px-5">
+                  <FieldGroup>
+                    <FormSelect
+                      control={form.control}
+                      name={`socialAccounts.${index}.platform`}
+                      label="Social Name"
+                      placeholder="Select a social account"
+                    >
+                      {socialProviderData.map((provider, i) => (
+                        <SelectItem key={i} value={provider}>
+                          {provider}
+                        </SelectItem>
+                      ))}
+                    </FormSelect>
+
+                    <FormInput
+                      control={form.control}
+                      name={`socialAccounts.${index}.url`}
+                      label="Social Profile URL"
+                      placeholder="https://linkedin/drgodly"
+                    />
+                  </FieldGroup>
+                </div>
+              </Card>
+            ))}
+          </CardDescription>
+        </Card>
 
         {/* KYC Address */}
         <div>
