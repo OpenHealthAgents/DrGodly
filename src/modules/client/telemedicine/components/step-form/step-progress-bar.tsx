@@ -95,9 +95,9 @@ export function StepProgressBar({
                   >
                     {step.title}
                   </div>
-                  <div className="text-xs text-muted-foreground hidden sm:block">
+                  {/* <div className="text-xs text-muted-foreground hidden sm:block">
                     {step.description}
-                  </div>
+                  </div> */}
                 </div>
               </button>
               {index < steps.length - 1 && (
@@ -113,7 +113,7 @@ export function StepProgressBar({
         })}
       </div>
 
-      <div className="max-w-4xl mx-auto">
+      {/* <div className="max-w-4xl mx-auto">
         <div className="flex justify-between text-sm mb-2">
           <span className="text-muted-foreground">Overall Progress</span>
           <span className="font-medium text-foreground">
@@ -128,7 +128,7 @@ export function StepProgressBar({
             }}
           />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

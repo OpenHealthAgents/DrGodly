@@ -14,6 +14,7 @@ import {
   organization,
 } from "better-auth/plugins";
 import { decodeJwt } from "jose";
+import { getRBAC } from "../utils/getRBAC";
 
 export const auth = betterAuth({
   database: prismaAdapter(prismaMain, {
@@ -135,6 +136,10 @@ export const auth = betterAuth({
         type: "string",
         required: false,
       },
+      currentOrgId: {
+        type: "string",
+        required: false,
+      },
     },
   },
 
@@ -214,6 +219,8 @@ export const auth = betterAuth({
         },
         select: {
           username: true,
+          currentOrgId: true,
+          keycloakUserid: true,
         },
       });
 
@@ -287,6 +294,27 @@ export const auth = betterAuth({
       }
         */
 
+      const { roles, organizations } = await getRBAC(user.id);
+
+      const updatedUser = userData;
+      if (
+        userData &&
+        !userData?.currentOrgId &&
+        organizations &&
+        organizations.length > 0
+      ) {
+        const updatedUserData = await prismaMain.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            currentOrgId: organizations[0].id,
+          },
+        });
+
+        updatedUser!.currentOrgId = updatedUserData!.currentOrgId;
+      }
+
       return {
         session,
         // user: {
@@ -301,13 +329,15 @@ export const auth = betterAuth({
         // },
         user: {
           ...user,
-          ...userData,
+          ...updatedUser,
         },
         keycloak: {
           refreshToken: providers?.refreshToken ?? null,
           accessToken: providers?.accessToken ?? null,
         },
         userPreferences,
+        roles,
+        organizations,
       };
     }),
     username(),

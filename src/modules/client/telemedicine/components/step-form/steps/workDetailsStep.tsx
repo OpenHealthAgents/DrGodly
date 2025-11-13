@@ -17,22 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroupItem } from "@/components/ui/radio-group";
 import { StepNavigation } from "./stepNavigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DoctorWorkDetailsSchema,
-  doctorWorkingFacilityDetailSchema,
   TDoctorWorkDetails,
-  TDoctorWorkingFacilityDetail,
-} from "../../schemas/doctor/doctor-register-profile-schema";
+} from "../../../../../shared/schemas/telemedicine/doctorProfile/doctorProfileValidationSchema";
+import { TDoctorWorkDetails as TDoctorWork } from "../../../../../shared/entities/models/telemedicine/doctorProfile";
 import { notWokingReason } from "../../../datas/doctor-profile-datas";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import {
@@ -40,7 +32,7 @@ import {
   FormRadioGroup,
   FormSelect,
 } from "@/modules/shared/custom-form-fields";
-import { Car, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
@@ -57,6 +49,8 @@ interface WorkDetailsStepProps {
   onNext: (data: TDoctorWorkDetails) => void;
   onPrevious: () => void;
   onSaveDraft: (data: Partial<TDoctorWorkDetails>) => void;
+  workData?: TDoctorWork | null;
+  isLoading?: boolean;
 }
 
 export function WorkDetailsStep({
@@ -64,6 +58,8 @@ export function WorkDetailsStep({
   onNext,
   onPrevious,
   onSaveDraft,
+  workData,
+  isLoading = false,
 }: WorkDetailsStepProps) {
   const form = useForm<TDoctorWorkDetails>({
     resolver: zodResolver(DoctorWorkDetailsSchema),
@@ -71,6 +67,13 @@ export function WorkDetailsStep({
       currentlyWorking: true,
       about: "",
       experience: "",
+      reasonForNotWorking: null,
+      otherReason: null,
+      natureOfWork: workData?.natureOfWork ?? null,
+      teleConsultationURL: null,
+      governmentCategory: null,
+      centralGovernment: null,
+      workStatus: null,
     },
   });
 
@@ -84,8 +87,39 @@ export function WorkDetailsStep({
   const workStatus = form.watch("workStatus");
   const governmentCategory = form.watch("governmentCategory");
 
+  useEffect(() => {
+    console.log("----------Running useEffect----------");
+    if (workData) {
+      const workPlace = workData?.workingFacilityDetails.map((w) => ({
+        id: w.id,
+        facilityId: w.facilityId,
+        facilityStatus: w.facilityStatus,
+        facilityName: w.facilityName,
+        state: w.state,
+        district: w.district,
+        type: w.type,
+        department: w.department,
+        designation: w.designation,
+        address: w.address,
+      }));
+
+      form.reset({
+        currentlyWorking: workData.currentlyWorking,
+        experience: workData.experience,
+        reasonForNotWorking: workData.reasonForNotWorking,
+        otherReason: workData.otherReason,
+        natureOfWork: workData.natureOfWork,
+        teleConsultationURL: workData.teleConsultationURL,
+        workStatus: workData.workStatus,
+        governmentCategory: workData.governmentCategory,
+        centralGovernment: workData.centralGovernment,
+        about: workData.about,
+        workingFacilityDetails: workPlace ?? undefined,
+      });
+    }
+  }, [form, workData]);
+
   const handleSubmit = (values: TDoctorWorkDetails) => {
-    console.log(values);
     onNext(values as TDoctorWorkDetails);
   };
 
@@ -115,6 +149,14 @@ export function WorkDetailsStep({
       removeAllFacility();
     }
   }, [currentlyWorking]);
+
+  useEffect(() => {
+    if (currentlyWorking && workStatus) {
+      if (fields.length === 0) {
+        addFacility();
+      }
+    }
+  }, [currentlyWorking, workStatus]);
 
   return (
     <Form {...form}>
@@ -172,7 +214,7 @@ export function WorkDetailsStep({
                         </FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          defaultValue={field.value ?? ""}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -200,7 +242,11 @@ export function WorkDetailsStep({
                         <FormItem>
                           <FormLabel>Please specify *</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter reason" {...field} />
+                            <Input
+                              placeholder="Enter reason"
+                              {...field}
+                              value={field.value ?? ""}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -458,6 +504,7 @@ export function WorkDetailsStep({
           onPrevious={onPrevious}
           onNext={() => {}}
           onSaveDraft={() => onSaveDraft(form.getValues())}
+          isLoading={isLoading}
         />
       </form>
     </Form>

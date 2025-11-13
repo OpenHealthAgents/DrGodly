@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,49 +23,95 @@ import {
   MapPin,
   Phone,
   Link,
+  Loader2,
 } from "lucide-react";
 import { format } from "date-fns";
 
-import { DoctoeProfileData } from "../step-form";
+import { DoctorProfileData } from "../step-form";
 import { Controller, useForm } from "react-hook-form";
 import {
   DoctorConcentSchema,
   TDoctorConcent,
-} from "../../schemas/doctor/doctor-register-profile-schema";
+} from "../../../../../shared/schemas/telemedicine/doctorProfile/doctorProfileValidationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FormCheckbox } from "@/modules/shared/custom-form-fields";
+import { TDoctorConcent as TConcentData } from "../../../../../shared/entities/models/telemedicine/doctorProfile";
 
 interface PreviewStepProps {
-  data: DoctoeProfileData;
+  data: DoctorProfileData;
   onPrevious: () => void;
-  onSubmit: () => void;
+  onSubmit: (data: any) => void;
+  concentData?: TConcentData | null;
+  isLoading?: boolean;
 }
 
-export function PreviewStep({ data, onPrevious, onSubmit }: PreviewStepProps) {
+export function PreviewStep({
+  data,
+  onPrevious,
+  onSubmit,
+  concentData,
+  isLoading,
+}: PreviewStepProps) {
   const form = useForm<TDoctorConcent>({
     resolver: zodResolver(DoctorConcentSchema),
     defaultValues: {
-      isAgreeToShowDetailsPublic: true,
-      name: true,
-      systemOfMedicine: true,
-      qualification: true,
-      experience: true,
-      email: true,
-      contactNumber: true,
-      placeOfWork: true,
-      profilePicture: true,
-      languageSpoken: true,
-      workStatus: true,
-      teleConsultation: true,
-      showToPublic: true,
-      isDeclearedToCreateDoctorAccount: false,
+      isAgreeToShowDetailsPublic:
+        concentData?.isAgreeToShowDetailsPublic ?? true,
+      name: concentData?.name ?? true,
+      systemOfMedicine: concentData?.systemOfMedicine ?? true,
+      qualification: concentData?.qualification ?? true,
+      experience: concentData?.experience ?? true,
+      email: concentData?.email ?? true,
+      contactNumber: concentData?.contactNumber ?? true,
+      placeOfWork: concentData?.placeOfWork ?? true,
+      profilePicture: concentData?.profilePicture ?? true,
+      languageSpoken: concentData?.languageSpoken ?? true,
+      workStatus: concentData?.workStatus ?? true,
+      teleConsultation: concentData?.teleConsultation ?? true,
+      // showToPublic: false,
+      isDeclearedToCreateDoctorAccount:
+        concentData?.isDeclearedToCreateDoctorAccount ?? false,
     },
   });
 
-  const [agreedToDeclaration, setAgreedToDeclaration] = useState(false);
+  const agreedToDeclaration = form.watch("isDeclearedToCreateDoctorAccount");
 
   const { personalDetails, qualificationDetails, workDetails } = data;
 
   const isAgreeToShowDetailsPublic = form.watch("isAgreeToShowDetailsPublic");
+
+  useEffect(() => {
+    if (concentData) {
+      form.reset({
+        isAgreeToShowDetailsPublic: concentData.isAgreeToShowDetailsPublic,
+        contactNumber: concentData.contactNumber,
+        email: concentData.email,
+        languageSpoken: concentData.languageSpoken,
+        experience: concentData.experience,
+        isDeclearedToCreateDoctorAccount:
+          concentData.isDeclearedToCreateDoctorAccount,
+        name: concentData.name,
+        placeOfWork: concentData.placeOfWork,
+        profilePicture: concentData.profilePicture,
+        qualification: concentData.qualification,
+        systemOfMedicine: concentData.systemOfMedicine,
+        teleConsultation: concentData.teleConsultation,
+        workStatus: concentData.workStatus,
+      });
+    }
+  }, [concentData, form]);
+
+  useEffect(() => {
+    if (!isAgreeToShowDetailsPublic) {
+      form.setValue("email", false);
+      form.setValue("contactNumber", false);
+      form.setValue("placeOfWork", false);
+      form.setValue("profilePicture", false);
+      form.setValue("languageSpoken", false);
+      form.setValue("workStatus", false);
+      form.setValue("teleConsultation", false);
+    }
+  }, [form, isAgreeToShowDetailsPublic]);
 
   const handleSubmitProfile = (values: TDoctorConcent) => {
     const combinedData = {
@@ -89,7 +135,7 @@ export function PreviewStep({ data, onPrevious, onSubmit }: PreviewStepProps) {
     //   body: JSON.stringify(combinedData),
     // });
 
-    onSubmit();
+    onSubmit(values);
   };
 
   return (
@@ -386,7 +432,7 @@ export function PreviewStep({ data, onPrevious, onSubmit }: PreviewStepProps) {
         <CardContent className="space-y-6">
           {/* Public Display Toggle */}
           <div className="space-y-2">
-            <label className="flex items-center gap-2">
+            {/* <label className="flex items-center gap-2">
               <Controller
                 name="isAgreeToShowDetailsPublic"
                 control={form.control}
@@ -402,7 +448,12 @@ export function PreviewStep({ data, onPrevious, onSubmit }: PreviewStepProps) {
               <span className="text-sm font-medium text-foreground">
                 I agree to show my details to public
               </span>
-            </label>
+            </label> */}
+            <FormCheckbox
+              control={form.control}
+              name="isAgreeToShowDetailsPublic"
+              label="I agree to show my details to public"
+            />
           </div>
 
           {/* Mandatory Fields */}
@@ -488,15 +539,14 @@ export function PreviewStep({ data, onPrevious, onSubmit }: PreviewStepProps) {
           <div className="space-y-2">
             <label className="flex items-center gap-2">
               <Controller
-                name="showToPublic"
+                name="isAgreeToShowDetailsPublic"
                 control={form.control}
                 render={({ field }) => (
                   <Checkbox
-                    checked={!isAgreeToShowDetailsPublic}
-                    onCheckedChange={(checked) => {
-                      field.onChange(!checked);
-                      form.setValue("isAgreeToShowDetailsPublic", !checked);
-                    }}
+                    checked={!field.value || false}
+                    onCheckedChange={(checked) =>
+                      field.onChange(!checked as boolean)
+                    }
                   />
                 )}
               />
@@ -511,22 +561,13 @@ export function PreviewStep({ data, onPrevious, onSubmit }: PreviewStepProps) {
       {/* Declaration */}
       <Card className="p-6 border-primary/20 bg-primary/3">
         <div className="flex items-start gap-3">
-          <Checkbox
-            id="declaration"
-            checked={agreedToDeclaration}
-            onCheckedChange={(checked) =>
-              setAgreedToDeclaration(checked as boolean)
-            }
-            className="mt-1"
-          />
-          <label
-            htmlFor="declaration"
-            className="text-sm text-foreground leading-relaxed cursor-pointer"
-          >
-            I hereby declare that all the details furnished above are true and
+          <FormCheckbox
+            control={form.control}
+            name="isDeclearedToCreateDoctorAccount"
+            label="I hereby declare that all the details furnished above are true and
             correct to the best of my knowledge. Any false information may lead
-            to disqualification or legal action.
-          </label>
+            to disqualification or legal action."
+          />
         </div>
       </Card>
 
@@ -537,6 +578,7 @@ export function PreviewStep({ data, onPrevious, onSubmit }: PreviewStepProps) {
           variant="outline"
           onClick={onPrevious}
           className="gap-2"
+          disabled={isLoading}
         >
           <ChevronLeft className="w-4 h-4" />
           Previous
@@ -544,10 +586,14 @@ export function PreviewStep({ data, onPrevious, onSubmit }: PreviewStepProps) {
         <Button
           type="button"
           onClick={form.handleSubmit(handleSubmitProfile)}
-          disabled={!agreedToDeclaration}
+          disabled={!agreedToDeclaration || isLoading}
           className="gap-2"
         >
-          <CheckCircle2 className="w-4 h-4" />
+          {isLoading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <CheckCircle2 className="w-4 h-4" />
+          )}
           Submit Profile
         </Button>
       </div>
@@ -566,7 +612,7 @@ function SectionTitle({ title }: { title: string }) {
   );
 }
 
-function Detail({ label, value }: { label: string; value?: string }) {
+function Detail({ label, value }: { label: string; value?: string | null }) {
   return (
     <div>
       <p className="text-sm font-medium text-muted-foreground">{label}</p>

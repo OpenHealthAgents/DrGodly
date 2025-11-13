@@ -1,6 +1,5 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import {
   Form,
   FormControl,
@@ -8,7 +7,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -40,9 +38,11 @@ import {
 import {
   DoctorQualificationsSchema,
   TDoctorQualifications,
-} from "../../schemas/doctor/doctor-register-profile-schema";
+} from "../../../../../../modules/shared/schemas/telemedicine/doctorProfile/doctorProfileValidationSchema";
+import { TDoctorQualifications as TQualificationData } from "@/modules/shared/entities/models/telemedicine/doctorProfile";
 import { medicalCouncils } from "../../../datas/doctor-profile-datas";
 import { FieldGroup } from "@/components/ui/field";
+import { useEffect } from "react";
 
 const months = [
   "January",
@@ -68,6 +68,8 @@ interface QualificationStepProps {
   onNext: (data: TDoctorQualifications) => void;
   onPrevious: () => void;
   onSaveDraft: (data: Partial<TDoctorQualifications>) => void;
+  qualificationData?: TQualificationData | null;
+  isLoading?: boolean;
 }
 
 export function QualificationStep({
@@ -75,16 +77,19 @@ export function QualificationStep({
   onNext,
   onPrevious,
   onSaveDraft,
+  qualificationData,
+  isLoading = false,
 }: QualificationStepProps) {
   const form = useForm<TDoctorQualifications>({
     resolver: zodResolver(DoctorQualificationsSchema),
     defaultValues: data || {
-      systemOfMedicine: "",
-      category: "",
-      councilName: "",
-      registrationNumber: "",
+      systemOfMedicine: qualificationData?.systemOfMedicine ?? "",
+      category: qualificationData?.category ?? "",
+      councilName: qualificationData?.councilName ?? "",
+      registrationNumber: qualificationData?.registrationNumber ?? "",
       registrationType: "permanent",
       nameMatchesAadhaar: true,
+      registrationValidDate: null,
       qualifications: [
         {
           id: "1",
@@ -109,6 +114,29 @@ export function QualificationStep({
 
   const selectedCouncilName = form.watch().councilName;
   const registrationType = form.watch().registrationType;
+
+  useEffect(() => {
+    if (registrationType === "permanent") {
+      form.setValue("registrationValidDate", null);
+    }
+  }, [registrationType, form]);
+
+  useEffect(() => {
+    console.log("----------Running useEffect----------");
+    if (qualificationData) {
+      form.reset({
+        category: qualificationData.category,
+        systemOfMedicine: qualificationData.systemOfMedicine,
+        councilName: qualificationData.councilName,
+        registrationNumber: qualificationData.registrationNumber,
+        registrationType: qualificationData.registrationType,
+        nameMatchesAadhaar: qualificationData.nameMatchesAadhaar,
+        registrationValidDate: qualificationData.registrationValidDate,
+        qualifications: qualificationData.qualifications,
+        dateOfFirstRegistration: qualificationData.dateOfFirstRegistration,
+      });
+    }
+  }, [form, qualificationData]);
 
   const handleSubmit = (values: TDoctorQualifications) => {
     onNext(values as TDoctorQualifications);
@@ -372,7 +400,7 @@ export function QualificationStep({
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
-                            selected={field.value}
+                            selected={field.value ?? undefined}
                             onSelect={field.onChange}
                             disabled={(date) =>
                               date > new Date() || date < new Date("1950-01-01")
@@ -653,6 +681,7 @@ export function QualificationStep({
           onPrevious={onPrevious}
           onNext={() => {}}
           onSaveDraft={() => onSaveDraft(form.getValues())}
+          isLoading={isLoading}
         />
       </form>
     </Form>
