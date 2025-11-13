@@ -67,7 +67,7 @@ model DoctorConcent {
     systemOfMedicine                 Boolean
     qualification                    Boolean
     experience                       Boolean
-    showToPublic                     Boolean?
+    // showToPublic                     Boolean?
     email                            Boolean?
     contactNumber                    Boolean?
     placeOfWork                      Boolean?
@@ -267,9 +267,9 @@ model DoctorWorkDetail {
     centralGovernment   String?
     about               String
 
-    doctorId          String                        @unique
-    doctor            Doctor                        @relation(fields: [doctorId], references: [id], onDelete: Cascade)
-    workingFacilities DoctorWorkingFacilityDetail[]
+    doctorId               String                        @unique
+    doctor                 Doctor                        @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+    workingFacilityDetails DoctorWorkingFacilityDetail[]
 
     createdBy String?
     updatedBy String?

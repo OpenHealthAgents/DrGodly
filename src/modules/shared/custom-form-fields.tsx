@@ -131,7 +131,12 @@ export const FormInput: TFormControlFunc = ({
   return (
     <FormBase {...props}>
       {(field) => (
-        <Input {...field} placeholder={placeholder} className={className} />
+        <Input
+          {...field}
+          value={field.value ?? ""}
+          placeholder={placeholder}
+          className={className}
+        />
       )}
     </FormBase>
   );
@@ -160,7 +165,7 @@ export const FormSelect: TFormControlFunc<{ children: React.ReactNode }> = ({
   return (
     <FormBase {...props}>
       {({ onChange, onBlur, ...field }) => (
-        <Select {...field} onValueChange={onChange} value={field.value}>
+        <Select {...field} onValueChange={onChange} value={field.value ?? ""}>
           <SelectTrigger
             aria-invalid={field["aria-invalid"]}
             id={field.id}

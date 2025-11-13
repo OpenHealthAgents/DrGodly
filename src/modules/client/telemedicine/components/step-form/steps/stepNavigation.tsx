@@ -9,6 +9,7 @@ interface StepNavigationProps {
   onSaveDraft: () => void;
   isNextDisabled?: boolean;
   isLastStep?: boolean;
+  isLoading?: boolean;
 }
 
 export function StepNavigation({
@@ -19,6 +20,7 @@ export function StepNavigation({
   onSaveDraft,
   isNextDisabled = false,
   isLastStep = false,
+  isLoading = false,
 }: StepNavigationProps) {
   return (
     <div className="flex items-center justify-between pt-6 border-t border-border">
@@ -26,7 +28,7 @@ export function StepNavigation({
         type="button"
         variant="outline"
         onClick={onPrevious}
-        disabled={currentStep === 1}
+        disabled={currentStep === 1 || isLoading}
         className="gap-2"
       >
         <ChevronLeft className="w-4 h-4" />
@@ -46,7 +48,7 @@ export function StepNavigation({
       <Button
         type="submit"
         onClick={onNext}
-        disabled={isNextDisabled}
+        disabled={isNextDisabled || isLoading}
         className="gap-2"
       >
         {isLastStep ? "Submit" : "Next"}

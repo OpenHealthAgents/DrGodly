@@ -25,6 +25,7 @@ export async function withMonitoring<T>(
   options?: {
     url?: string;
     revalidatePath?: boolean;
+    revalidateType?: "layout";
     redirect?: boolean;
     operationErrorMessage?: string;
     inputData?: Record<string, unknown>;
@@ -75,7 +76,7 @@ export async function withMonitoring<T>(
         });
 
         if (options?.url && options?.revalidatePath) {
-          revalidatePath(options.url);
+          revalidatePath(options.url, options.revalidateType ?? "page");
         }
       } catch (err) {
         if (!isNextJsControlError(err)) {

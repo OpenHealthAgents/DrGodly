@@ -6,17 +6,29 @@ import {
   getDoctorDataByIdController,
   deleteDoctorProfileController,
   createorUpdateDoctorPersonalDetailsController,
+  createorUpdateDoctorQualificationDetailsController,
+  createorUpdateDoctorWorkDetailsController,
+  createorUpdateDoctorConcentController,
+  submitDoctorFullProfileController,
 } from "@/modules/server/telemedicine/interface-adapters/controllers/doctorProfile";
 import {
   TDoctor,
   TDoctorDatas,
   TDoctorInitialProfile,
+  TDoctorPersonalDetails,
+  TDoctorQualifications,
+  TDoctorWorkDetails,
+  TDoctorConcent,
 } from "@/modules/shared/entities/models/telemedicine/doctorProfile";
 import {
   getAllDoctorSchema,
   CreateDoctorInitialProfileSchema,
   DeleteDoctorProfileSchema,
   DoctorProfileCreateOrUpdateValidationSchema,
+  DoctorQualificationCreateOrUpdateValidation,
+  DoctorWorkDetailCreateOrUpdateValidation,
+  DoctorConcentCreateOrUpdateValidation,
+  SubmitDoctorFullProfileValidationSchema,
 } from "@/modules/shared/schemas/telemedicine/doctorProfile/doctorProfileValidationSchema";
 import { withMonitoring } from "@/modules/shared/utils/serverActionWithMonitoring";
 import { createServerAction } from "zsa";
@@ -78,13 +90,95 @@ export const createOrUpdateDoctorPersonalDetails = createServerAction()
     skipInputParsing: true,
   })
   .handler(async ({ input }) => {
-    return await withMonitoring<TDoctor>(
+    return await withMonitoring<TDoctorPersonalDetails>(
       "createOrUpdateDoctorPersonalDetails",
       () => createorUpdateDoctorPersonalDetailsController(input),
       {
-        url: "/bezs/telemedicine/admin/manage-doctors/create",
+        url: `/bezs/telemedicine/admin/manage-doctors`,
+        revalidateType: "layout",
         revalidatePath: true,
-        operationErrorMessage: "Failed to create doctor profile.",
+        operationErrorMessage: `Failed to ${
+          input.id ? "update" : "create"
+        } doctor profile.`,
+      }
+    );
+  });
+
+export const createOrUpdateDoctorQualificationDetails = createServerAction()
+  .input(DoctorQualificationCreateOrUpdateValidation, {
+    skipInputParsing: true,
+  })
+  .handler(async ({ input }) => {
+    return await withMonitoring<TDoctorQualifications>(
+      "createOrUpdateDoctorPersonalDetails",
+      () => createorUpdateDoctorQualificationDetailsController(input),
+      {
+        url: `/bezs/telemedicine/admin/manage-doctors`,
+        revalidatePath: true,
+        revalidateType: "layout",
+        operationErrorMessage: `Failed to ${
+          input.id ? "update" : "create"
+        } doctor profile.`,
+      }
+    );
+  });
+
+export const createOrUpdateDoctorWorkDetails = createServerAction()
+  .input(DoctorWorkDetailCreateOrUpdateValidation, {
+    skipInputParsing: true,
+  })
+  .handler(async ({ input }) => {
+    return await withMonitoring<TDoctorWorkDetails>(
+      "createOrUpdateDoctorWorkDetails",
+      () => createorUpdateDoctorWorkDetailsController(input),
+      {
+        url: `/bezs/telemedicine/admin/manage-doctors`,
+        revalidateType: "layout",
+        revalidatePath: true,
+        operationErrorMessage: `Failed to ${
+          input.id ? "update" : "create"
+        } doctor work details.`,
+      }
+    );
+  });
+
+export const createOrUpdateDoctorConcent = createServerAction()
+  .input(DoctorConcentCreateOrUpdateValidation, {
+    skipInputParsing: true,
+  })
+  .handler(async ({ input }) => {
+    return await withMonitoring<TDoctorConcent>(
+      "createOrUpdateDoctorConcent",
+      () => createorUpdateDoctorConcentController(input),
+      {
+        url: `/bezs/telemedicine/admin/manage-doctors`,
+        revalidateType: "layout",
+        revalidatePath: true,
+        operationErrorMessage: `Failed to ${
+          input.id ? "update" : "create"
+        } doctor concent.`,
+      }
+    );
+  });
+
+export const submitDoctorFullProfile = createServerAction()
+  .input(SubmitDoctorFullProfileValidationSchema, { skipInputParsing: true })
+  .handler(async ({ input }) => {
+    return await withMonitoring<TDoctor>(
+      "submitDoctorFullProfile",
+      () => submitDoctorFullProfileController(input),
+      {
+        url: `/bezs/telemedicine/admin/manage-doctors`,
+        revalidateType: "layout",
+        revalidatePath: true,
+        operationErrorMessage: `Failed to ${
+          input.personal.id ||
+          input.qualification.id ||
+          input.work.id ||
+          input.concent.id
+            ? "update"
+            : "create"
+        } doctor profile.`,
       }
     );
   });

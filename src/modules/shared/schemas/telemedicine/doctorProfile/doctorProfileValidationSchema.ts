@@ -109,21 +109,29 @@ export const DoctorQualificationsSchema = z
       required_error: "Registration date is required",
     }),
     registrationType: z.enum(["permanent", "renewal"]),
-    registrationValidDate: z.date().optional(),
+    registrationValidDate: z.date().nullable(),
     nameMatchesAadhaar: z.boolean(),
     qualifications: z
       .array(qualificationSchema)
       .min(1, "Add at least one qualification"),
   })
-  .refine(
-    (data) =>
-      data.registrationType === "permanent" ||
-      (data.registrationType === "renewal" && data.registrationValidDate),
-    {
-      message: "Registration valid date is required for renewal type",
-      path: ["registrationValidDate"],
+  .superRefine((data, ctx) => {
+    if (data.registrationType === "renewal" && !data.registrationValidDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Registration valid date is required for renewal type",
+        path: ["registrationValidDate"],
+      });
     }
-  );
+
+    if (data.registrationType === "permanent" && data.registrationValidDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Registration valid date should be empty for permanent type",
+        path: ["registrationValidDate"],
+      });
+    }
+  });
 export type TDoctorQualifications = z.infer<typeof DoctorQualificationsSchema>;
 
 export const doctorWorkingFacilityDetailSchema = z.object({
@@ -150,15 +158,15 @@ export const DoctorWorkDetailsSchema = z
   .object({
     currentlyWorking: z.boolean(),
     experience: z.string().min(1, "Experience is required"),
-    reasonForNotWorking: z.string().optional(),
-    otherReason: z.string().optional(),
+    reasonForNotWorking: z.string().nullable(),
+    otherReason: z.string().nullable(),
 
-    natureOfWork: z.string().optional(),
-    teleConsultationURL: z.string().optional(),
-    workStatus: z.enum(workStatus).optional(),
+    natureOfWork: z.string().nullable(),
+    teleConsultationURL: z.string().nullable(),
+    workStatus: z.enum(workStatus).nullable(),
 
-    governmentCategory: z.enum(["central", "state"]).optional(),
-    centralGovernment: z.string().optional(),
+    governmentCategory: z.enum(["central", "state"]).nullable(),
+    centralGovernment: z.string().nullable(),
 
     workingFacilityDetails: z
       .array(doctorWorkingFacilityDetailSchema)
@@ -256,22 +264,41 @@ export const DoctorWorkDetailsSchema = z
 
 export type TDoctorWorkDetails = z.infer<typeof DoctorWorkDetailsSchema>;
 
-export const DoctorConcentSchema = z.object({
-  isAgreeToShowDetailsPublic: z.boolean().optional(),
-  name: z.boolean(),
-  systemOfMedicine: z.boolean(),
-  qualification: z.boolean(),
-  experience: z.boolean(),
-  showToPublic: z.boolean().optional(),
-  email: z.boolean().optional(),
-  contactNumber: z.boolean().optional(),
-  placeOfWork: z.boolean().optional(),
-  profilePicture: z.boolean().optional(),
-  languageSpoken: z.boolean().optional(),
-  workStatus: z.boolean().optional(),
-  teleConsultation: z.boolean().optional(),
-  isDeclearedToCreateDoctorAccount: z.boolean(),
-});
+export const DoctorConcentSchema = z
+  .object({
+    isAgreeToShowDetailsPublic: z.boolean(),
+    name: z.boolean(),
+    systemOfMedicine: z.boolean(),
+    qualification: z.boolean(),
+    experience: z.boolean(),
+    // showToPublic: z.boolean().optional(),
+    email: z.boolean().nullable(),
+    contactNumber: z.boolean().nullable(),
+    placeOfWork: z.boolean().nullable(),
+    profilePicture: z.boolean().nullable(),
+    languageSpoken: z.boolean().nullable(),
+    workStatus: z.boolean().nullable(),
+    teleConsultation: z.boolean().nullable(),
+    isDeclearedToCreateDoctorAccount: z.boolean(),
+  })
+  .superRefine((data, ctx) => {
+    const requiredTrueFields = [
+      { field: "name", label: "Name" },
+      { field: "systemOfMedicine", label: "System of Medicine" },
+      { field: "qualification", label: "Qualification" },
+      { field: "experience", label: "Experience" },
+    ];
+
+    for (const { field, label } of requiredTrueFields) {
+      if (!data[field as keyof typeof data]) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [field],
+          message: `${label} consent must be checked`,
+        });
+      }
+    }
+  });
 export type TDoctorConcent = z.infer<typeof DoctorConcentSchema>;
 
 export const DoctorProfileCreateOrUpdateValidationSchema = z
@@ -284,4 +311,53 @@ export const DoctorProfileCreateOrUpdateValidationSchema = z
   .merge(DoctorPersonalDetailsSchema);
 export type TDoctorProfileCreateValidation = z.infer<
   typeof DoctorProfileCreateOrUpdateValidationSchema
+>;
+
+export const DoctorQualificationCreateOrUpdateValidation = z
+  .object({
+    id: z.string().nullable(),
+    orgId: z.string(),
+    operationBy: z.string(),
+    doctorId: z.string(),
+  })
+  .and(DoctorQualificationsSchema);
+export type TDoctorQualificationCreateValidation = z.infer<
+  typeof DoctorQualificationCreateOrUpdateValidation
+>;
+
+export const DoctorWorkDetailCreateOrUpdateValidation = z
+  .object({
+    id: z.string().nullable(),
+    orgId: z.string(),
+    operationBy: z.string(),
+    doctorId: z.string(),
+  })
+  .and(DoctorWorkDetailsSchema);
+export type TDoctorWorkDetailCreateValidation = z.infer<
+  typeof DoctorWorkDetailCreateOrUpdateValidation
+>;
+
+export const DoctorConcentCreateOrUpdateValidation = z
+  .object({
+    id: z.string().nullable(),
+    orgId: z.string(),
+    operationBy: z.string(),
+    doctorId: z.string(),
+  })
+  .and(DoctorConcentSchema);
+export type TDoctorConcentCreateValidation = z.infer<
+  typeof DoctorConcentCreateOrUpdateValidation
+>;
+
+export const SubmitDoctorFullProfileValidationSchema = z.object({
+  doctorId: z.string(),
+  orgId: z.string(),
+  operationBy: z.string(),
+  personal: DoctorProfileCreateOrUpdateValidationSchema,
+  qualification: DoctorQualificationCreateOrUpdateValidation,
+  work: DoctorWorkDetailCreateOrUpdateValidation,
+  concent: DoctorConcentCreateOrUpdateValidation,
+});
+export type TSubmitDoctorFullProfileValidation = z.infer<
+  typeof SubmitDoctorFullProfileValidationSchema
 >;

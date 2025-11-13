@@ -1,9 +1,16 @@
 import {
+  TCreateOrUpdateDoctorConcent,
   TCreateOrUpdateDoctorProfileDetail,
+  TCreateOrUpdateDoctorQualificationDetail,
+  TCreateOrUpdateDoctorWorkDetail,
   TDoctor,
+  TDoctorConcent,
   TDoctorDatas,
   TDoctorInitialProfile,
   TDoctorPersonalDetails,
+  TDoctorQualifications,
+  TDoctorWorkDetails,
+  TSubmitFullDoctorProfile,
 } from "../../../../shared/entities/models/telemedicine/doctorProfile";
 
 export interface IDoctorProfileRepository {
@@ -21,11 +28,26 @@ export interface IDoctorProfileRepository {
     updateData: TCreateOrUpdateDoctorProfileDetail
   ): Promise<TDoctorPersonalDetails>;
 
-  createDoctorQualificationsDetails(): Promise<void>;
-  createDoctorWorkDetails(): Promise<void>;
-  createDoctorConcent(): Promise<void>;
+  createDoctorQualificationDetails(
+    createData: TCreateOrUpdateDoctorQualificationDetail
+  ): Promise<TDoctorQualifications>;
+  updateDoctorQualificationDetails(
+    updateData: TCreateOrUpdateDoctorQualificationDetail
+  ): Promise<TDoctorQualifications>;
 
-  editDoctorQualificationsDetails(): Promise<void>;
-  editDoctorWorkDetails(): Promise<void>;
-  editDoctorConcent(): Promise<void>;
+  createDoctorWorkDetails(
+    createData: TCreateOrUpdateDoctorWorkDetail
+  ): Promise<TDoctorWorkDetails>;
+  updateDoctorWorkDetails(
+    updateData: TCreateOrUpdateDoctorWorkDetail
+  ): Promise<TDoctorWorkDetails>;
+
+  createDoctorConcent(
+    createData: TCreateOrUpdateDoctorConcent
+  ): Promise<TDoctorConcent>;
+  updateDoctorConcent(
+    updateData: TCreateOrUpdateDoctorConcent
+  ): Promise<TDoctorConcent>;
+
+  submitDoctorFullProfile(data: TSubmitFullDoctorProfile): Promise<TDoctor>;
 }

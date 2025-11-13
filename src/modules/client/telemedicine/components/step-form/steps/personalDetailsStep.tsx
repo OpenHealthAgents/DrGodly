@@ -51,6 +51,7 @@ interface PersonalDetailsStepProps {
   onNext: (data: TDoctorPersonalDetails) => void;
   onSaveDraft: (data: Partial<TDoctorPersonalDetails>) => void;
   profileData?: TProfileDetails | null;
+  isLoading?: boolean;
 }
 
 export function PersonalDetailsStep({
@@ -58,6 +59,7 @@ export function PersonalDetailsStep({
   onNext,
   onSaveDraft,
   profileData,
+  isLoading = false,
 }: PersonalDetailsStepProps) {
   const [open, setOpen] = useState(false);
 
@@ -90,8 +92,8 @@ export function PersonalDetailsStep({
       },
       mobileNumber: "",
       email: "",
-      alternativeMobileNumber: "",
-      alternativeEmail: "",
+      alternativeMobileNumber: profileData?.alternativeMobileNumber ?? "",
+      alternativeEmail: profileData?.alternativeEmail ?? "",
     },
   });
 
@@ -159,8 +161,6 @@ export function PersonalDetailsStep({
       });
     }
   }, [form, profileData]);
-
-  console.log(profileData);
 
   return (
     <Form {...form}>
@@ -653,6 +653,7 @@ export function PersonalDetailsStep({
           onPrevious={() => {}}
           onNext={() => {}}
           onSaveDraft={() => onSaveDraft(form.getValues())}
+          isLoading={isLoading}
         />
       </form>
     </Form>

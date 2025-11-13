@@ -11,6 +11,16 @@ import {
   TDoctorInitialProfile,
   TDoctorPersonalDetails,
   DoctorPersonalDetailsSchema,
+  TCreateOrUpdateDoctorQualificationDetail,
+  DoctorQualificationSchema,
+  TDoctorQualifications,
+  TCreateOrUpdateDoctorWorkDetail,
+  TDoctorWorkDetails,
+  DoctorWorkDetailsSchema,
+  TCreateOrUpdateDoctorConcent,
+  TDoctorConcent,
+  DoctorConcentSchema,
+  TSubmitFullDoctorProfile,
 } from "../../../../shared/entities/models/telemedicine/doctorProfile";
 import { OperationError } from "../../../../shared/entities/errors/commonError";
 import { logOperation } from "../../../../shared/utils/server-logger/log-operation";
@@ -54,7 +64,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
           },
           workDetail: {
             include: {
-              workingFacilities: true,
+              workingFacilityDetails: true,
             },
           },
           concent: true,
@@ -237,7 +247,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
           },
           workDetail: {
             include: {
-              workingFacilities: true,
+              workingFacilityDetails: true,
             },
           },
           concent: true,
@@ -303,6 +313,12 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       throw new Error("Failed to create doctor profile.");
     }
 
+    if (!rest.orgId || !rest.doctorId) {
+      throw new Error(
+        "Missing organization or doctor ID while creating profile."
+      );
+    }
+
     const lang = languagesSpoken.map((lang) => ({
       langCode: lang,
       orgId: rest.orgId,
@@ -342,22 +358,18 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
             updatedBy: operationBy,
             languagesSpoken: {
               createMany: {
-                data: [...lang],
+                data: lang,
               },
             },
             kycAddress: {
-              create: {
-                ...kyc,
-              },
+              create: kyc,
             },
             communicationAddress: {
-              create: {
-                ...comm,
-              },
+              create: comm,
             },
             socialAccounts: {
               createMany: {
-                data: [...social],
+                data: social,
               },
             },
           },
@@ -399,7 +411,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
     }
   }
 
-  async editDoctorPersonalDetails(
+  async updateDoctorPersonalDetails(
     editData: TCreateOrUpdateDoctorProfileDetail
   ): Promise<TDoctorPersonalDetails> {
     const startTimeMs = Date.now();
@@ -407,7 +419,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
 
     // Start log
     logOperation("start", {
-      name: "editDoctorPersonalDetailsRepository",
+      name: "updateDoctorPersonalDetailsRepository",
       startTimeMs,
       context: {
         operationId,
@@ -425,7 +437,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
     } = editData;
 
     if (!id) {
-      throw new Error("Failed to edit doctor profile.");
+      throw new Error("Failed to update doctor profile.");
     }
 
     const lang = languagesSpoken.map((lang) => ({
@@ -438,14 +450,14 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
     const kyc = {
       ...kycAddress,
       orgId: rest.orgId,
-      createdBy: operationBy,
+      // createdBy: operationBy,
       updatedBy: operationBy,
     };
 
     const comm = {
       ...communicationAddress,
       orgId: rest.orgId,
-      createdBy: operationBy,
+      // createdBy: operationBy,
       updatedBy: operationBy,
     };
 
@@ -459,51 +471,85 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       })) ?? [];
 
     try {
-      const doctorPersonalDetails =
-        await prismaTelemedicine.doctorPersonalDetail.update({
+      const profileData = await prismaTelemedicine.$transaction(async (tx) => {
+        // Delete many-to-many relations
+        await tx.language.deleteMany({
           where: {
-            id,
-          },
-          data: {
-            ...rest,
-            createdBy: operationBy,
-            updatedBy: operationBy,
-            languagesSpoken: {
-              createMany: {
-                data: [...lang],
-              },
-            },
-            kycAddress: {
-              create: {
-                ...kyc,
-              },
-            },
-            communicationAddress: {
-              create: {
-                ...comm,
-              },
-            },
-            socialAccounts: {
-              createMany: {
-                data: [...social],
-              },
-            },
-          },
-          include: {
-            communicationAddress: true,
-            kycAddress: true,
-            languagesSpoken: true,
-            socialAccounts: true,
+            doctorPersonalDetailId: id,
           },
         });
 
-      const data = await DoctorPersonalDetailsSchema.parseAsync(
-        doctorPersonalDetails
-      );
+        await tx.socialAccount.deleteMany({
+          where: {
+            doctorPersonalDetailId: id,
+          },
+        });
+
+        // update main personal detail
+        await tx.doctorPersonalDetail.update({
+          where: { id },
+          data: {
+            ...rest,
+            updatedBy: operationBy,
+            languagesSpoken: {
+              createMany: { data: lang },
+            },
+            socialAccounts: {
+              createMany: {
+                data: social,
+              },
+            },
+          },
+        });
+
+        // Upsert KYC address (1-to-1)
+        await tx.kYCAddress.upsert({
+          where: { doctorPersonalDetailId: id },
+          create: {
+            ...kyc,
+            createdBy: operationBy,
+            doctorPersonalDetailId: id,
+          },
+          update: {
+            ...kyc,
+            updatedBy: operationBy,
+          },
+        });
+
+        // Upsert Communication address (1-to-1)
+        await tx.communicationAddress.upsert({
+          where: { doctorPersonalDetailId: id },
+          create: {
+            ...comm,
+            createdBy: operationBy,
+            doctorPersonalDetailId: id,
+          },
+          update: {
+            ...comm,
+            updatedBy: operationBy,
+          },
+        });
+
+        // Finally, return full data with nested relations
+        const fullProfileData =
+          await prismaTelemedicine.doctorPersonalDetail.findUnique({
+            where: { id },
+            include: {
+              communicationAddress: true,
+              kycAddress: true,
+              languagesSpoken: true,
+              socialAccounts: true,
+            },
+          });
+
+        return fullProfileData;
+      });
+
+      const data = await DoctorPersonalDetailsSchema.parseAsync(profileData);
 
       // Success log
       logOperation("success", {
-        name: "editDoctorPersonalDetailsRepository",
+        name: "updateDoctorPersonalDetailsRepository",
         startTimeMs,
       });
 
@@ -511,7 +557,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
     } catch (error) {
       // Error log
       logOperation("error", {
-        name: "editDoctorPersonalDetailsRepository",
+        name: "updateDoctorPersonalDetailsRepository",
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
@@ -527,15 +573,734 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
     }
   }
 
-  async createDoctorQualificationsDetails(): Promise<void> {}
+  async createDoctorQualificationDetails(
+    createData: TCreateOrUpdateDoctorQualificationDetail
+  ): Promise<TDoctorQualifications> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
 
-  async createDoctorConcent(): Promise<void> {}
+    // Start log
+    logOperation("start", {
+      name: "createDoctorQualificationDetailsRepository",
+      startTimeMs,
+      context: {
+        operationId,
+      },
+    });
 
-  async createDoctorWorkDetails(): Promise<void> {}
+    const { qualifications, id, operationBy, ...rest } = createData;
 
-  async editDoctorConcent(): Promise<void> {}
+    if (id) {
+      throw new Error("Failed to create doctor qualifications profile.");
+    }
 
-  async editDoctorQualificationsDetails(): Promise<void> {}
+    const qualificationsData = qualifications.map(({ id, ...restData }) => ({
+      ...restData,
+      orgId: rest.orgId,
+      createdBy: operationBy,
+      updatedBy: operationBy,
+    }));
 
-  async editDoctorWorkDetails(): Promise<void> {}
+    try {
+      const qualificationData =
+        await prismaTelemedicine.doctorQualification.create({
+          data: {
+            ...rest,
+            createdBy: operationBy,
+            updatedBy: operationBy,
+            qualifications: {
+              createMany: {
+                data: qualificationsData,
+              },
+            },
+          },
+          include: {
+            qualifications: true,
+          },
+        });
+
+      const data = await DoctorQualificationSchema.parseAsync(
+        qualificationData
+      );
+
+      // Success log
+      logOperation("success", {
+        name: "createDoctorQualificationDetailsRepository",
+        startTimeMs,
+      });
+
+      return data;
+    } catch (error) {
+      // Error log
+      logOperation("error", {
+        name: "createDoctorQualificationDetailsRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+
+      throw new OperationError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async updateDoctorQualificationDetails(
+    updateData: TCreateOrUpdateDoctorQualificationDetail
+  ): Promise<TDoctorQualifications> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    // Start log
+    logOperation("start", {
+      name: "updateDoctorQualificationDetailsRepository",
+      startTimeMs,
+      context: {
+        operationId,
+      },
+    });
+
+    const { qualifications, id, operationBy, ...rest } = updateData;
+
+    if (!id) {
+      throw new Error("Failed to update doctor qualifications profile.");
+    }
+
+    const qualificationsData = qualifications.map(
+      ({ id, ...qualification }) => ({
+        ...qualification,
+        orgId: rest.orgId,
+        createdBy: operationBy,
+        updatedBy: operationBy,
+      })
+    );
+
+    try {
+      const qualificationData = await prismaTelemedicine.$transaction(
+        async (tx) => {
+          // Delete many-to-many relations
+          await tx.qualification.deleteMany({
+            where: {
+              doctorQualificationId: id,
+            },
+          });
+
+          const qualification = await tx.doctorQualification.update({
+            where: {
+              id,
+            },
+            data: {
+              ...rest,
+              updatedBy: operationBy,
+              qualifications: {
+                createMany: {
+                  data: qualificationsData,
+                },
+              },
+            },
+            include: {
+              qualifications: true,
+            },
+          });
+
+          return qualification;
+        }
+      );
+
+      const data = await DoctorQualificationSchema.parseAsync(
+        qualificationData
+      );
+
+      // Success log
+      logOperation("success", {
+        name: "updateDoctorQualificationDetailsRepository",
+        startTimeMs,
+      });
+
+      return data;
+    } catch (error) {
+      // Error log
+      logOperation("error", {
+        name: "updateDoctorQualificationDetailsRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+
+      throw new OperationError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async createDoctorWorkDetails(
+    createData: TCreateOrUpdateDoctorWorkDetail
+  ): Promise<TDoctorWorkDetails> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    // Start log
+    logOperation("start", {
+      name: "createDoctorWorkDetailsRepository",
+      startTimeMs,
+      context: {
+        operationId,
+      },
+    });
+
+    const { workingFacilityDetails, id, operationBy, ...rest } = createData;
+
+    const workingFacilityDetailsData =
+      workingFacilityDetails?.map(({ id, ...restData }) => ({
+        ...restData,
+        orgId: rest.orgId,
+        createdBy: operationBy,
+        updatedBy: operationBy,
+      })) ?? [];
+
+    if (id) {
+      throw new Error("Failed to create doctor working profile.");
+    }
+
+    try {
+      const workingDetails = await prismaTelemedicine.doctorWorkDetail.create({
+        data: {
+          ...rest,
+          createdBy: operationBy,
+          updatedBy: operationBy,
+          workingFacilityDetails: {
+            createMany: {
+              data: workingFacilityDetailsData,
+            },
+          },
+        },
+        include: {
+          workingFacilityDetails: true,
+        },
+      });
+
+      const data = await DoctorWorkDetailsSchema.parseAsync(workingDetails);
+
+      // Success log
+      logOperation("success", {
+        name: "createDoctorWorkDetailsRepository",
+        startTimeMs,
+      });
+
+      return data;
+    } catch (error) {
+      // Error log
+      logOperation("error", {
+        name: "createDoctorWorkDetailsRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+
+      throw new OperationError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async updateDoctorWorkDetails(
+    updateData: TCreateOrUpdateDoctorWorkDetail
+  ): Promise<TDoctorWorkDetails> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    // Start log
+    logOperation("start", {
+      name: "editDoctorWorkDetailsRepository",
+      startTimeMs,
+      context: {
+        operationId,
+      },
+    });
+
+    const { workingFacilityDetails, id, operationBy, ...rest } = updateData;
+
+    if (!id) {
+      throw new Error("Failed to update doctor working details profile.");
+    }
+
+    const workingFacilityDetailsData =
+      workingFacilityDetails?.map(({ id, ...restData }) => ({
+        ...restData,
+        orgId: rest.orgId,
+        createdBy: operationBy,
+        updatedBy: operationBy,
+      })) ?? [];
+
+    try {
+      const doctorWorkingDetails = await prismaTelemedicine.$transaction(
+        async (tx) => {
+          // Delete many-to-many relations
+          await tx.doctorWorkingFacilityDetail.deleteMany({
+            where: {
+              doctorWorkId: id,
+            },
+          });
+
+          const workingDetails = await tx.doctorWorkDetail.update({
+            where: {
+              id,
+            },
+            data: {
+              ...rest,
+              updatedBy: operationBy,
+              workingFacilityDetails: {
+                createMany: {
+                  data: workingFacilityDetailsData,
+                },
+              },
+            },
+            include: {
+              workingFacilityDetails: true,
+            },
+          });
+
+          return workingDetails;
+        }
+      );
+
+      const data = await DoctorWorkDetailsSchema.parseAsync(
+        doctorWorkingDetails
+      );
+
+      // Success log
+      logOperation("success", {
+        name: "editDoctorWorkDetailsRepository",
+        startTimeMs,
+      });
+
+      return data;
+    } catch (error) {
+      // Error log
+      logOperation("error", {
+        name: "editDoctorWorkDetailsRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+
+      throw new OperationError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async createDoctorConcent(
+    createData: TCreateOrUpdateDoctorConcent
+  ): Promise<TDoctorConcent> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    // Start log
+    logOperation("start", {
+      name: "createDoctorConcentRepository",
+      startTimeMs,
+      context: {
+        operationId,
+      },
+    });
+
+    const { id, operationBy, ...rest } = createData;
+
+    if (id) {
+      throw new Error("Failed to create doctor concent details.");
+    }
+
+    try {
+      const doctorConcent = await prismaTelemedicine.doctorConcent.create({
+        data: {
+          ...rest,
+          createdBy: operationBy,
+          updatedBy: operationBy,
+        },
+      });
+
+      const data = await DoctorConcentSchema.parseAsync(doctorConcent);
+
+      // Success log
+      logOperation("success", {
+        name: "createDoctorConcentRepository",
+        startTimeMs,
+      });
+
+      return data;
+    } catch (error) {
+      // Error log
+      logOperation("error", {
+        name: "createDoctorConcentRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+
+      throw new OperationError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async updateDoctorConcent(
+    updateData: TCreateOrUpdateDoctorConcent
+  ): Promise<TDoctorConcent> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    // Start log
+    logOperation("start", {
+      name: "updateDoctorConcentRepository",
+      startTimeMs,
+      context: {
+        operationId,
+      },
+    });
+
+    const { id, operationBy, ...rest } = updateData;
+
+    if (!id) {
+      throw new Error("Failed to update doctor concent details.");
+    }
+
+    try {
+      const doctorConcent = await prismaTelemedicine.doctorConcent.update({
+        where: {
+          id,
+        },
+        data: {
+          ...rest,
+          updatedBy: operationBy,
+        },
+      });
+
+      const data = await DoctorConcentSchema.parseAsync(doctorConcent);
+
+      // Success log
+      logOperation("success", {
+        name: "updateDoctorConcentRepository",
+        startTimeMs,
+      });
+
+      return data;
+    } catch (error) {
+      // Error log
+      logOperation("error", {
+        name: "updateDoctorConcentRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+
+      throw new OperationError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async submitDoctorFullProfile({
+    doctorId,
+    orgId,
+    operationBy,
+    personal,
+    qualification,
+    work,
+    concent,
+  }: TSubmitFullDoctorProfile): Promise<TDoctor> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    logOperation("start", {
+      name: "submitDoctorFullProfileRepository",
+      startTimeMs,
+      context: { operationId },
+    });
+
+    try {
+      const result = await prismaTelemedicine.$transaction(async (tx) => {
+        /** -------------------------------------------------------
+         * 1. PERSONAL DETAILS
+         * ------------------------------------------------------- */
+        if (personal.id) {
+          const {
+            languagesSpoken,
+            kycAddress,
+            communicationAddress,
+            socialAccounts,
+            operationBy,
+            id,
+            ...restPersonal
+          } = personal;
+
+          const lang = languagesSpoken.map((lang) => ({
+            langCode: lang,
+            orgId: restPersonal.orgId,
+            createdBy: operationBy,
+            updatedBy: operationBy,
+          }));
+
+          const kyc = {
+            ...kycAddress,
+            orgId: restPersonal.orgId,
+            // createdBy: operationBy,
+            updatedBy: operationBy,
+          };
+
+          const comm = {
+            ...communicationAddress,
+            orgId: restPersonal.orgId,
+            // createdBy: operationBy,
+            updatedBy: operationBy,
+          };
+
+          const social =
+            socialAccounts?.map((acc) => ({
+              orgId: restPersonal.orgId,
+              createdBy: operationBy,
+              updatedBy: operationBy,
+              platform: acc.platform ?? "",
+              url: acc.url ?? "",
+            })) ?? [];
+
+          // update
+          // Delete many-to-many relations
+          await tx.language.deleteMany({
+            where: { doctorPersonalDetailId: personal.id },
+          });
+
+          await tx.socialAccount.deleteMany({
+            where: { doctorPersonalDetailId: personal.id },
+          });
+
+          // update main personal detail
+          await tx.doctorPersonalDetail.update({
+            where: { id },
+            data: {
+              ...restPersonal,
+              updatedBy: operationBy,
+              languagesSpoken: {
+                createMany: { data: lang },
+              },
+              socialAccounts: {
+                createMany: {
+                  data: social,
+                },
+              },
+            },
+          });
+
+          // Upsert KYC address (1-to-1)
+          await tx.kYCAddress.upsert({
+            where: { doctorPersonalDetailId: id },
+            create: {
+              ...kyc,
+              createdBy: operationBy,
+              doctorPersonalDetailId: id,
+            },
+            update: { ...kyc, updatedBy: operationBy },
+          });
+
+          await tx.communicationAddress.upsert({
+            where: { doctorPersonalDetailId: id },
+            create: {
+              ...comm,
+              createdBy: operationBy,
+              doctorPersonalDetailId: id,
+            },
+            update: {
+              ...comm,
+              updatedBy: operationBy,
+            },
+          });
+        } else {
+          throw new Error("Cannot submit personal details: missing id");
+        }
+
+        /** -------------------------------------------------------
+         * 2. QUALIFICATIONS
+         * ------------------------------------------------------- */
+        if (qualification.id) {
+          const { id, qualifications, operationBy, ...restQualification } =
+            qualification;
+
+          const qualificationsData = qualifications.map(
+            ({ id, ...qualification }) => ({
+              ...qualification,
+              orgId: restQualification.orgId,
+              createdBy: operationBy,
+              updatedBy: operationBy,
+            })
+          );
+
+          // Delete many-to-many relations
+          await tx.qualification.deleteMany({
+            where: { doctorQualificationId: id },
+          });
+
+          await tx.doctorQualification.update({
+            where: { id },
+            data: {
+              ...restQualification,
+              updatedBy: operationBy,
+              qualifications: {
+                createMany: {
+                  data: qualificationsData,
+                },
+              },
+            },
+          });
+        } else {
+          throw new Error("Cannot submit qualification details: missing id");
+        }
+
+        /** -------------------------------------------------------
+         * 3. WORK DETAILS
+         * ------------------------------------------------------- */
+        if (work.id) {
+          const { id, workingFacilityDetails, operationBy, ...restWork } = work;
+
+          const workingFacilityDetailsData =
+            workingFacilityDetails?.map(({ id, ...restData }) => ({
+              ...restData,
+              orgId: restWork.orgId,
+              createdBy: operationBy,
+              updatedBy: operationBy,
+            })) ?? [];
+
+          await tx.doctorWorkingFacilityDetail.deleteMany({
+            where: { doctorWorkId: id },
+          });
+
+          await tx.doctorWorkDetail.update({
+            where: { id },
+            data: {
+              ...restWork,
+              updatedBy: operationBy,
+              workingFacilityDetails: {
+                createMany: {
+                  data: workingFacilityDetailsData,
+                },
+              },
+            },
+          });
+        } else {
+          throw new Error("Cannot submit work details: missing id");
+        }
+
+        /** -------------------------------------------------------
+         * 4. CONCENT (UPSERT)
+         * ------------------------------------------------------- */
+        const {
+          id: concentId,
+          operationBy: concentOperationBy,
+          ...restConcent
+        } = concent;
+
+        if (concentId) {
+          await tx.doctorConcent.update({
+            where: { id: concentId },
+            data: {
+              ...restConcent,
+              updatedBy: concentOperationBy,
+            },
+          });
+        } else {
+          await tx.doctorConcent.create({
+            data: {
+              ...restConcent,
+              doctorId,
+              orgId,
+              createdBy: concentOperationBy,
+              updatedBy: concentOperationBy,
+            },
+          });
+        }
+
+        /** -------------------------------------------------------
+         * 5. MARK PROFILE AS COMPLETED
+         * ------------------------------------------------------- */
+        await tx.doctor.update({
+          where: { id: doctorId },
+          data: {
+            isCompleted: true,
+            updatedBy: operationBy,
+          },
+        });
+
+        /** -------------------------------------------------------
+         * 6. FETCH FULL PROFILE
+         * ------------------------------------------------------- */
+        return tx.doctor.findUnique({
+          where: { id: doctorId },
+          include: {
+            personal: {
+              include: {
+                kycAddress: true,
+                communicationAddress: true,
+                languagesSpoken: true,
+                socialAccounts: true,
+              },
+            },
+            qualification: {
+              include: { qualifications: true },
+            },
+            workDetail: {
+              include: { workingFacilityDetails: true },
+            },
+            concent: true,
+          },
+        });
+      });
+
+      const parsed = await DoctorSchema.parseAsync(result);
+
+      logOperation("success", {
+        name: "submitDoctorFullProfileRepository",
+        startTimeMs,
+      });
+
+      return parsed;
+    } catch (error) {
+      logOperation("error", {
+        name: "submitDoctorFullProfileRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+
+      throw new OperationError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
 }

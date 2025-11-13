@@ -117,16 +117,7 @@ export const DoctorQualificationSchema = z
     doctorId: z.string(),
     qualifications: z.array(qualificationSchema),
   })
-  .merge(DefaultFieldsSchema)
-  .refine(
-    (data) =>
-      data.registrationType === "permanent" ||
-      (data.registrationType === "renewal" && data.registrationValidDate),
-    {
-      message: "Registration valid date is required for renewal type",
-      path: ["registrationValidDate"],
-    }
-  );
+  .merge(DefaultFieldsSchema);
 export type TDoctorQualifications = z.infer<typeof DoctorQualificationSchema>;
 
 export const DoctorWorkingFacilityDetailSchema = z
@@ -162,110 +153,28 @@ export const DoctorWorkDetailsSchema = z
     centralGovernment: z.string().nullable(),
     doctorId: z.string(),
 
-    workingFacilities: z.array(DoctorWorkingFacilityDetailSchema),
+    workingFacilityDetails: z.array(DoctorWorkingFacilityDetailSchema),
 
     about: z.string(),
   })
-  .merge(DefaultFieldsSchema)
-  .superRefine((data, ctx) => {
-    // 1️⃣ When not currently working → must specify reason
-    if (!data.currentlyWorking && !data.reasonForNotWorking) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Reason for not working is required",
-        path: ["reasonForNotWorking"],
-      });
-    }
-
-    // 2️⃣ When reason = "other" → require 'otherReason'
-    if (
-      !data.currentlyWorking &&
-      data.reasonForNotWorking === "other" &&
-      !data.otherReason
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Please specify the reason for not working",
-        path: ["otherReason"],
-      });
-    }
-
-    // 3️⃣ When currently working → require key work fields
-    if (data.currentlyWorking) {
-      if (!data.natureOfWork) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Nature of work is required",
-          path: ["natureOfWork"],
-        });
-      }
-      if (!data.workStatus) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Work status is required",
-          path: ["workStatus"],
-        });
-      }
-    }
-
-    // 4️⃣ Government category validation
-    if (data.workStatus === "government" || data.workStatus === "both") {
-      if (!data.governmentCategory) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Government category is required",
-          path: ["governmentCategory"],
-        });
-      }
-
-      if (data.governmentCategory === "central" && !data.centralGovernment) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Central government department is required",
-          path: ["centralGovernment"],
-        });
-      }
-    }
-
-    // 5️⃣ When currently working → require at least one facility
-    if (data.currentlyWorking) {
-      if (!data.workingFacilities || data.workingFacilities.length === 0) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "At least one working facility detail is required",
-          path: ["workingFacilityDetails"],
-        });
-      }
-    }
-
-    // 6️⃣ When not working → workingFacilityDetails must be empty or ignored
-    if (!data.currentlyWorking && data.workingFacilities?.length) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message:
-          "Working facility details should be empty when not currently working",
-        path: ["workingFacilityDetails"],
-      });
-    }
-  });
-
+  .merge(DefaultFieldsSchema);
 export type TDoctorWorkDetails = z.infer<typeof DoctorWorkDetailsSchema>;
 
 export const DoctorConcentSchema = z
   .object({
-    isAgreeToShowDetailsPublic: z.boolean().optional(),
+    isAgreeToShowDetailsPublic: z.boolean(),
     name: z.boolean(),
     systemOfMedicine: z.boolean(),
     qualification: z.boolean(),
     experience: z.boolean(),
-    showToPublic: z.boolean().optional(),
-    email: z.boolean().optional(),
-    contactNumber: z.boolean().optional(),
-    placeOfWork: z.boolean().optional(),
-    profilePicture: z.boolean().optional(),
-    languageSpoken: z.boolean().optional(),
-    workStatus: z.boolean().optional(),
-    teleConsultation: z.boolean().optional(),
+    // showToPublic: z.boolean().optional(),
+    email: z.boolean().nullable(),
+    contactNumber: z.boolean().nullable(),
+    placeOfWork: z.boolean().nullable(),
+    profilePicture: z.boolean().nullable(),
+    languageSpoken: z.boolean().nullable(),
+    workStatus: z.boolean().nullable(),
+    teleConsultation: z.boolean().nullable(),
     isDeclearedToCreateDoctorAccount: z.boolean(),
     doctorId: z.string(),
   })
@@ -351,3 +260,89 @@ export const createOrUpdateDoctorProfileDetailSchema =
 export type TCreateOrUpdateDoctorProfileDetail = z.infer<
   typeof createOrUpdateDoctorProfileDetailSchema
 >;
+
+export const createOrUpdateDoctorQualificationDetailSchema =
+  DoctorQualificationSchema.omit({
+    qualifications: true,
+    id: true,
+    createdAt: true,
+    createdBy: true,
+    updatedAt: true,
+    updatedBy: true,
+  }).merge(
+    z.object({
+      id: z.string().nullable(),
+      operationBy: z.string(),
+      orgId: z.string(),
+      qualifications: z.array(
+        qualificationSchema.omit({
+          doctorQualificationId: true,
+          orgId: true,
+          createdAt: true,
+          createdBy: true,
+          updatedAt: true,
+          updatedBy: true,
+        })
+      ),
+    })
+  );
+
+export type TCreateOrUpdateDoctorQualificationDetail = z.infer<
+  typeof createOrUpdateDoctorQualificationDetailSchema
+>;
+
+export const createOrUpdateDoctorWorkDetailSchema =
+  DoctorWorkDetailsSchema.omit({
+    workingFacilityDetails: true,
+    id: true,
+    createdAt: true,
+    createdBy: true,
+    updatedAt: true,
+    updatedBy: true,
+  }).merge(
+    z.object({
+      id: z.string().nullable(),
+      operationBy: z.string(),
+      workingFacilityDetails: z
+        .array(
+          DoctorWorkingFacilityDetailSchema.omit({
+            doctorWorkId: true,
+            orgId: true,
+            createdBy: true,
+            updatedBy: true,
+            createdAt: true,
+            updatedAt: true,
+          })
+        )
+        .optional(),
+    })
+  );
+export type TCreateOrUpdateDoctorWorkDetail = z.infer<
+  typeof createOrUpdateDoctorWorkDetailSchema
+>;
+
+export const createOrUpdateDoctorConcentSchema = DoctorConcentSchema.omit({
+  id: true,
+  createdAt: true,
+  createdBy: true,
+  updatedAt: true,
+  updatedBy: true,
+}).merge(
+  z.object({
+    id: z.string().nullable(),
+    operationBy: z.string(),
+  })
+);
+export type TCreateOrUpdateDoctorConcent = z.infer<
+  typeof createOrUpdateDoctorConcentSchema
+>;
+
+export type TSubmitFullDoctorProfile = {
+  doctorId: string;
+  orgId: string;
+  operationBy: string;
+  personal: TCreateOrUpdateDoctorProfileDetail;
+  qualification: TCreateOrUpdateDoctorQualificationDetail;
+  work: TCreateOrUpdateDoctorWorkDetail;
+  concent: TCreateOrUpdateDoctorConcent;
+};
