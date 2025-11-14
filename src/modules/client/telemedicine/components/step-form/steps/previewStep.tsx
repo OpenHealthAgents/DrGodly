@@ -43,6 +43,7 @@ interface PreviewStepProps {
   onSubmit: (data: any) => void;
   concentData?: TConcentData | null;
   isLoading?: boolean;
+  isUpdate?: boolean;
 }
 
 export function PreviewStep({
@@ -51,6 +52,7 @@ export function PreviewStep({
   onSubmit,
   concentData,
   isLoading,
+  isUpdate,
 }: PreviewStepProps) {
   const form = useForm<TDoctorConcent>({
     resolver: zodResolver(DoctorConcentSchema),
@@ -594,7 +596,7 @@ export function PreviewStep({
           ) : (
             <CheckCircle2 className="w-4 h-4" />
           )}
-          Submit Profile
+          {isUpdate ? "Update" : "Submit"} Profile
         </Button>
       </div>
     </div>

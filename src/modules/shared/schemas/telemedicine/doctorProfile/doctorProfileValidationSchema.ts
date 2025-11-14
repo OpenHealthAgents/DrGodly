@@ -4,6 +4,7 @@ export const IdSchema = z.object({
   id: z.string(),
   orgId: z.string(),
   createdBy: z.string(),
+  isABDMDoctorProfile: z.boolean(),
 });
 
 export const getAllDoctorSchema = IdSchema.pick({
@@ -13,10 +14,16 @@ export const getAllDoctorSchema = IdSchema.pick({
 export const CreateDoctorInitialProfileSchema = IdSchema.pick({
   createdBy: true,
   orgId: true,
+  isABDMDoctorProfile: true,
 });
 
 export const DeleteDoctorProfileSchema = IdSchema.pick({
   id: true,
+});
+
+export const GetDoctorByUserIdSchema = z.object({
+  userId: z.string(),
+  orgId: z.string().optional(),
 });
 
 /////////////////////////////////////////////////////////

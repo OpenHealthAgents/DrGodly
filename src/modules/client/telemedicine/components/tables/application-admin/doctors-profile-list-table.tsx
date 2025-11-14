@@ -3,9 +3,6 @@
 import DataTable from "@/modules/shared/components/table/data-table";
 import { doctorsProfileListTableColumn } from "./doctors-profile-list-table-column";
 import type { ZSAError } from "zsa";
-import { TAppDatas } from "@/modules/shared/entities/models/admin/app";
-// import { clientLogger } from "@/modules/shared/utils/client-logger";
-// import { usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { TDoctorDatas } from "@/modules/shared/entities/models/telemedicine/doctorProfile";
 import { useServerAction } from "zsa-react";
@@ -95,6 +92,7 @@ export const DoctorsProfileListTable = ({
             const [data, error] = await execute({
               orgId: user.currentOrgId,
               createdBy: user.id,
+              isABDMDoctorProfile: false,
             });
 
             if (!error && data) {

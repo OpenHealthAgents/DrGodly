@@ -43,7 +43,8 @@ model Doctor {
     registrationNumber   String?
     registrationProvider String?
 
-    isCompleted Boolean @default(false)
+    isCompleted         Boolean @default(false)
+    isABDMDoctorProfile Boolean @default(false)
 
     personal      DoctorPersonalDetail?
     qualification DoctorQualification?

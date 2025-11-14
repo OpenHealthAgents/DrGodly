@@ -188,6 +188,7 @@ export const DoctorSchema = z
     isCompleted: z.boolean(),
     registrationNumber: z.string().nullable(),
     registrationProvider: z.string().nullable(),
+    isABDMDoctorProfile: z.boolean().nullable(),
     personal: DoctorPersonalDetailsSchema.nullable(),
     qualification: DoctorQualificationSchema.nullable(),
     workDetail: DoctorWorkDetailsSchema.nullable(),
@@ -207,6 +208,7 @@ export const DoctorInitialProfileSchema = z
     userId: z.string().nullable(),
     doctorId: z.number(),
     isCompleted: z.boolean(),
+    isABDMDoctorProfile: z.boolean(),
   })
   .merge(DefaultFieldsSchema);
 export type TDoctorInitialProfile = z.infer<typeof DoctorInitialProfileSchema>;

@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { adminModalStore } from "@/modules/client/admin/stores/admin-modal-store";
+import { adminModalStore } from "../../../stores/admin-modal-store";
 import { TanstackTableColumnSorting } from "@/modules/shared/components/table/tanstack-table-column-sorting";
 
 import { ColumnDef } from "@tanstack/react-table";
@@ -43,6 +43,14 @@ export const doctorsProfileListTableColumn = (
     accessorKey: "doctorId",
   },
   {
+    header: "Profile Type",
+    accessorKey: "isABDMDoctorProfile",
+    cell: ({ row }) => {
+      const isABDMDoctorProfile: boolean = row.getValue("isABDMDoctorProfile");
+      return <span>{isABDMDoctorProfile ? "ABDM" : "Custom"}</span>;
+    },
+  },
+  {
     header: "Status",
     accessorKey: "isCompleted",
     cell: ({ row }) => {
@@ -50,7 +58,7 @@ export const doctorsProfileListTableColumn = (
       return (
         <Badge
           className={cn(
-            isCompleted ? "bg-green-400 text-black" : "bg-orange-400 text-white"
+            isCompleted ? "bg-green-500 text-white" : "bg-orange-500 text-white"
           )}
         >
           {isCompleted ? "Completed" : "Pending"}
@@ -92,7 +100,7 @@ export const doctorsProfileListTableColumn = (
               <DropdownMenuItem className="cursor-pointer">
                 <Link
                   href={`/bezs/telemedicine/admin/manage-doctors/edit?id=${id}`}
-                  className="flex items-center"
+                  className="flex items-center gap-2"
                 >
                   <PencilLine />
                   {t("table.actions.edit")}
@@ -101,7 +109,12 @@ export const doctorsProfileListTableColumn = (
               {/* <DropdownMenuSeparator /> */}
               <DropdownMenuItem
                 className="space-x-2 cursor-pointer"
-                onClick={() => {}}
+                onClick={() =>
+                  openModal({
+                    type: "deleteDoctorProfile",
+                    doctorProfileId: id,
+                  })
+                }
               >
                 <div className="flex items-center gap-2">
                   <Trash2 />

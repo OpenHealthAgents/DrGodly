@@ -110,7 +110,8 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
 
   async createDoctorInitialProfile(
     orgId: string,
-    createdBy: string
+    createdBy: string,
+    isABDMDoctorProfile: boolean
   ): Promise<TDoctorInitialProfile> {
     const startTimeMs = Date.now();
     const operationId = randomUUID();
@@ -130,6 +131,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
           orgId,
           createdBy,
           updatedBy: createdBy,
+          isABDMDoctorProfile,
         },
       });
 
@@ -269,6 +271,80 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       // Error log
       logOperation("error", {
         name: "getDoctorDataByIdRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+
+      throw new OperationError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async getDoctorDataByUserId(
+    userId: string,
+    orgId?: string
+  ): Promise<TDoctor | null> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    // Start log
+    logOperation("start", {
+      name: "getDoctorDataByUserIdRepository",
+      startTimeMs,
+      context: {
+        operationId,
+      },
+    });
+
+    try {
+      const doctorData = await prismaTelemedicine.doctor.findFirst({
+        where: {
+          OR: [{ userId }, { orgId }],
+        },
+        include: {
+          personal: {
+            include: {
+              kycAddress: true,
+              communicationAddress: true,
+              languagesSpoken: true,
+              socialAccounts: true,
+            },
+          },
+          qualification: {
+            include: {
+              qualifications: true,
+            },
+          },
+          workDetail: {
+            include: {
+              workingFacilityDetails: true,
+            },
+          },
+          concent: true,
+        },
+      });
+
+      if (!doctorData) return null;
+
+      const data = await DoctorSchema.parseAsync(doctorData);
+
+      // Success log
+      logOperation("success", {
+        name: "getDoctorDataByUserIdRepository",
+        startTimeMs,
+      });
+
+      return data;
+    } catch (error) {
+      // Error log
+      logOperation("error", {
+        name: "getDoctorDataByUserIdRepository",
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",

@@ -21,7 +21,8 @@ export async function createDoctorInitialProfileController(
 
   const doctorInitialProfile = await createDoctorInitialProfileUseCase(
     data.orgId,
-    data.createdBy
+    data.createdBy,
+    data.isABDMDoctorProfile
   );
 
   return presenter(doctorInitialProfile);

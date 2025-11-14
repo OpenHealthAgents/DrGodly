@@ -43,7 +43,12 @@ async function TelemedicineAdminCreateDoctorPage({
 
   return (
     <div>
-      <DoctorProfileAndRegister doctorData={data} id={id} user={user} />
+      <DoctorProfileAndRegister
+        doctorData={data}
+        id={id}
+        user={user}
+        isUpdate={type === "edit"}
+      />
     </div>
   );
 }

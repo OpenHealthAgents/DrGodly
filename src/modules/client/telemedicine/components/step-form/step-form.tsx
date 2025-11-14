@@ -41,18 +41,18 @@ function DoctorProfileAndRegister({
   doctorData,
   id,
   user,
+  isUpdate,
 }: {
   doctorData: TDoctor | null;
   id: string;
   user: TUser;
+  isUpdate?: boolean;
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [profileData, setProfileData] = useState<DoctorProfileData>({
     completed: false,
   });
-
-  console.log(doctorData);
 
   useEffect(() => {
     if (doctorData) {
@@ -365,7 +365,7 @@ function DoctorProfileAndRegister({
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 mb-6">
       <StepProgressBar
         currentStep={currentStep}
         onStepClick={handleStepClick}
@@ -412,6 +412,7 @@ function DoctorProfileAndRegister({
             onSubmit={handleSubmit}
             concentData={doctorData?.concent}
             isLoading={isPendingDoctorFullProfile}
+            isUpdate={isUpdate}
           />
         )}
       </div>
