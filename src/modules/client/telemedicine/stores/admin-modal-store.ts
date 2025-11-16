@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type ModalType = "deleteDoctorProfile";
+export type ModalType = "deleteDoctorProfile" | "addDoctorByHPR";
 
 interface AdminStore {
   type: ModalType | null;

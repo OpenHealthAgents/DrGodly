@@ -58,7 +58,8 @@ export function logOperation(stage: LogStage, opts: LogOperationOptions) {
     case "error":
       logger.error(`[ERROR] ${name}`, {
         ...baseMeta,
-        error: (err as Error)?.message,
+        // error: (err as Error)?.message,
+        error: err,
         errorName: errName ?? (err as any)?.name ?? "Unknown Error",
         // stack: (err as Error)?.stack, // optional
       });

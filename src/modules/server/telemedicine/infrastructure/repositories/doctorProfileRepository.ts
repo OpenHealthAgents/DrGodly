@@ -86,6 +86,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       logOperation("success", {
         name: "getAllDoctorsDataRepository",
         startTimeMs,
+        context: {
+          operationId,
+        },
       });
 
       return result;
@@ -96,6 +99,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
       });
 
       if (error instanceof Error) {
@@ -143,6 +149,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       logOperation("success", {
         name: "createDoctorInitialProfileRepository",
         startTimeMs,
+        context: {
+          operationId,
+        },
       });
 
       return data;
@@ -153,6 +162,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
       });
 
       if (error instanceof Error) {
@@ -193,6 +205,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       logOperation("success", {
         name: "deleteDoctorProfileRepository",
         startTimeMs,
+        context: {
+          operationId,
+        },
       });
 
       return data;
@@ -203,6 +218,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
       });
 
       if (error instanceof Error) {
@@ -264,6 +282,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       logOperation("success", {
         name: "getDoctorDataByIdRepository",
         startTimeMs,
+        context: {
+          operationId,
+        },
       });
 
       return data;
@@ -274,6 +295,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
       });
 
       if (error instanceof Error) {
@@ -338,6 +362,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       logOperation("success", {
         name: "getDoctorDataByUserIdRepository",
         startTimeMs,
+        context: {
+          operationId,
+        },
       });
 
       return data;
@@ -348,6 +375,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
       });
 
       if (error instanceof Error) {
@@ -465,6 +495,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       logOperation("success", {
         name: "createDoctorPersonalDetailsRepository",
         startTimeMs,
+        context: {
+          operationId,
+        },
       });
 
       return data;
@@ -475,6 +508,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
       });
 
       if (error instanceof Error) {
@@ -627,6 +663,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       logOperation("success", {
         name: "updateDoctorPersonalDetailsRepository",
         startTimeMs,
+        context: {
+          operationId,
+        },
       });
 
       return data;
@@ -637,6 +676,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
       });
 
       if (error instanceof Error) {
@@ -703,6 +745,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       logOperation("success", {
         name: "createDoctorQualificationDetailsRepository",
         startTimeMs,
+        context: {
+          operationId,
+        },
       });
 
       return data;
@@ -713,6 +758,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
       });
 
       if (error instanceof Error) {
@@ -795,6 +843,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       logOperation("success", {
         name: "updateDoctorQualificationDetailsRepository",
         startTimeMs,
+        context: {
+          operationId,
+        },
       });
 
       return data;
@@ -805,6 +856,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
       });
 
       if (error instanceof Error) {
@@ -869,6 +923,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       logOperation("success", {
         name: "createDoctorWorkDetailsRepository",
         startTimeMs,
+        context: {
+          operationId,
+        },
       });
 
       return data;
@@ -879,6 +936,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
       });
 
       if (error instanceof Error) {
@@ -960,6 +1020,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       logOperation("success", {
         name: "editDoctorWorkDetailsRepository",
         startTimeMs,
+        context: {
+          operationId,
+        },
       });
 
       return data;
@@ -970,6 +1033,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
       });
 
       if (error instanceof Error) {
@@ -1018,6 +1084,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       logOperation("success", {
         name: "createDoctorConcentRepository",
         startTimeMs,
+        context: {
+          operationId,
+        },
       });
 
       return data;
@@ -1028,6 +1097,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
       });
 
       if (error instanceof Error) {
@@ -1078,6 +1150,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       logOperation("success", {
         name: "updateDoctorConcentRepository",
         startTimeMs,
+        context: {
+          operationId,
+        },
       });
 
       return data;
@@ -1088,6 +1163,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
       });
 
       if (error instanceof Error) {
@@ -1359,6 +1437,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       logOperation("success", {
         name: "submitDoctorFullProfileRepository",
         startTimeMs,
+        context: {
+          operationId,
+        },
       });
 
       return parsed;
@@ -1368,6 +1449,9 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
       });
 
       if (error instanceof Error) {

@@ -368,3 +368,10 @@ export const SubmitDoctorFullProfileValidationSchema = z.object({
 export type TSubmitDoctorFullProfileValidation = z.infer<
   typeof SubmitDoctorFullProfileValidationSchema
 >;
+
+export const CreateDoctorByHPRidSchema = z.object({
+  id: z
+    .string({ required_error: "HPR ID is required" })
+    .min(1, "HPR ID is required"),
+});
+export type TCreateDoctorByHPRid = z.infer<typeof CreateDoctorByHPRidSchema>;

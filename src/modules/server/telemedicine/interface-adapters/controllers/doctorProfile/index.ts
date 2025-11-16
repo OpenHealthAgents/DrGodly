@@ -7,3 +7,4 @@ export { createorUpdateDoctorQualificationDetailsController } from "./createOrUp
 export { createorUpdateDoctorWorkDetailsController } from "./createOrUpdateDoctorWorkDetails.controller";
 export { createorUpdateDoctorConcentController } from "./createOrUpdateDoctorConcent.controller";
 export { submitDoctorFullProfileController } from "./submitDoctorFullProfile.controller";
+export { getDoctorProfileByHPRIdController } from "./getDoctorProfileByHPRId.controller";
