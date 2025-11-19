@@ -29,6 +29,18 @@ enum GovernmentCategory {
     state
 }
 
+enum Gender {
+    MALE
+    FEMALE
+    OTHER
+}
+
+enum AbnormalFlag {
+    HIGH
+    LOW
+    NORMAL
+}
+
 // ───────────────────────────
 // ROOT DOCTOR
 // ───────────────────────────
@@ -293,6 +305,161 @@ model DoctorWorkingFacilityDetail {
 
     doctorWorkId String
     doctorWork   DoctorWorkDetail @relation(fields: [doctorWorkId], references: [id], onDelete: Cascade)
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+////////////////////////////////////////////////////////////
+
+// -----------------------------
+// Patient
+// -----------------------------
+model Patient {
+    id     String @id @default(uuid())
+    orgId  String
+    userId String
+
+    // Demographics
+    name               String
+    gender             Gender
+    dob                DateTime
+    address            String
+    alternativeAddress String?
+    phone              String
+    alternativePhone   String?
+    email              String
+    alternativeEmail   String?
+    insuranceProvider  String?
+    insuranceNumber    String?
+    idCardNumbers      String?
+    maritalStatus      String?
+    bloodGroup         String?
+
+    // Relations
+    medicalHistory MedicalHistory[]
+    medications    Medication[]
+    labResults     LabResult[]
+    vitals         Vital[]
+    lifestyle      Lifestyle?
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// -----------------------------
+// Medical History
+// -----------------------------
+model MedicalHistory {
+    id        String @id @default(uuid())
+    patientId String
+    orgId     String
+
+    pastDiagnoses     String?
+    pastSurgeries     String?
+    allergies         String?
+    immunizations     String?
+    ongoingTreatments String?
+    familyHistory     String?
+
+    patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// -----------------------------
+// Medications
+// -----------------------------
+model Medication {
+    id        String @id @default(uuid())
+    patientId String
+    orgId     String
+
+    drugName  String
+    fromDate  DateTime
+    toDate    DateTime
+    dose      String?
+    frequency String?
+    duration  String?
+
+    patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// -----------------------------
+// Lab Results
+// -----------------------------
+model LabResult {
+    id        String @id @default(uuid())
+    patientId String
+    orgId     String
+
+    parameter    String
+    value        String?
+    range        String?
+    units        String?
+    abnormalFlag AbnormalFlag?
+
+    labReportDate  DateTime?
+    labReportRefNo String?
+    labName        String?
+
+    patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// -----------------------------
+// Vitals
+// -----------------------------
+model Vital {
+    id        String @id @default(uuid())
+    patientId String
+    orgId     String
+
+    bp        String?
+    hr        Int?
+    temp      Float?
+    bmi       Float?
+    oxygenSat Float?
+    asOnDate  DateTime
+
+    patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// -----------------------------
+// Lifestyle
+// -----------------------------
+model Lifestyle {
+    id        String @id @default(uuid())
+    patientId String @unique
+    orgId     String
+
+    smoking  String?
+    alcohol  String?
+    exercise String?
+    diet     String?
+
+    patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
 
     createdBy String?
     updatedBy String?
