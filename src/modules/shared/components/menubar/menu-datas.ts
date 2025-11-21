@@ -1,7 +1,7 @@
 import {
   Building,
   CalendarClock,
-  CalendarDays,
+  CalendarPlus,
   CalendarRange,
   FileSliders,
   LayoutDashboard,
@@ -113,6 +113,21 @@ export const telemedicineSidebarData = {
           title: "Dashboard",
           url: "/bezs/telemedicine/doctor",
           icon: LayoutDashboard,
+        },
+      ],
+    },
+    {
+      title: "Patient",
+      items: [
+        {
+          title: "Dashboard",
+          url: "/bezs/telemedicine/patient",
+          icon: LayoutDashboard,
+        },
+        {
+          title: "Book Appointment",
+          url: "/bezs/telemedicine/patient/askai",
+          icon: CalendarPlus,
         },
       ],
     },

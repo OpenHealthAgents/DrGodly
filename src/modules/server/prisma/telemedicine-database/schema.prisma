@@ -41,6 +41,14 @@ enum AbnormalFlag {
     NORMAL
 }
 
+enum AppointmentStatus {
+    PENDING
+    SCHEDULED
+    CANCELLED
+    COMPLETED
+    INPROGRESS
+}
+
 // ───────────────────────────
 // ROOT DOCTOR
 // ───────────────────────────

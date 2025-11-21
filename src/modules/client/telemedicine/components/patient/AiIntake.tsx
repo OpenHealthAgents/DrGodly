@@ -325,7 +325,7 @@ function AiIntake({ user, appointmentData }: TProps) {
           Start Call
         </Button>
       )}
-      {/* <UserPromptInput onSend={sendTextToAgent} /> */}
+      <UserPromptInput onSend={sendTextToAgent} />
     </div>
   );
 }

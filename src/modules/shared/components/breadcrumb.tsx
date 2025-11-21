@@ -45,7 +45,7 @@ const BreadCrumb = ({ className = "" }: { className?: string }) => {
             <BreadcrumbItem key={pathSegment}>
               <BreadcrumbPage
                 className={cn(
-                  "text-base text-primary font-medium",
+                  "text-base text-primary font-bold",
                   formattedPathSegment === "rbac" && "uppercase"
                 )}
               >

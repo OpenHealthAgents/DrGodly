@@ -8,30 +8,11 @@ import {
 } from "@/components/ai-elements/conversation";
 import {
   Message,
-  MessageAction,
-  MessageActions,
-  MessageAttachment,
-  MessageAttachments,
-  MessageBranch,
-  MessageBranchContent,
-  MessageBranchNext,
-  MessageBranchPage,
-  MessageBranchPrevious,
-  MessageBranchSelector,
   MessageContent,
   MessageResponse,
-  MessageToolbar,
 } from "@/components/ai-elements/message";
 import { Avatar } from "@/components/ui/avatar";
-import {
-  Brain,
-  CopyIcon,
-  MessageSquareIcon,
-  RefreshCcwIcon,
-  ThumbsDownIcon,
-  ThumbsUpIcon,
-} from "lucide-react";
-import { nanoid } from "nanoid";
+import { Brain, MessageSquareIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type TMessageItem = {
@@ -72,7 +53,7 @@ const ConversationChat = ({
   }, [messages]);
 
   return (
-    <Conversation className="relative flex-1 pb-14">
+    <Conversation className="relative flex-1 pb-14 max-w-[800px] mx-auto border rounded-2xl">
       <ConversationContent>
         {visibleMessages.length === 0 && !liveTranscript ? (
           <ConversationEmptyState
@@ -83,177 +64,24 @@ const ConversationChat = ({
         ) : (
           <>
             {visibleMessages.map((message) => (
-              //   <Message from={message.from} key={message.key}>
-              //     {message.versions && message.versions.length > 1 ? (
-              //       <MessageBranch defaultBranch={0} key={message.key}>
-              //         <MessageBranchContent>
-              //           {message.versions.map((version) => (
-              //             <MessageContent key={version.id}>
-              //               <MessageResponse>{version.content}</MessageResponse>
-              //             </MessageContent>
-              //           ))}
-              //         </MessageBranchContent>
-
-              //         {message.from === "assistant" && (
-              //           <MessageToolbar>
-              //             <MessageBranchSelector from={message.from}>
-              //               <MessageBranchPrevious />
-              //               <MessageBranchPage />
-              //               <MessageBranchNext />
-              //             </MessageBranchSelector>
-
-              //             <MessageActions>
-              //               <MessageAction
-              //                 label="Retry"
-              //                 onClick={handleRetry}
-              //                 tooltip="Regenerate response"
-              //               >
-              //                 <RefreshCcwIcon className="size-4" />
-              //               </MessageAction>
-              //               <MessageAction
-              //                 label="Like"
-              //                 onClick={() =>
-              //                   setLiked((prev) => ({
-              //                     ...prev,
-              //                     [message.key]: !prev[message.key],
-              //                   }))
-              //                 }
-              //                 tooltip="Like this response"
-              //               >
-              //                 <ThumbsUpIcon
-              //                   className="size-4"
-              //                   fill={
-              //                     liked[message.key] ? "currentColor" : "none"
-              //                   }
-              //                 />
-              //               </MessageAction>
-              //               <MessageAction
-              //                 label="Dislike"
-              //                 onClick={() =>
-              //                   setDisliked((prev) => ({
-              //                     ...prev,
-              //                     [message.key]: !prev[message.key],
-              //                   }))
-              //                 }
-              //                 tooltip="Dislike this response"
-              //               >
-              //                 <ThumbsDownIcon
-              //                   className="size-4"
-              //                   fill={
-              //                     disliked[message.key] ? "currentColor" : "none"
-              //                   }
-              //                 />
-              //               </MessageAction>
-              //               <MessageAction
-              //                 label="Copy"
-              //                 onClick={() =>
-              //                   handleCopy(
-              //                     message.versions?.find((v) => v.id)?.content ||
-              //                       ""
-              //                   )
-              //                 }
-              //                 tooltip="Copy to clipboard"
-              //               >
-              //                 <CopyIcon className="size-4" />
-              //               </MessageAction>
-              //             </MessageActions>
-              //           </MessageToolbar>
-              //         )}
-              //       </MessageBranch>
-              //     ) : (
-              //       <div key={message.key}>
-              //         {message.attachments && message.attachments.length > 0 && (
-              //           <MessageAttachments className="mb-2">
-              //             {message.attachments.map((attachment) => (
-              //               <MessageAttachment
-              //                 data={attachment}
-              //                 key={attachment.url}
-              //               />
-              //             ))}
-              //           </MessageAttachments>
-              //         )}
-
-              //         <MessageContent>
-              //           {message.from === "assistant" ? (
-              //             <MessageResponse>{message.content}</MessageResponse>
-              //           ) : (
-              //             message.content
-              //           )}
-              //         </MessageContent>
-
-              //         {message.from === "assistant" && message.versions && (
-              //           <MessageActions>
-              //             <MessageAction
-              //               label="Retry"
-              //               onClick={handleRetry}
-              //               tooltip="Regenerate response"
-              //             >
-              //               <RefreshCcwIcon className="size-4" />
-              //             </MessageAction>
-              //             <MessageAction
-              //               label="Like"
-              //               onClick={() =>
-              //                 setLiked((prev) => ({
-              //                   ...prev,
-              //                   [message.key]: !prev[message.key],
-              //                 }))
-              //               }
-              //               tooltip="Like this response"
-              //             >
-              //               <ThumbsUpIcon
-              //                 className="size-4"
-              //                 fill={liked[message.key] ? "currentColor" : "none"}
-              //               />
-              //             </MessageAction>
-              //             <MessageAction
-              //               label="Dislike"
-              //               onClick={() =>
-              //                 setDisliked((prev) => ({
-              //                   ...prev,
-              //                   [message.key]: !prev[message.key],
-              //                 }))
-              //               }
-              //               tooltip="Dislike this response"
-              //             >
-              //               <ThumbsDownIcon
-              //                 className="size-4"
-              //                 fill={
-              //                   disliked[message.key] ? "currentColor" : "none"
-              //                 }
-              //               />
-              //             </MessageAction>
-              //             <MessageAction
-              //               label="Copy"
-              //               onClick={() => handleCopy(message.content || "")}
-              //               tooltip="Copy to clipboard"
-              //             >
-              //               <CopyIcon className="size-4" />
-              //             </MessageAction>
-              //           </MessageActions>
-              //         )}
-              //       </div>
-              //     )}
-              //   </Message>
               <Message key={message.key} from={message.from}>
                 <MessageContent>
                   <div className="flex gap-2 items-center">
                     {message.from === "assistant" ? (
-                      <div
-                        className={`bg-secondary w-fit rounded-full p-2 mb-1`}
-                      >
+                      <div className={`bg-secondary w-fit rounded-full p-2`}>
                         <Brain className="size-6" />
                       </div>
                     ) : (
-                      //   <div className="bg-primary text-center flex items-center w-fit rounded-full p-2 mb-1">
-                      //     <p className="text-2xl text-secondary size-6">
-                      //       {user.name[0]}
-                      //     </p>
-                      //   </div>
-                      <Avatar className="size-8">
-                        <div className="flex items-center justify-center text-2xl size-6">
+                      <div className="bg-primary flex-1 w-fit rounded-full p-2">
+                        <p className="text-2xl size-6 text-secondary">
                           {user.name[0]}
-                        </div>
-                      </Avatar>
+                        </p>
+                      </div>
+                      // <Avatar className="size-8">
+                      //   <div className="flex items-center justify-center text-2xl size-6">
+                      //     {user.name[0]}
+                      //   </div>
+                      // </Avatar>
                     )}
                     <MessageResponse>{message.content}</MessageResponse>
                   </div>
