@@ -1,4 +1,3 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Card,
   CardContent,
@@ -29,7 +28,7 @@ export const AppointmentDetails = ({
       </CardHeader>
 
       <CardContent className="flex-1 px-0">
-        <div className="grid lg:grid-cols-2 2xl:grid-cols-3 gap-4">
+        <div className="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3 grid-flow-dense">
           {/* <PatientOverview appointment={appointment} /> */}
           <IntakeInsights intake={appointment.patient.intake} />
           <ClinicalSummary patientName={appointment.patientName} />

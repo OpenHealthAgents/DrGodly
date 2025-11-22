@@ -8,7 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { capitalizeString } from "../helper";
 import { usePathname } from "@/i18n/navigation";
 
@@ -25,6 +25,10 @@ const BreadCrumb = ({ className = "" }: { className?: string }) => {
     .filter(Boolean)
     .filter((segment) => !isProbablyId(segment));
   const pathSegmentsLength = pathSegments.length;
+
+  if (pathSegmentsLength === 0) {
+    return null;
+  }
 
   return (
     <Breadcrumb className={`${className}`}>

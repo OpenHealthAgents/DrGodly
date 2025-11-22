@@ -4,21 +4,6 @@ import createNectIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  // experimental: {
-  //   optimizeCss: false,
-  //   webpackMemoryOptimizations: true,
-  // },
-  // webpack: (config) => {
-  //   config.cache = false;
-  //   return config;
-  // },
-  // productionBrowserSourceMaps: false,
 };
 
 const withNextIntl = createNectIntlPlugin();

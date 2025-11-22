@@ -18,7 +18,7 @@ export const TreatmentEngine = ({ recommendations }: TreatmentEngineProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <Card className={cn(isExpanded ? "col-span-full" : "col-auto")}>
+    <Card className={cn(isExpanded ? "col-span-2" : "col-auto")}>
       <CardHeader className="flex items-center gap-2 justify-between">
         <CardTitle className="flex items-center gap-2">
           <Brain className="h-5 w-5" />

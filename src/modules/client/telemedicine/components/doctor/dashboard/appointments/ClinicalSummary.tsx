@@ -38,7 +38,7 @@ Treatment plan initiated as outlined in treatment pathway. Patient educated on d
   };
 
   return (
-    <Card className={cn(isExpanded ? "col-span-full" : "col-auto")}>
+    <Card className={cn(isExpanded ? "col-span-2" : "col-auto")}>
       <CardHeader className="flex items-center justify-between">
         <CardTitle>
           <div className="flex items-center gap-2">
@@ -70,15 +70,15 @@ Treatment plan initiated as outlined in treatment pathway. Patient educated on d
           </ActionTooltipProvider>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="flex flex-col gap-4 h-full">
         {isEditing ? (
           <Textarea
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
-            className="min-h-[400px] font-mono text-sm"
+            className="min-h-[400px] font-mono text-sm flex-1"
           />
         ) : (
-          <div className="whitespace-pre-wrap text-sm text-foreground bg-muted p-4 rounded-md font-mono">
+          <div className="whitespace-pre-wrap text-sm text-foreground bg-muted p-4 rounded-md font-mono flex-1">
             {summary}
           </div>
         )}

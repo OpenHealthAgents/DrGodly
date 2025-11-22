@@ -330,28 +330,50 @@ model Patient {
     orgId  String
     userId String
 
-    // Demographics
-    name               String
-    gender             Gender
-    dob                DateTime
-    address            String
-    alternativeAddress String?
-    phone              String
-    alternativePhone   String?
-    email              String
-    alternativeEmail   String?
-    insuranceProvider  String?
-    insuranceNumber    String?
-    idCardNumbers      String?
-    maritalStatus      String?
-    bloodGroup         String?
+    patientId Int @default(autoincrement())
+
+    isCompleted          Boolean @default(false)
+    isABHAPatientProfile Boolean @default(false)
 
     // Relations
+    personal       PatientPersonalDetail?
     medicalHistory MedicalHistory[]
     medications    Medication[]
     labResults     LabResult[]
     vitals         Vital[]
     lifestyle      Lifestyle?
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// -----------------------------
+// Personal Detail
+// -----------------------------
+
+model PatientPersonalDetail {
+    id        String @id @default(uuid())
+    patientId String @unique
+    orgId     String
+
+    name                    String
+    gender                  Gender
+    dateOfBirth             DateTime
+    address                 String
+    alternativeAddress      String?
+    mobileNumber            String
+    alternativeMobileNumber String?
+    email                   String
+    alternativeEmail        String?
+    insuranceProvider       String?
+    insuranceNumber         String?
+    idCardNumber            String?
+    maritalStatus           String
+    bloodGroup              String?
+
+    patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
 
     createdBy String?
     updatedBy String?

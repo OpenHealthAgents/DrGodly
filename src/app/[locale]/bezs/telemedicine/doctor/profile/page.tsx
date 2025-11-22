@@ -1,4 +1,4 @@
-import DoctorProfileAndRegister from "@/modules/client/telemedicine/components/step-form/step-form";
+import DoctorProfileAndRegister from "@/modules/client/telemedicine/components/step-form/doctor/step-form";
 import { getDoctorDataByUserId } from "@/modules/client/telemedicine/server-actions/doctorProfile-actions/doctorProfile-actions";
 import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
 

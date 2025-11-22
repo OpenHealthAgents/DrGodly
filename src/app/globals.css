@@ -6,6 +6,7 @@
 @theme {
   --breakpoint-3xl: 110rem;
   --breakpoint-xxs: 310px;
+  --breakpoint-xs: 420px;
   --progress-bar: #8b5cf6;
   --progress-bar-dark: #a78bfa;
 }

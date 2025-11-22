@@ -18,7 +18,7 @@ export const IntakeInsights = ({ intake }: IntakeInsightsProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <Card className={cn(isExpanded ? "col-span-full" : "col-auto")}>
+    <Card className={cn(isExpanded ? "col-span-2" : "col-auto")}>
       <CardHeader className="flex items-center gap-2 justify-between">
         <CardTitle className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-primary" />
