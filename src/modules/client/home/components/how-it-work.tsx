@@ -1,64 +1,73 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { motion } from "framer-motion";
+import { CheckCircle2 } from "lucide-react";
 
-const containerVariants: Variants = {
+const containerVariants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.3 } },
 };
 
-const itemVariants: Variants = {
+const itemVariants = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
 function LandingPageHowItWorks() {
-  const t = useTranslations("landing.howItWorks");
-
   const steps = [
     {
       number: "01",
-      title: t("steps.0.title"),
-      description: t("steps.0.description"),
+      title: "Create Your Account",
+      description:
+        "Sign up in minutes and set up your practice profile with our intuitive onboarding process.",
     },
     {
       number: "02",
-      title: t("steps.1.title"),
-      description: t("steps.1.description"),
+      title: "Import Patient Data",
+      description:
+        "Securely migrate existing patient records or start fresh with our comprehensive data import tools.",
     },
     {
       number: "03",
-      title: t("steps.2.title"),
-      description: t("steps.2.description"),
+      title: "Configure Your Workflow",
+      description:
+        "Customize the platform to match your practice needs with flexible settings and integrations.",
     },
     {
       number: "04",
-      title: t("steps.3.title"),
-      description: t("steps.3.description"),
+      title: "Start Managing Patients",
+      description:
+        "Begin scheduling appointments, managing records, and providing better patient care immediately.",
     },
   ];
 
   return (
     <motion.section
       id="how-it-works"
-      className="py-20 sm:py-28 bg-landing-muted/30 overflow-hidden"
+      className="py-20 sm:py-28 bg-background overflow-hidden relative"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
-      <div className="px-4 sm:px-6 lg:px-8">
+      {/* Background decoration */}
+      <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-secondary/20 to-transparent pointer-events-none" />
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div
           variants={itemVariants}
           className="text-center max-w-3xl mx-auto"
         >
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-landing-foreground">
-            {t("title")}
+          <span className="text-primary font-semibold tracking-wider uppercase text-sm">
+            Process
+          </span>
+          <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-foreground">
+            How It Works
           </h2>
-          <p className="mt-4 text-lg text-landing-muted-foreground">
-            {t("description")}
+          <p className="mt-4 text-lg text-muted-foreground">
+            Get started with our platform in four simple steps and transform
+            your practice.
           </p>
         </motion.div>
 
@@ -66,14 +75,16 @@ function LandingPageHowItWorks() {
         <div className="relative mt-20">
           {/* Timeline line */}
           <motion.div
-            className="absolute left-8 top-0 bottom-0 w-0.5 bg-landing-primary/20 rounded-full lg:left-1/2 lg:-translate-x-1/2"
+            className="absolute left-8 top-0 bottom-0 w-0.5 bg-border rounded-full lg:left-1/2 lg:-translate-x-1/2"
             aria-hidden="true"
             style={{ originY: 0 }}
             initial={{ scaleY: 0 }}
             whileInView={{ scaleY: 1 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 1, ease: "easeOut" }}
-          />
+          >
+            <div className="absolute top-0 bottom-0 w-full bg-gradient-to-b from-primary/50 via-primary to-primary/50 opacity-50" />
+          </motion.div>
 
           {/* Step items */}
           <motion.div
@@ -100,8 +111,9 @@ function LandingPageHowItWorks() {
                     viewport={{ once: true }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
-                    <div className="w-16 h-16 bg-landing-background border-2 border-landing-primary rounded-full flex items-center justify-center">
-                      <span className="text-2xl font-bold text-landing-primary">
+                    <div className="w-16 h-16 bg-background border-4 border-primary/20 rounded-full flex items-center justify-center shadow-lg shadow-primary/10 relative overflow-hidden group">
+                      <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/10 transition-colors" />
+                      <span className="text-2xl font-bold text-primary relative z-10">
                         {step.number}
                       </span>
                     </div>
@@ -109,10 +121,16 @@ function LandingPageHowItWorks() {
 
                   {/* Step Content */}
                   <div className={`pt-2 ${!isEven ? "lg:text-right" : ""}`}>
-                    <h3 className="text-xl font-bold text-landing-foreground">
+                    <h3 className="text-xl font-bold text-foreground flex items-center gap-2 lg:inline-flex">
                       {step.title}
+                      {isEven && (
+                        <CheckCircle2 className="w-5 h-5 text-primary hidden lg:block" />
+                      )}
+                      {!isEven && (
+                        <CheckCircle2 className="w-5 h-5 text-primary lg:hidden" />
+                      )}
                     </h3>
-                    <p className="mt-2 text-landing-muted-foreground">
+                    <p className="mt-2 text-muted-foreground leading-relaxed">
                       {step.description}
                     </p>
                   </div>

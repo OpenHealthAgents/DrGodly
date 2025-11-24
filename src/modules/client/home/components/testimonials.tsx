@@ -1,111 +1,99 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
-import { UserRound, Stethoscope, HeartPulse } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Quote, Star } from "lucide-react";
 
-const testimonialIcons = [UserRound, Stethoscope, HeartPulse];
-
-const containerVariants: Variants = {
+const containerVariants = {
   hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
+  visible: { transition: { staggerChildren: 0.1 } },
 };
 
-const itemVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { type: "spring", stiffness: 100 },
-  },
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
 function LandingPageTestimonials() {
-  const t = useTranslations("landing.testimonials");
-
   const testimonials = [
     {
-      quote: t("items.0.quote"),
-      name: t("items.0.name"),
-      title: t("items.0.title"),
+      content:
+        "This platform has completely transformed how we manage patient care. The interface is intuitive and our staff adapted quickly.",
+      author: "Dr. Sarah Johnson",
+      role: "Chief Medical Officer",
     },
     {
-      quote: t("items.1.quote"),
-      name: t("items.1.name"),
-      title: t("items.1.title"),
+      content:
+        "The scheduling system alone has saved us countless hours. Our no-show rate has dropped by 60% since implementing automated reminders.",
+      author: "Michael Chen",
+      role: "Practice Manager",
     },
     {
-      quote: t("items.2.quote"),
-      name: t("items.2.name"),
-      title: t("items.2.title"),
+      content:
+        "Security and compliance were our top concerns. This platform exceeded our expectations with robust HIPAA-compliant features.",
+      author: "Dr. Emily Rodriguez",
+      role: "Healthcare Administrator",
     },
   ];
 
   return (
-    <motion.section
-      id="testimonials"
-      className="py-20 sm:py-28 bg-landing-muted/30"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
-      variants={containerVariants}
-    >
-      <div className="px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+    <section className="py-20 sm:py-28 bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          variants={itemVariants}
-          className="text-center max-w-3xl mx-auto"
-        >
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-landing-foreground">
-            {t("title")}
-          </h2>
-          <p className="mt-4 text-lg text-landing-muted-foreground">
-            {t("description")}
-          </p>
-        </motion.div>
-
-        {/* Testimonials */}
-        <motion.div
-          className="mt-16 grid gap-8 md:grid-cols-1 lg:grid-cols-3"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
           variants={containerVariants}
         >
-          {testimonials.map((testimonial, index) => {
-            const Icon = testimonialIcons[index % testimonialIcons.length];
-            return (
-              <motion.div
-                key={testimonial.name}
-                className="p-8 bg-landing-background rounded-2xl border border-landing-border flex flex-col transition-all duration-300 hover:shadow-lg"
-                variants={itemVariants}
-                whileHover={{ y: -5 }}
-              >
-                <p className="text-landing-muted-foreground flex-grow">
-                  “{testimonial.quote}”
-                </p>
-                <div className="mt-6 flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-full bg-landing-primary/10 border border-landing-primary/30 flex items-center justify-center">
-                      <Icon className="text-landing-primary" size={24} />
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="text-primary font-semibold tracking-wider uppercase text-sm">
+              Testimonials
+            </span>
+            <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-foreground">
+              Trusted by Healthcare Professionals
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((item, index) => (
+              <motion.div key={index} variants={itemVariants}>
+                <Card className="h-full border-border/50 bg-card hover:shadow-lg transition-shadow duration-300">
+                  <CardHeader className="pb-4">
+                    <div className="flex gap-1 mb-4">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className="w-4 h-4 fill-yellow-400 text-yellow-400"
+                        />
+                      ))}
                     </div>
-                  </div>
-                  <div className="ml-4">
-                    <p className="font-bold text-landing-foreground">
-                      {testimonial.name}
+                    <Quote className="w-8 h-8 text-primary/20" />
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground mb-6 italic">
+                      {item.content}
                     </p>
-                    <p className="text-sm text-landing-muted-foreground">
-                      {testimonial.title}
-                    </p>
-                  </div>
-                </div>
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-blue-500 flex items-center justify-center text-primary-foreground font-bold">
+                        {item.author.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-foreground">
+                          {item.author}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {item.role}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </motion.div>
-            );
-          })}
+            ))}
+          </div>
         </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 

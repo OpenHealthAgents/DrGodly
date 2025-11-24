@@ -10,8 +10,6 @@ import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
 export default async function Home() {
   const session = await getServerSession();
 
-  if (!session) return;
-
   return (
     <>
       <LandingPageHero session={session} />

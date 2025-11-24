@@ -10,7 +10,9 @@ import {
   createorUpdateDoctorWorkDetailsController,
   createorUpdateDoctorConcentController,
   submitDoctorFullProfileController,
+  getDoctorProfileByHPRIdController,
 } from "@/modules/server/telemedicine/interface-adapters/controllers/doctorProfile";
+import { getDoctorDataByUserIdController } from "@/modules/server/telemedicine/interface-adapters/controllers/doctorProfile/getDoctorDataByUserId.controller";
 import {
   TDoctor,
   TDoctorDatas,
@@ -29,6 +31,8 @@ import {
   DoctorWorkDetailCreateOrUpdateValidation,
   DoctorConcentCreateOrUpdateValidation,
   SubmitDoctorFullProfileValidationSchema,
+  GetDoctorByUserIdSchema,
+  CreateDoctorByHPRidSchema,
 } from "@/modules/shared/schemas/telemedicine/doctorProfile/doctorProfileValidationSchema";
 import { withMonitoring } from "@/modules/shared/utils/serverActionWithMonitoring";
 import { createServerAction } from "zsa";
@@ -79,6 +83,18 @@ export const getDoctorDataById = createServerAction()
     return await withMonitoring<TDoctor | null>(
       "getDoctorDataById",
       () => getDoctorDataByIdController(input),
+      {
+        operationErrorMessage: "Failed to get doctor profile.",
+      }
+    );
+  });
+
+export const getDoctorDataByUserId = createServerAction()
+  .input(GetDoctorByUserIdSchema, { skipInputParsing: false })
+  .handler(async ({ input }) => {
+    return await withMonitoring<TDoctor | null>(
+      "getDoctorDataById",
+      () => getDoctorDataByUserIdController(input),
       {
         operationErrorMessage: "Failed to get doctor profile.",
       }
@@ -179,6 +195,23 @@ export const submitDoctorFullProfile = createServerAction()
             ? "update"
             : "create"
         } doctor profile.`,
+      }
+    );
+  });
+
+export const getDoctorProfileByHPRId = createServerAction()
+  .input(CreateDoctorByHPRidSchema, {
+    skipInputParsing: true,
+  })
+  .handler(async ({ input }) => {
+    return await withMonitoring<any>(
+      "getDoctorProfileByHPRId",
+      () => getDoctorProfileByHPRIdController(input),
+      {
+        // url: `/bezs/telemedicine/admin/manage-doctors`,
+        // revalidateType: "layout",
+        // revalidatePath: true,
+        operationErrorMessage: `Failed to get doctor profile.`,
       }
     );
   });

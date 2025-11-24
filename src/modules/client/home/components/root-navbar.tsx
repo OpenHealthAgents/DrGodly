@@ -2,15 +2,20 @@
 
 import LocaleSwitcher from "@/modules/shared/components/LocaleSwitcher";
 import { ThemeSwitcher } from "@/theme/theme-switcher";
-import { landingButtonVariants } from "./landing-page-button";
-import { motion } from "motion/react";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Link } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { Activity } from "lucide-react";
 
-const RootNavBarPage = ({ session }: { session: any | null }) => {
+const RootNavBarPage = ({
+  session,
+  isErrorRender = false,
+}: {
+  session: any | null;
+  isErrorRender?: boolean;
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const t = useTranslations("navbar");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,58 +32,48 @@ const RootNavBarPage = ({ session }: { session: any | null }) => {
       <motion.header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? "bg-[var(--color-landing-background)]/80 backdrop-blur-sm shadow-md border-b border-[var(--color-landing-border)]"
+            ? "bg-background/80 backdrop-blur-md shadow-sm border-b border-border"
             : "bg-transparent"
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <Link
-              href="/"
-              className="flex items-center space-x-2 text-[var(--color-landing-primary)]"
-            >
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 32 32"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M16 3C8.82 3 3 8.82 3 16C3 23.18 8.82 29 16 29C23.18 29 29 23.18 29 16C29 8.82 23.18 3 16 3ZM22 17.5H17.5V22H14.5V17.5H10V14.5H14.5V10H17.5V14.5H22V17.5Z"
-                  fill="currentColor"
-                />
-              </svg>
-              <span className="text-2xl font-bold text-[var(--color-landing-foreground)]">
-                {t("brand")}
+            <Link href="/" className="flex items-center space-x-2 text-primary">
+              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
+                <Activity className="w-5 h-5" />
+              </div>
+              <span className="text-2xl font-bold text-foreground tracking-tight">
+                HealthCare
               </span>
             </Link>
 
             {/* Nav Links */}
-            <nav className="hidden md:flex items-center space-x-8">
-              <a
-                href="#features"
-                className="text-[var(--color-landing-foreground)] font-medium hover:text-[var(--color-landing-primary)] transition-colors"
-              >
-                {t("features")}
-              </a>
-              <a
-                href="#how-it-works"
-                className="text-[var(--color-landing-foreground)] font-medium hover:text-[var(--color-landing-primary)] transition-colors"
-              >
-                {t("howItWorks")}
-              </a>
-              <a
-                href="#testimonials"
-                className="text-[var(--color-landing-foreground)] font-medium hover:text-[var(--color-landing-primary)] transition-colors"
-              >
-                {t("testimonials")}
-              </a>
-            </nav>
+            {!isErrorRender && (
+              <nav className="hidden md:flex items-center space-x-8">
+                <a
+                  href="#features"
+                  className="text-muted-foreground font-medium hover:text-primary transition-colors"
+                >
+                  Features
+                </a>
+                <a
+                  href="#how-it-works"
+                  className="text-muted-foreground font-medium hover:text-primary transition-colors"
+                >
+                  How It Works
+                </a>
+                <a
+                  href="#testimonials"
+                  className="text-muted-foreground font-medium hover:text-primary transition-colors"
+                >
+                  Testimonials
+                </a>
+              </nav>
+            )}
 
             {/* Actions */}
             <div className="flex items-center gap-4">
@@ -86,34 +81,28 @@ const RootNavBarPage = ({ session }: { session: any | null }) => {
               <ThemeSwitcher />
               {!session ? (
                 <>
-                  <Link
-                    href="/signin"
-                    className={landingButtonVariants({
-                      variant: "outline",
-                      size: "sm",
-                    })}
-                  >
-                    {t("signIn")}
+                  <Link href="/signin">
+                    <Button variant="ghost" size="sm" className="font-semibold">
+                      Sign In
+                    </Button>
                   </Link>
-                  <Link
-                    href="/signup"
-                    className={landingButtonVariants({
-                      variant: "primary",
-                      size: "sm",
-                    })}
-                  >
-                    {t("signUp")}
+                  <Link href="/signup">
+                    <Button
+                      size="sm"
+                      className="rounded-full px-6 shadow-md hover:shadow-lg transition-all"
+                    >
+                      Sign Up
+                    </Button>
                   </Link>
                 </>
               ) : (
-                <Link
-                  href="/bezs"
-                  className={landingButtonVariants({
-                    variant: "primary",
-                    size: "sm",
-                  })}
-                >
-                  {t("openApp")}
+                <Link href="/bezs">
+                  <Button
+                    size="sm"
+                    className="rounded-full px-6 shadow-md hover:shadow-lg transition-all"
+                  >
+                    Open App
+                  </Button>
                 </Link>
               )}
             </div>

@@ -1,22 +1,23 @@
 "use client";
 
-import { landingButtonVariants as buttonVariants } from "./landing-page-button";
+import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
-import { Variants, motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { motion } from "framer-motion";
+import { ArrowRight, Activity, ShieldCheck, Users } from "lucide-react";
 
-const containerVariants: Variants = {
+const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2,
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
     },
   },
 };
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
@@ -27,35 +28,56 @@ const itemVariants: Variants = {
   },
 };
 
+const floatingIconVariants = {
+  initial: { y: 0 },
+  animate: {
+    y: [-10, 10, -10],
+    transition: {
+      duration: 4,
+      repeat: Infinity,
+      ease: "easeInOut",
+    },
+  },
+};
+
 function LandingPageHero({ session }: { session: any | null }) {
-  const t = useTranslations("landing.hero");
-
   return (
-    <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 overflow-hidden">
-      {/* Subtle grid background */}
-      <div className="absolute inset-0 -z-10 bg-grid-pattern [mask-image:linear-gradient(to_bottom,white_10%,transparent_90%)]" />
+    <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-32 overflow-hidden bg-background">
+      {/* Abstract Background Elements */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
+        <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-50 mix-blend-multiply animate-pulse" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-secondary/30 rounded-full blur-3xl opacity-50 mix-blend-multiply" />
+      </div>
 
-      <div className="px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
-          className="grid lg:grid-cols-2 gap-12 items-center"
+          className="grid lg:grid-cols-2 gap-16 items-center"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
           {/* Hero Text Section */}
-          <div className="text-center lg:text-left">
+          <div className="text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
+            <motion.div variants={itemVariants} className="inline-block mb-4">
+              <span className="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium border border-primary/20">
+                Revolutionizing Healthcare
+              </span>
+            </motion.div>
+
             <motion.h1
               variants={itemVariants}
-              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-landing-foreground tracking-tight leading-16"
+              className="text-4xl sm:text-5xl lg:text-7xl font-bold text-foreground tracking-tight leading-[1.1]"
             >
-              {t("title")}
+              Your Complete Healthcare Management Platform
             </motion.h1>
 
             <motion.p
               variants={itemVariants}
-              className="mt-6 text-lg sm:text-xl text-landing-muted-foreground max-w-xl mx-auto lg:mx-0"
+              className="mt-6 text-lg sm:text-xl text-muted-foreground leading-relaxed"
             >
-              {t("description")}
+              Streamline patient care, manage appointments, and access medical
+              records securely - all in one powerful platform designed for
+              modern healthcare providers.
             </motion.p>
 
             {/* Buttons */}
@@ -65,269 +87,133 @@ function LandingPageHero({ session }: { session: any | null }) {
             >
               {!session ? (
                 <>
-                  <Link
-                    href="/signin"
-                    className={buttonVariants({
-                      variant: "primary",
-                      className:
-                        "w-full sm:w-auto text-lg px-8 py-4 rounded-full shadow-lg transition-transform duration-200 hover:scale-105",
-                    })}
-                  >
-                    {t("buttons.signin")}
+                  <Link href="/signin">
+                    <Button
+                      size="lg"
+                      className="rounded-full px-8 h-12 text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
+                    >
+                      Sign In
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
                   </Link>
 
-                  <Link
-                    href="/signup"
-                    className={buttonVariants({
-                      variant: "outline",
-                      className:
-                        "w-full sm:w-auto text-lg px-8 py-4 rounded-full",
-                    })}
-                  >
-                    {t("buttons.signup")}
+                  <Link href="/signup">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="rounded-full px-8 h-12 text-base border-primary/20 hover:bg-primary/5"
+                    >
+                      Get Started Free
+                    </Button>
                   </Link>
                 </>
               ) : (
-                <Link
-                  href="/app"
-                  className={buttonVariants({
-                    variant: "primary",
-                    className:
-                      "w-full sm:w-auto text-lg px-8 py-4 rounded-full shadow-lg transition-transform duration-200 hover:scale-105",
-                  })}
-                >
-                  {t("buttons.openApp")}
+                <Link href="/app">
+                  <Button
+                    size="lg"
+                    className="rounded-full px-8 h-12 text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
+                  >
+                    Open Dashboard
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </Link>
               )}
             </motion.div>
+
+            {/* Trust Indicators */}
+            <motion.div
+              variants={itemVariants}
+              className="mt-12 pt-8 border-t border-border/50 flex items-center justify-center lg:justify-start gap-8 text-muted-foreground"
+            >
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-primary" />
+                <span className="text-sm font-medium">HIPAA Compliant</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-primary" />
+                <span className="text-sm font-medium">10k+ Users</span>
+              </div>
+            </motion.div>
           </div>
 
-          {/* SVG Illustration */}
+          {/* Visual Section */}
           <motion.div
             variants={itemVariants}
             className="relative hidden lg:block"
           >
-            <svg
-              viewBox="0 0 500 420"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect
-                width="500"
-                height="420"
-                rx="20"
-                className="fill-landing-muted/30"
-              />
-              <rect
-                x="15"
-                y="15"
-                width="470"
-                height="390"
-                rx="10"
-                className="fill-landing-background"
-              />
+            <div className="relative w-full aspect-square max-w-[600px] mx-auto">
+              {/* Main Card */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1, delay: 0.5 }}
+                className="absolute inset-4 bg-card border border-border rounded-3xl shadow-2xl overflow-hidden z-20"
+              >
+                <div className="p-6 border-b border-border bg-muted/30 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-400/80" />
+                    <div className="w-3 h-3 rounded-full bg-yellow-400/80" />
+                    <div className="w-3 h-3 rounded-full bg-green-400/80" />
+                  </div>
+                  <div className="h-2 w-20 bg-muted-foreground/10 rounded-full" />
+                </div>
+                <div className="p-8 space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+                      <Activity className="w-8 h-8 text-primary" />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="h-4 w-32 bg-muted-foreground/20 rounded" />
+                      <div className="h-3 w-24 bg-muted-foreground/10 rounded" />
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="h-24 w-full bg-muted/50 rounded-xl border border-border/50" />
+                    <div className="flex gap-3">
+                      <div className="h-24 w-1/2 bg-muted/50 rounded-xl border border-border/50" />
+                      <div className="h-24 w-1/2 bg-muted/50 rounded-xl border border-border/50" />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
 
-              {/* Sidebar */}
-              <rect
-                x="30"
-                y="30"
-                width="120"
-                height="360"
-                rx="5"
-                className="fill-landing-muted/50"
-              />
-              <rect
-                x="40"
-                y="45"
-                width="100"
-                height="10"
-                rx="5"
-                className="fill-landing-muted-foreground/20"
-              />
-              <rect
-                x="40"
-                y="65"
-                width="60"
-                height="10"
-                rx="5"
-                className="fill-landing-muted-foreground/10"
-              />
+              {/* Floating Elements */}
+              <motion.div
+                variants={floatingIconVariants}
+                initial="initial"
+                animate="animate"
+                className="absolute -top-4 -right-4 w-20 h-20 bg-white dark:bg-zinc-800 rounded-2xl shadow-xl border border-border z-30 flex items-center justify-center"
+              >
+                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                  <ShieldCheck className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                </div>
+              </motion.div>
 
-              {/* Primary progress bars */}
-              <rect
-                x="40"
-                y="100"
-                width="100"
-                height="8"
-                rx="4"
-                className="fill-landing-primary/30"
-              />
-              <rect
-                x="40"
-                y="115"
-                width="100"
-                height="8"
-                rx="4"
-                className="fill-landing-primary"
-              />
-              <rect
-                x="40"
-                y="130"
-                width="70"
-                height="8"
-                rx="4"
-                className="fill-landing-primary/30"
-              />
+              <motion.div
+                variants={floatingIconVariants}
+                initial="initial"
+                animate="animate"
+                transition={{ delay: 1 }}
+                className="absolute -bottom-8 -left-8 w-auto px-6 py-4 bg-white dark:bg-zinc-800 rounded-2xl shadow-xl border border-border z-30 flex items-center gap-3"
+              >
+                <div className="flex -space-x-2">
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className={`w-8 h-8 rounded-full border-2 border-white dark:border-zinc-800 bg-gray-200 z-${i}`}
+                    />
+                  ))}
+                </div>
+                <div className="text-xs font-semibold">
+                  <span className="text-primary">Trusted by</span>
+                  <br />
+                  Top Clinics
+                </div>
+              </motion.div>
 
-              {/* Top card */}
-              <rect
-                x="165"
-                y="30"
-                width="305"
-                height="60"
-                rx="5"
-                className="fill-landing-muted/50"
-              />
-              <circle
-                cx="190"
-                cy="60"
-                r="15"
-                className="fill-landing-avatar-1-bg"
-              />
-              <rect
-                x="220"
-                y="50"
-                width="120"
-                height="8"
-                rx="4"
-                className="fill-landing-muted-foreground/30"
-              />
-              <rect
-                x="220"
-                y="65"
-                width="80"
-                height="8"
-                rx="4"
-                className="fill-landing-muted-foreground/10"
-              />
-
-              {/* Left graph */}
-              <rect
-                x="165"
-                y="105"
-                width="145"
-                height="150"
-                rx="5"
-                className="fill-landing-muted/50"
-              />
-              <rect
-                x="175"
-                y="120"
-                width="125"
-                height="8"
-                rx="4"
-                className="fill-landing-primary"
-              />
-              <rect
-                x="175"
-                y="135"
-                width="80"
-                height="8"
-                rx="4"
-                className="fill-landing-primary/50"
-              />
-              <path
-                d="M175 160 C 195 190, 240 150, 260 175 C 280 200, 270 220, 300 230"
-                className="stroke-landing-secondary"
-                strokeWidth="4"
-                fill="none"
-                strokeLinecap="round"
-              />
-
-              {/* Right graph */}
-              <rect
-                x="325"
-                y="105"
-                width="145"
-                height="150"
-                rx="5"
-                className="fill-landing-muted/50"
-              />
-              <rect
-                x="335"
-                y="120"
-                width="125"
-                height="8"
-                rx="4"
-                className="fill-landing-muted-foreground/20"
-              />
-              <rect
-                x="335"
-                y="135"
-                width="80"
-                height="8"
-                rx="4"
-                className="fill-landing-muted-foreground/10"
-              />
-              <rect
-                x="345"
-                y="160"
-                width="20"
-                height="80"
-                rx="5"
-                className="fill-landing-secondary/60"
-              />
-              <rect
-                x="375"
-                y="180"
-                width="20"
-                height="60"
-                rx="5"
-                className="fill-landing-secondary/60"
-              />
-              <rect
-                x="405"
-                y="150"
-                width="20"
-                height="90"
-                rx="5"
-                className="fill-landing-secondary/60"
-              />
-
-              {/* Footer card */}
-              <rect
-                x="165"
-                y="270"
-                width="305"
-                height="120"
-                rx="5"
-                className="fill-landing-muted/50"
-              />
-              <rect
-                x="175"
-                y="285"
-                width="285"
-                height="8"
-                rx="4"
-                className="fill-landing-muted-foreground/30"
-              />
-              <rect
-                x="175"
-                y="300"
-                width="200"
-                height="8"
-                rx="4"
-                className="fill-landing-muted-foreground/20"
-              />
-              <rect
-                x="400"
-                y="340"
-                width="60"
-                height="30"
-                rx="8"
-                className="fill-landing-primary"
-              />
-            </svg>
+              {/* Decorative Blob */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-blue-500/20 rounded-full blur-3xl -z-10 transform rotate-12" />
+            </div>
           </motion.div>
         </motion.div>
       </div>

@@ -17,10 +17,15 @@ export interface IDoctorProfileRepository {
   getAllDoctorsData(orgId: string): Promise<TDoctorDatas>;
   createDoctorInitialProfile(
     orgId: string,
-    createdBy: string
+    createdBy: string,
+    isABDMDoctorProfile: boolean
   ): Promise<TDoctorInitialProfile>;
   deleteDoctorProfile(id: string): Promise<TDoctorInitialProfile>;
   getDoctorDataById(id: string): Promise<TDoctor | null>;
+  getDoctorDataByUserId(
+    userId: string,
+    orgId?: string
+  ): Promise<TDoctor | null>;
   createDoctorPersonalDetails(
     createData: TCreateOrUpdateDoctorProfileDetail
   ): Promise<TDoctorPersonalDetails>;

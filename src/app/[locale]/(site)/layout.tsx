@@ -7,7 +7,7 @@ const HomeLayout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <main className="w-full min-h-screen bg-landing-background">
+      <main className="w-full min-h-screen bg-background">
         <RootNavBarPage session={session} />
         <main className="max-w-[110rem] mx-auto">{children}</main>
         <LandingPageFooter />

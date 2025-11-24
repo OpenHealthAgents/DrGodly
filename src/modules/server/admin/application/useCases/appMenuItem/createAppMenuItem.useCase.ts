@@ -11,7 +11,6 @@ export async function createAppMenuItemUseCase(
 
   const existingAppMenuItem = await appMenuItemRepository.getAppByUniqueFields(
     app.appId,
-    app.name,
     app.slug
   );
 

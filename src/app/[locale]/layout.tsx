@@ -43,7 +43,7 @@ export default async function RootLayout({
         <NextIntlClientProvider>
           <ThemeProvider
             attribute="data-theme"
-            defaultTheme="zinc-light"
+            defaultTheme="blue-light"
             enableSystem
             disableTransitionOnChange
           >

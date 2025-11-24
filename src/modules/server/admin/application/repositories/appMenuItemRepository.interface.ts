@@ -11,7 +11,6 @@ export interface IAppMenuItemRepository {
   createAppMenuItem(createData: TCreateAppMenuItem): Promise<TAppMenuItem>;
   getAppByUniqueFields(
     appId: string,
-    appMenuItemName: string,
     appMenuItemSlug: string
   ): Promise<TAppMenuItem | null>;
   updateAppMenuItem(updateData: TUpdateAppMenuItem): Promise<TAppMenuItem>;
