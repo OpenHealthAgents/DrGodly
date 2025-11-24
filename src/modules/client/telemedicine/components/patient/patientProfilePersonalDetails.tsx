@@ -51,7 +51,7 @@ interface PersonalDetailsStepProps {
   data?: TPatientPersonalDetails;
 }
 
-export function PatientProfilePersonalDetailsStep({
+export function PatientProfilePersonalDetails({
   data,
 }: PersonalDetailsStepProps) {
   const [open, setOpen] = useState(false);

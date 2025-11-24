@@ -74,14 +74,13 @@ export class AppMenuItemRepository implements IAppMenuItemRepository {
 
   async getAppByUniqueFields(
     appId: string,
-    appMenuItemName: string,
     appMenuItemSlug: string
   ): Promise<TAppMenuItem | null> {
     try {
       const data = await prismaMain.appMenuItem.findFirst({
         where: {
           appId,
-          OR: [{ name: appMenuItemName }, { slug: appMenuItemSlug }],
+          slug: appMenuItemSlug,
         },
       });
 

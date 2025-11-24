@@ -2,7 +2,8 @@ import {
   TPatientCreateOrUpdatePatientProfile,
   TPatientInitialProfile,
   TPatientPersonalDetails,
-} from "../../../../../modules/shared/entities/models/telemedicine/patientProfile";
+  TPatientWithPersonalProfile,
+} from "../../../../shared/entities/models/telemedicine/patientProfile";
 
 export interface IPatientProfileRepository {
   createPatientInitialProfile(
@@ -11,7 +12,14 @@ export interface IPatientProfileRepository {
     createdBy: string,
     isABHAPatientProfile: boolean
   ): Promise<TPatientInitialProfile>;
+  getPatientWithPersonalProfile(
+    orgId: string,
+    userId: string
+  ): Promise<TPatientWithPersonalProfile | null>;
   createPatientPersonalDetails(
     createData: TPatientCreateOrUpdatePatientProfile
+  ): Promise<TPatientPersonalDetails>;
+  updatePatientPersonalDetails(
+    updateData: TPatientCreateOrUpdatePatientProfile
   ): Promise<TPatientPersonalDetails>;
 }

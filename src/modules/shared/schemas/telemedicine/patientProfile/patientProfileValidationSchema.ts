@@ -1,5 +1,20 @@
 import z from "zod";
 
+export const IdSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  orgId: z.string(),
+  createdBy: z.string(),
+  isABHAPatientProfile: z.boolean(),
+});
+
+export const CreatePatientInitialProfileSchema = IdSchema.pick({
+  createdBy: true,
+  orgId: true,
+  userId: true,
+  isABHAPatientProfile: true,
+});
+
 export const PatientPersonalDetailsSchema = z.object({
   name: z.string().min(1, "Full name is required"),
   dateOfBirth: z.date({ required_error: "Date of birth is required" }),
@@ -81,3 +96,15 @@ export const LifestyleDetailsSchema = z.object({
 });
 
 export type TLifeStyleDetails = z.infer<typeof LifestyleDetailsSchema>;
+
+export const PatientProfileCreateOrUpdateValidationSchema = z
+  .object({
+    id: z.string().nullable(),
+    orgId: z.string(),
+    operationBy: z.string(),
+    patientId: z.string(),
+  })
+  .merge(PatientPersonalDetailsSchema);
+export type TPatientProfileCreateValidation = z.infer<
+  typeof PatientProfileCreateOrUpdateValidationSchema
+>;

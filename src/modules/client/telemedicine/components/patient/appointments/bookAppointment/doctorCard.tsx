@@ -1,27 +1,20 @@
-import {
-  CheckCircle2,
-  MapPin,
-  MessageSquare,
-  Phone,
-  ShieldCheck,
-  Star,
-} from "lucide-react";
+import { CheckCircle2, MapPin, MessageSquare, Phone, Star } from "lucide-react";
 import { Doctor } from "./types";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { usePatientModalStore } from "@/modules/client/telemedicine/stores/patient-modal-store";
 
 export const DoctorCard = ({
   doctor,
   selected,
   onSelect,
-  onViewReviews,
 }: {
   doctor: Doctor;
   selected: boolean;
   onSelect: () => void;
-  onViewReviews: () => void;
 }) => {
+  const openModal = usePatientModalStore((state) => state.onOpen);
+
   return (
     <Card
       onClick={onSelect}
@@ -44,9 +37,6 @@ export const DoctorCard = ({
             alt={doctor.name}
             className="w-20 h-20 rounded-full object-cover border"
           />
-          {/* {doctor.available && (
-            <span className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-zinc-900 rounded-full"></span>
-          )} */}
         </div>
 
         {/* Content */}
@@ -74,7 +64,7 @@ export const DoctorCard = ({
               variant="link"
               onClick={(e) => {
                 e.stopPropagation();
-                onViewReviews();
+                openModal({ type: "doctorReview", doctorData: doctor });
               }}
               className="text-xs font-medium text-muted-foreground underline decoration-muted-foreground hover:text-orange-400 hover:decoration-orange-400 transition-colors flex items-center gap-1 !p-0 h-fit"
             >
@@ -97,28 +87,7 @@ export const DoctorCard = ({
           <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
             {doctor.description}
           </p>
-
-          <div className="pt-3">
-            <Badge className="inline-flex py-1 px-2 items-center rounded-full font-medium bg-green-50 text-green-600 border border-green-600 dark:border-green-900 dark:text-white dark:bg-green-900">
-              <ShieldCheck className="mr-1" />
-              Licensed Professional
-            </Badge>
-          </div>
         </div>
-      </div>
-      <div className="flex items-center justify-between">
-        <p className="text-muted-foreground text-xs">Click to select</p>
-        <Button
-          size="sm"
-          variant="outline"
-          className="text-xs"
-          onClick={(e) => {
-            e.stopPropagation();
-            onViewReviews();
-          }}
-        >
-          <MessageSquare /> View Reviews
-        </Button>
       </div>
     </Card>
   );

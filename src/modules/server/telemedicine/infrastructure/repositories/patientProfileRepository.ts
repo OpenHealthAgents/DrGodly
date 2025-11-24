@@ -4,10 +4,12 @@ import { prismaTelemedicine } from "../../../prisma/prisma";
 import {
   PatientInitialProfileSchema,
   PatientPersonalDetailsSchema,
+  PatientWithPersonalProfileSchema,
   TPatientCreateOrUpdatePatientProfile,
   TPatientInitialProfile,
   TPatientPersonalDetails,
-} from "../../../../../modules/shared/entities/models/telemedicine/patientProfile";
+  TPatientWithPersonalProfile,
+} from "../../../../shared/entities/models/telemedicine/patientProfile";
 import { OperationError } from "../../../../shared/entities/errors/commonError";
 import { randomUUID } from "crypto";
 import { logOperation } from "../../../../shared/utils/server-logger/log-operation";
@@ -33,6 +35,12 @@ export class PatientProfileRepository implements IPatientProfileRepository {
         operationId,
       },
     });
+
+    if (!orgId || !userId) {
+      throw new Error(
+        "Missing organization or user ID while creating profile."
+      );
+    }
 
     try {
       const initialPatientProfile = await prismaTelemedicine.patient.create({
@@ -63,6 +71,76 @@ export class PatientProfileRepository implements IPatientProfileRepository {
       // Error log
       logOperation("error", {
         name: "createPatientInitialProfileRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+
+      throw new OperationError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async getPatientWithPersonalProfile(
+    orgId: string,
+    userId: string
+  ): Promise<TPatientWithPersonalProfile | null> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    // Start log
+    logOperation("start", {
+      name: "getPatientFullProfileRepository",
+      startTimeMs,
+      context: {
+        operationId,
+      },
+    });
+
+    try {
+      const patientWithPersonalProfile =
+        await prismaTelemedicine.patient.findUnique({
+          where: {
+            orgId_userId: {
+              orgId,
+              userId,
+            },
+          },
+          include: {
+            personal: true,
+          },
+        });
+
+      if (!patientWithPersonalProfile) {
+        return null;
+      }
+
+      const data = await PatientWithPersonalProfileSchema.parseAsync(
+        patientWithPersonalProfile
+      );
+
+      // Success log
+      logOperation("success", {
+        name: "getPatientFullProfileRepository",
+        startTimeMs,
+        context: {
+          operationId,
+        },
+      });
+
+      return data;
+    } catch (error) {
+      // Error log
+      logOperation("error", {
+        name: "getPatientFullProfileRepository",
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
@@ -136,6 +214,77 @@ export class PatientProfileRepository implements IPatientProfileRepository {
       // Error log
       logOperation("error", {
         name: "createPatientPersonalDetailsRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+
+      throw new OperationError("An unexpected erorr occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async updatePatientPersonalDetails(
+    updateData: TPatientCreateOrUpdatePatientProfile
+  ): Promise<TPatientPersonalDetails> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    // Start log
+    logOperation("start", {
+      name: "updatePatientPersonalDetailsRepository",
+      startTimeMs,
+      context: {
+        operationId,
+      },
+    });
+
+    const { id, orgId, patientId, operationBy, ...rest } = updateData;
+
+    if (!id || !orgId || !patientId) {
+      throw new Error("Failed to update patient profile.");
+    }
+
+    try {
+      const patientPersonalDetails =
+        await prismaTelemedicine.patientPersonalDetail.update({
+          where: {
+            id: id,
+            orgId,
+            patientId,
+          },
+          data: {
+            ...rest,
+            updatedBy: operationBy,
+          },
+        });
+
+      const data = await PatientPersonalDetailsSchema.parseAsync(
+        patientPersonalDetails
+      );
+
+      // Success log
+      logOperation("success", {
+        name: "updatePatientPersonalDetailsRepository",
+        startTimeMs,
+        context: {
+          operationId,
+        },
+      });
+
+      return data;
+    } catch (error) {
+      // Error log
+      logOperation("error", {
+        name: "updatePatientPersonalDetailsRepository",
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",

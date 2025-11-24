@@ -125,7 +125,17 @@ export const telemedicineSidebarData = {
           icon: LayoutDashboard,
         },
         {
+          title: "Profile",
+          url: "/bezs/telemedicine/patient/profile",
+          icon: UserCog,
+        },
+        {
           title: "Book Appointment",
+          url: "/bezs/telemedicine/patient/appointments/book-appointment",
+          icon: CalendarPlus,
+        },
+        {
+          title: "Appointment Intake",
           url: "/bezs/telemedicine/patient/askai",
           icon: CalendarPlus,
         },

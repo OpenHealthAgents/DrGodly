@@ -1,100 +1,81 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
-import { motion, Variants } from "framer-motion";
-import { landingButtonVariants as buttonVariants } from "./landing-page-button";
-import { useTranslations } from "next-intl";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.3,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut",
-    },
-  },
-};
-
-function LandingPageCTA({ session }: { session: any | null }) {
-  const t = useTranslations("landing.cta");
-
+function LangingPageCTA({ session }: { session: any | null }) {
   return (
     <section className="py-20 sm:py-28">
-      <div className="px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden bg-landing-primary text-landing-primary-foreground p-12 sm:p-16 rounded-3xl shadow-xl">
-          {/* Decorative background blur */}
-          <div aria-hidden="true" className="absolute inset-0 -z-10">
-            <div className="absolute -right-40 -top-40 w-96 h-96 bg-landing-primary-foreground/5 rounded-full filter blur-3xl opacity-50" />
-            <div className="absolute -left-60 -bottom-20 w-80 h-80 bg-landing-primary-foreground/5 rounded-full filter blur-3xl opacity-50" />
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative rounded-[2.5rem] overflow-hidden bg-primary px-6 py-16 sm:px-16 sm:py-24 text-center shadow-2xl"
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <svg
+              className="h-full w-full"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+            >
+              <path d="M0 100 C 20 0 50 0 100 100 Z" fill="white" />
+            </svg>
           </div>
 
-          <motion.div
-            className="max-w-3xl mx-auto text-center"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.5 }}
-            variants={containerVariants}
-          >
-            <motion.h2
-              variants={itemVariants}
-              className="text-3xl sm:text-4xl font-extrabold"
-            >
-              {t("title")}
-            </motion.h2>
-
-            <motion.p
-              variants={itemVariants}
-              className="mt-4 text-lg text-landing-primary-foreground/80"
-            >
-              {t("description")}
-            </motion.p>
-
-            <motion.div
-              variants={itemVariants}
-              className="mt-8 flex justify-center"
-            >
+          <div className="relative z-10 max-w-3xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-foreground tracking-tight">
+              Ready to Transform Your Practice?
+            </h2>
+            <p className="mt-6 text-lg sm:text-xl text-primary-foreground/80 max-w-2xl mx-auto">
+              Join thousands of healthcare providers who are already using our
+              platform to deliver better patient care.
+            </p>
+            <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
               {!session ? (
-                <Link
-                  href="/signup"
-                  className={buttonVariants({
-                    variant: "primary",
-                    className:
-                      "bg-landing-background text-landing-primary hover:bg-landing-muted px-8 py-4 rounded-full font-semibold shadow-lg transition-transform duration-200 hover:scale-105 text-lg",
-                  })}
-                >
-                  {t("buttons.signup")}
-                </Link>
+                <>
+                  <Link href="/signup">
+                    <Button
+                      size="lg"
+                      variant="secondary"
+                      className="w-full sm:w-auto rounded-full px-8 h-14 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+                    >
+                      Start Free Trial
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </Link>
+                  <Link href="/contact">
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="w-full sm:w-auto rounded-full px-8 h-14 text-lg bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10"
+                    >
+                      Contact Sales
+                    </Button>
+                  </Link>
+                </>
               ) : (
-                <Link
-                  href="/app"
-                  className={buttonVariants({
-                    variant: "primary",
-                    className:
-                      "bg-landing-background text-landing-primary hover:bg-landing-muted px-8 py-4 rounded-full font-semibold shadow-lg transition-transform duration-200 hover:scale-105 text-lg",
-                  })}
-                >
-                  {t("buttons.openApp")}
+                <Link href="/app">
+                  <Button
+                    size="lg"
+                    variant="secondary"
+                    className="w-full sm:w-auto rounded-full px-8 h-14 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+                  >
+                    Open Dashboard
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
                 </Link>
               )}
-            </motion.div>
-          </motion.div>
-        </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
 }
 
-export default LandingPageCTA;
+export default LangingPageCTA;

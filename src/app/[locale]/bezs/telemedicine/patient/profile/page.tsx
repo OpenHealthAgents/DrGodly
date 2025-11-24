@@ -1,9 +1,9 @@
-import { PatientProfilePersonalDetailsStep } from "@/modules/client/telemedicine/components/patient/patientProfilePersonalDetailsStep";
+import { PatientProfilePersonalDetails } from "@/modules/client/telemedicine/components/patient/patientProfilePersonalDetails";
 
 function PatientProfilePage() {
   return (
     <div>
-      <PatientProfilePersonalDetailsStep />
+      <PatientProfilePersonalDetails />
     </div>
   );
 }

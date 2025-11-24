@@ -7,17 +7,13 @@ import {
   Calendar,
   Clock,
   ChevronLeft,
-  ChevronRight,
-  CheckCircle2,
   Filter,
 } from "lucide-react";
 import { DOCTORS, SERVICES, TIME_SLOTS, SPECIALTIES } from "./data";
-import { Doctor, Service, AppointmentDetails } from "./types";
+import { Doctor, Service } from "./types";
 import { Button } from "@/components/ui/button";
 import { StepIndicator } from "./stepIndicator";
 import { DoctorCard } from "./doctorCard";
-import { Modal } from "./modal";
-import { ReviewsModal } from "./reviewModal";
 import {
   InputGroup,
   InputGroupAddon,
@@ -32,8 +28,13 @@ import {
 } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ConfirmedAppointmentMessageModal } from "@/modules/client/telemedicine/modals/patient";
+import { usePatientModalStore } from "@/modules/client/telemedicine/stores/patient-modal-store";
 
 export function BookAppointment() {
+  const openModal = usePatientModalStore((state) => state.onOpen);
+  const closeModal = usePatientModalStore((state) => state.onClose);
+
   // State
   const [step, setStep] = useState(1);
 
@@ -46,12 +47,6 @@ export function BookAppointment() {
   // Filters
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("All");
-
-  // UI State
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-  const [viewingReviewsFor, setViewingReviewsFor] = useState<Doctor | null>(
-    null
-  );
 
   // Computed
   const filteredDoctors = useMemo(() => {
@@ -119,7 +114,7 @@ export function BookAppointment() {
   };
 
   const handleConfirmBooking = () => {
-    setIsSuccessModalOpen(true);
+    openModal({ type: "confirmedAppointmentMessage" });
   };
 
   const resetBooking = () => {
@@ -128,7 +123,7 @@ export function BookAppointment() {
     setSelectedService(null);
     setSelectedDate(null);
     setSelectedTime(null);
-    setIsSuccessModalOpen(false);
+    closeModal();
   };
 
   // Scroll to top on step change
@@ -201,7 +196,6 @@ export function BookAppointment() {
                 doctor={doctor}
                 selected={selectedDoctor?.id === doctor.id}
                 onSelect={() => setSelectedDoctor(doctor)}
-                onViewReviews={() => setViewingReviewsFor(doctor)}
               />
             ))}
             {filteredDoctors.length === 0 && (
@@ -357,7 +351,7 @@ export function BookAppointment() {
         selectedService &&
         selectedDate &&
         selectedTime && (
-          <div className="animate-in fade-in zoom-in-95 duration-500">
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="mb-6">
               <Button
                 variant="ghost"
@@ -469,87 +463,9 @@ export function BookAppointment() {
       )}
 
       {/* Success Modal */}
-      <Modal isOpen={isSuccessModalOpen} onClose={() => {}}>
-        <div className="text-center p-6 pt-8">
-          <div className="mx-auto w-16 h-16 bg-orange-400/20 rounded-full flex items-center justify-center mb-6 text-orange-400 border border-orange-400/50">
-            <CheckCircle2 className="w-8 h-8" />
-          </div>
-
-          <h2 className="text-2xl font-bold text-zinc-100 mb-2">
-            Appointment Confirmed!
-          </h2>
-          <p className="text-zinc-400 mb-6">
-            Your appointment has been successfully booked.
-          </p>
-
-          {/* 3D-ish Illustration Placeholder */}
-          <div className="relative w-40 h-40 mx-auto mb-6">
-            <img
-              src={`https://api.dicebear.com/7.x/bottts/svg?seed=${selectedDoctor?.id}&backgroundColor=transparent`}
-              alt="Robot Assistant"
-              className="w-full h-full drop-shadow-[0_10px_20px_rgba(249,115,22,0.2)]"
-            />
-            <div className="absolute top-10 -right-4 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-lg shadow-lg transform rotate-12">
-              Email Sent!
-            </div>
-          </div>
-
-          <p className="text-sm text-orange-400 mb-6 flex items-center justify-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
-            Details sent to your inbox
-          </p>
-
-          <div className="bg-zinc-950/50 rounded-lg p-4 text-left mb-6 border border-zinc-800">
-            <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">
-              Quick Summary
-            </h4>
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center gap-3 text-zinc-300">
-                <div className="w-5 flex justify-center">
-                  <span className="text-zinc-500 text-base">👤</span>
-                </div>
-                <span>{selectedDoctor?.name}</span>
-              </div>
-              <div className="flex items-center gap-3 text-zinc-300">
-                <div className="w-5 flex justify-center">
-                  <Calendar className="w-3.5 h-3.5 text-zinc-500" />
-                </div>
-                <span>{selectedDate && formatFullDate(selectedDate)}</span>
-              </div>
-              <div className="flex items-center gap-3 text-zinc-300">
-                <div className="w-5 flex justify-center">
-                  <Clock className="w-3.5 h-3.5 text-zinc-500" />
-                </div>
-                <span>{selectedTime}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid gap-3">
-            <Button
-              onClick={() => alert("Navigate to My Appointments")}
-              variant="default"
-              className="w-full"
-            >
-              View My Appointments
-            </Button>
-            <Button onClick={resetBooking} variant="ghost" className="w-full">
-              Close
-            </Button>
-          </div>
-
-          <p className="text-xs text-zinc-600 mt-6 px-4">
-            Please arrive 15 minutes early. Need to reschedule? Contact us 24
-            hours in advance.
-          </p>
-        </div>
-      </Modal>
-
-      {/* Reviews Modal */}
-      <ReviewsModal
-        isOpen={!!viewingReviewsFor}
-        doctor={viewingReviewsFor}
-        onClose={() => setViewingReviewsFor(null)}
+      <ConfirmedAppointmentMessageModal
+        data={{ selectedDoctor, selectedDate, selectedTime }}
+        resetAction={resetBooking}
       />
     </div>
   );

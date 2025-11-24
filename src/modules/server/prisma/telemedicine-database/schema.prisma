@@ -347,6 +347,8 @@ model Patient {
     updatedBy String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@unique([orgId, userId])
 }
 
 // -----------------------------

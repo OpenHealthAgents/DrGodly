@@ -1,4 +1,4 @@
-import { z } from "better-auth";
+import z from "zod";
 
 const gender = z.enum(["MALE", "FEMALE", "OTHER"]);
 
@@ -59,4 +59,14 @@ export const PatientCreateOrUpdatePatientProfileSchema =
   });
 export type TPatientCreateOrUpdatePatientProfile = z.infer<
   typeof PatientCreateOrUpdatePatientProfileSchema
+>;
+
+export const PatientWithPersonalProfileSchema =
+  PatientInitialProfileSchema.extend(
+    z.object({
+      personal: PatientPersonalDetailsSchema.nullable(),
+    }).shape
+  );
+export type TPatientWithPersonalProfile = z.infer<
+  typeof PatientWithPersonalProfileSchema
 >;

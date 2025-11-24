@@ -20,7 +20,8 @@ const eslintConfig = [
       "next-env.d.ts",
     ],
     rules: {
-      "@typescript-eslint/no-explicit-any": "off", // Ignore any type errors
+      "@typescript-eslint/no-explicit-any": "off", // ignore any type errors
+      "@typescript-eslint/no-img-element": "off", // ignore <img> rule
     },
   },
 ];

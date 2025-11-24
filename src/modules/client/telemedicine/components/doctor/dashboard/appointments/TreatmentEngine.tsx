@@ -21,7 +21,7 @@ export const TreatmentEngine = ({ recommendations }: TreatmentEngineProps) => {
     <Card className={cn(isExpanded ? "col-span-2" : "col-auto")}>
       <CardHeader className="flex items-center gap-2 justify-between">
         <CardTitle className="flex items-center gap-2">
-          <Brain className="h-5 w-5" />
+          <Brain className="h-5 w-5 text-primary" />
           AI Treatment & Recommendation Engine
         </CardTitle>
         <ActionTooltipProvider label={isExpanded ? "Shrink" : "Expand"}>
@@ -41,7 +41,7 @@ export const TreatmentEngine = ({ recommendations }: TreatmentEngineProps) => {
       <CardContent className="space-y-4">
         <div>
           <h4 className="font-medium text-foreground mb-2 flex items-center gap-2">
-            <AlertCircle className="h-4 w-4" />
+            <AlertCircle className="h-4 w-4 text-warning" />
             Likely Conditions
           </h4>
           <div className="flex flex-wrap gap-2">

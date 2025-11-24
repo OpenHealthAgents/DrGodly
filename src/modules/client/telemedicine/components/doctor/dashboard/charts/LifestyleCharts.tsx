@@ -78,29 +78,34 @@ export const LifestyleCharts = ({ lifestyle }: LifestyleChartsProps) => {
               </p>
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={lifestyle.heartRate}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    className="stroke-border"
-                  />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis
                     dataKey="date"
-                    className="text-xs"
                     stroke="var(--muted-foreground)"
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+                    tickLine={{ stroke: "var(--muted-foreground)" }}
+                    axisLine={{ stroke: "var(--muted-foreground)" }}
                   />
-                  <YAxis className="text-xs" stroke="var(--muted-foreground)" />
+                  <YAxis
+                    stroke="var(--muted-foreground)"
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+                    tickLine={{ stroke: "var(--muted-foreground)" }}
+                    axisLine={{ stroke: "var(--muted-foreground)" }}
+                  />
                   <Tooltip
                     contentStyle={{
                       backgroundColor: "var(--card)",
                       border: "1px solid var(--border)",
                       borderRadius: "var(--radius)",
+                      color: "var(--foreground)",
                     }}
                   />
                   <Line
                     type="monotone"
                     dataKey="value"
-                    stroke="var(--primary)"
+                    stroke="var(--chart-1)"
                     strokeWidth={2}
-                    dot={{ fill: "var(--primary)" }}
+                    dot={{ fill: "var(--chart-1)" }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -114,26 +119,31 @@ export const LifestyleCharts = ({ lifestyle }: LifestyleChartsProps) => {
               </p>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={lifestyle.steps}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    className="stroke-border"
-                  />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis
                     dataKey="date"
-                    className="text-xs"
                     stroke="var(--muted-foreground)"
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+                    tickLine={{ stroke: "var(--muted-foreground)" }}
+                    axisLine={{ stroke: "var(--muted-foreground)" }}
                   />
-                  <YAxis className="text-xs" stroke="var(--muted-foreground)" />
+                  <YAxis
+                    stroke="var(--muted-foreground)"
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+                    tickLine={{ stroke: "var(--muted-foreground)" }}
+                    axisLine={{ stroke: "var(--muted-foreground)" }}
+                  />
                   <Tooltip
                     contentStyle={{
                       backgroundColor: "var(--card)",
                       border: "1px solid var(--border)",
                       borderRadius: "var(--radius)",
+                      color: "var(--foreground)",
                     }}
                   />
                   <Bar
                     dataKey="value"
-                    fill="var(--primary)"
+                    fill="var(--chart-2)"
                     radius={[8, 8, 0, 0]}
                   />
                 </BarChart>
@@ -146,31 +156,42 @@ export const LifestyleCharts = ({ lifestyle }: LifestyleChartsProps) => {
               <p className="text-sm text-muted-foreground">
                 Hours of sleep per night (past week)
               </p>
+
               <ResponsiveContainer width="100%" height={250}>
                 <AreaChart data={lifestyle.sleep}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    className="stroke-border"
-                  />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+
                   <XAxis
                     dataKey="date"
-                    className="text-xs"
                     stroke="var(--muted-foreground)"
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+                    tickLine={{ stroke: "var(--muted-foreground)" }}
+                    axisLine={{ stroke: "var(--muted-foreground)" }}
                   />
-                  <YAxis className="text-xs" stroke="var(--muted-foreground)" />
+
+                  <YAxis
+                    stroke="var(--muted-foreground)"
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+                    tickLine={{ stroke: "var(--muted-foreground)" }}
+                    axisLine={{ stroke: "var(--muted-foreground)" }}
+                  />
+
                   <Tooltip
                     contentStyle={{
                       backgroundColor: "var(--card)",
                       border: "1px solid var(--border)",
                       borderRadius: "var(--radius)",
+                      color: "var(--foreground)",
                     }}
                   />
+
                   <Area
                     type="monotone"
                     dataKey="value"
-                    stroke="var(--muted-foreground)"
-                    fill="var(--muted-foreground)"
+                    stroke="var(--chart-1)"
+                    fill="var(--chart-1)"
                     fillOpacity={0.3}
+                    activeDot={{ r: 4, stroke: "var(--card)", strokeWidth: 2 }}
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -184,26 +205,31 @@ export const LifestyleCharts = ({ lifestyle }: LifestyleChartsProps) => {
               </p>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={lifestyle.activity}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    className="stroke-border"
-                  />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis
                     dataKey="date"
-                    className="text-xs"
                     stroke="var(--muted-foreground)"
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+                    tickLine={{ stroke: "var(--muted-foreground)" }}
+                    axisLine={{ stroke: "var(--muted-foreground)" }}
                   />
-                  <YAxis className="text-xs" stroke="var(--muted-foreground)" />
+                  <YAxis
+                    stroke="var(--muted-foreground)"
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+                    tickLine={{ stroke: "var(--muted-foreground)" }}
+                    axisLine={{ stroke: "var(--muted-foreground)" }}
+                  />
                   <Tooltip
                     contentStyle={{
                       backgroundColor: "var(--card)",
                       border: "1px solid var(--border)",
                       borderRadius: "var(--radius)",
+                      color: "var(--foreground)",
                     }}
                   />
                   <Bar
                     dataKey="value"
-                    fill="var(--primary)"
+                    fill="var(--chart-3)"
                     radius={[8, 8, 0, 0]}
                   />
                 </BarChart>

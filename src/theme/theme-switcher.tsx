@@ -19,6 +19,7 @@ const themes: string[] = [
   "orange",
   "green",
   "blue",
+  "teal",
   "yellow",
   "violet",
 ];
@@ -30,6 +31,7 @@ const themeColors: Record<string, string> = {
   orange: "bg-orange-600",
   green: "bg-green-600",
   blue: "bg-blue-600",
+  teal: "bg-teal-600",
   yellow: "bg-yellow-600",
   violet: "bg-violet-600",
 };
