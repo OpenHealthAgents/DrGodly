@@ -49,6 +49,11 @@ enum AppointmentStatus {
     INPROGRESS
 }
 
+enum AppointmentMode {
+    VIRTUAL
+    INPERSON
+}
+
 // ───────────────────────────
 // ROOT DOCTOR
 // ───────────────────────────
@@ -70,11 +75,15 @@ model Doctor {
     qualification DoctorQualification?
     workDetail    DoctorWorkDetail?
     concent       DoctorConcent?
+    appointments  Appointment[]
+    services      Service[]
 
     createdBy String?
     updatedBy String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@unique([orgId, userId])
 }
 
 // ───────────────────────────
@@ -137,8 +146,6 @@ model DoctorPersonalDetail {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
-
-// mobile number (primary / secondary multiple)
 
 // ──────────────────────────────────────────────────────────────
 // Social Platform
@@ -320,6 +327,27 @@ model DoctorWorkingFacilityDetail {
     updatedAt DateTime @updatedAt
 }
 
+model Service {
+    id             String  @id @default(uuid())
+    orgId          String
+    name           String
+    duration       Int
+    priceAmount    Float?
+    priceCurrency  String? @db.VarChar(3)
+    description    String?
+    supportedModes Json
+
+    doctorId String
+    doctor   Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([orgId, doctorId, name])
+}
+
 ////////////////////////////////////////////////////////////
 
 // -----------------------------
@@ -342,6 +370,7 @@ model Patient {
     labResults     LabResult[]
     vitals         Vital[]
     lifestyle      Lifestyle?
+    appointments   Appointment[]
 
     createdBy String?
     updatedBy String?
@@ -497,4 +526,31 @@ model Lifestyle {
     updatedBy String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+// -----------------------------
+// Appointment
+// -----------------------------
+model Appointment {
+    id              Int               @id @default(autoincrement())
+    patientId       String
+    doctorId        String
+    orgId           String
+    appointmentDate DateTime
+    time            String
+    status          AppointmentStatus @default(PENDING)
+    type            String
+    price           String
+    note            String?
+    appointmentMode AppointmentMode
+    virtualRoomId   String?           @unique
+
+    patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+    doctor  Doctor  @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+    reason       String?
+    conversation Json?
+    report       Json?
+    created_at   DateTime @default(now())
+    updated_at   DateTime @updatedAt
 }

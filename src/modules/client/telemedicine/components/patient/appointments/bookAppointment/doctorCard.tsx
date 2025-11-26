@@ -18,10 +18,10 @@ export const DoctorCard = ({
   return (
     <Card
       onClick={onSelect}
-      className={`relative p-5 cursor-pointer group ${
+      className={`relative p-5 cursor-pointer group transition-all hover:shadow-md ${
         selected
-          ? "border-primary bg-primary/10"
-          : "hover:border-primary/20 hover:bg-primary/5"
+          ? "border-primary shadow-md bg-primary/5"
+          : "hover:border-primary/50 border-border"
       }`}
     >
       {selected && (

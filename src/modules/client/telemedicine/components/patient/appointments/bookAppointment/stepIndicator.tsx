@@ -15,7 +15,7 @@ export const StepIndicator = ({ currentStep }: { currentStep: number }) => {
             className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold mr-2 transition-colors ${
               currentStep >= step.num
                 ? "bg-primary text-secondary"
-                : "bg-primary/20 text-primary"
+                : "bg-primary/15 text-primary"
             }`}
           >
             {step.num}

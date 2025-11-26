@@ -44,7 +44,7 @@ export class OrganizationRepository implements IOrganizationRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -71,7 +71,7 @@ export class OrganizationRepository implements IOrganizationRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -93,7 +93,7 @@ export class OrganizationRepository implements IOrganizationRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -120,7 +120,7 @@ export class OrganizationRepository implements IOrganizationRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -140,7 +140,7 @@ export class OrganizationRepository implements IOrganizationRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }

@@ -83,7 +83,7 @@ export class PatientProfileRepository implements IPatientProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -98,7 +98,7 @@ export class PatientProfileRepository implements IPatientProfileRepository {
 
     // Start log
     logOperation("start", {
-      name: "getPatientFullProfileRepository",
+      name: "getPatientWithPersonalProfileRepository",
       startTimeMs,
       context: {
         operationId,
@@ -129,7 +129,7 @@ export class PatientProfileRepository implements IPatientProfileRepository {
 
       // Success log
       logOperation("success", {
-        name: "getPatientFullProfileRepository",
+        name: "getPatientWithPersonalProfileRepository",
         startTimeMs,
         context: {
           operationId,
@@ -140,7 +140,7 @@ export class PatientProfileRepository implements IPatientProfileRepository {
     } catch (error) {
       // Error log
       logOperation("error", {
-        name: "getPatientFullProfileRepository",
+        name: "getPatientWithPersonalProfileRepository",
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",
@@ -153,7 +153,7 @@ export class PatientProfileRepository implements IPatientProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -226,7 +226,7 @@ export class PatientProfileRepository implements IPatientProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -297,7 +297,7 @@ export class PatientProfileRepository implements IPatientProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }

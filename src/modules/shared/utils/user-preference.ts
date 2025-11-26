@@ -58,6 +58,7 @@ export function createPresenter(prefs: Preferences) {
     return new Intl.NumberFormat(country, {
       style: "currency",
       currency,
+      currencyDisplay: "narrowSymbol",
     }).format(amount);
   }
 

@@ -53,7 +53,7 @@ const ConversationChat = ({
   }, [messages]);
 
   return (
-    <Conversation className="relative flex-1 pb-14 max-w-[800px] mx-auto border rounded-2xl">
+    <Conversation className="relative flex-1 pb-14 border rounded-2xl">
       <ConversationContent>
         {visibleMessages.length === 0 && !liveTranscript ? (
           <ConversationEmptyState
@@ -77,11 +77,6 @@ const ConversationChat = ({
                           {user.name[0]}
                         </p>
                       </div>
-                      // <Avatar className="size-8">
-                      //   <div className="flex items-center justify-center text-2xl size-6">
-                      //     {user.name[0]}
-                      //   </div>
-                      // </Avatar>
                     )}
                     <MessageResponse>{message.content}</MessageResponse>
                   </div>
@@ -94,7 +89,18 @@ const ConversationChat = ({
               <Message from={liveRole} key="live-transcript">
                 <div>
                   <MessageContent>
-                    <MessageResponse>{liveTranscript}</MessageResponse>
+                    <div className="flex gap-2 items-center">
+                      {liveRole === "assistant" ? (
+                        <div className={`bg-secondary w-fit rounded-full p-2`}>
+                          <Brain className="size-6" />
+                        </div>
+                      ) : (
+                        <div className="bg-primary h-6 w-6 flex items-center justify-center rounded-full text-secondary">
+                          {user.name[0]}
+                        </div>
+                      )}
+                      <MessageResponse>{liveTranscript}</MessageResponse>
+                    </div>
                   </MessageContent>
                 </div>
               </Message>

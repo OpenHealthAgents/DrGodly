@@ -23,7 +23,7 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: "easeOut",
+      ease: "easeOut" as const,
     },
   },
 };
@@ -35,7 +35,7 @@ const floatingIconVariants = {
     transition: {
       duration: 4,
       repeat: Infinity,
-      ease: "easeInOut",
+      ease: "easeInOut" as const,
     },
   },
 };
@@ -49,7 +49,7 @@ function LandingPageHero({ session }: { session: any | null }) {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-secondary/30 rounded-full blur-3xl opacity-50 mix-blend-multiply" />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           className="grid lg:grid-cols-2 gap-16 items-center"
           variants={containerVariants}
@@ -66,7 +66,7 @@ function LandingPageHero({ session }: { session: any | null }) {
 
             <motion.h1
               variants={itemVariants}
-              className="text-4xl sm:text-5xl lg:text-7xl font-bold text-foreground tracking-tight leading-[1.1]"
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground tracking-tight leading-[1.1]"
             >
               Your Complete Healthcare Management Platform
             </motion.h1>

@@ -1,4 +1,4 @@
-import DefaultWeeklyAvailability from "@/modules/client/telemedicine/components/doctor/doctorDefaultWeeklyAvailability";
+import DefaultWeeklyAvailability from "@/modules/client/telemedicine/components/doctor/availability/doctorWeeklyAvailability";
 
 function DoctorAvailabilitySettings() {
   return (

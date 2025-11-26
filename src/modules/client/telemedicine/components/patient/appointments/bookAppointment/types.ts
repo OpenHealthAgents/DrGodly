@@ -25,6 +25,7 @@ export interface Service {
   name: string;
   duration: number; // in minutes
   price: number;
+  supportedModes: ("VIRTUAL" | "INPERSON")[];
 }
 
 export interface TimeSlot {

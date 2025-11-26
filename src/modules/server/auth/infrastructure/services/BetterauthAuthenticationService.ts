@@ -41,7 +41,7 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
         throw new UnauthenticatedError(error.message, { cause: error });
       }
 
-      throw new UnauthenticatedError("An unexpected erorr occurred", {
+      throw new UnauthenticatedError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -77,7 +77,7 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
         throw new UnauthenticatedError(error.message, { cause: error });
       }
 
-      throw new UnauthenticatedError("An unexpected erorr occurred", {
+      throw new UnauthenticatedError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -122,7 +122,7 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
         throw new UnauthenticatedError(error.message, { cause: error });
       }
 
-      throw new UnauthenticatedError("An unexpected erorr occurred", {
+      throw new UnauthenticatedError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -144,7 +144,7 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
         throw new UnauthenticatedError(error.message, { cause: error });
       }
 
-      throw new UnauthenticatedError("An unexpected erorr occurred", {
+      throw new UnauthenticatedError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -162,7 +162,7 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
         throw new UnauthenticatedError(error.message, { cause: error });
       }
 
-      throw new UnauthenticatedError("An unexpected erorr occurred", {
+      throw new UnauthenticatedError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -181,7 +181,7 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
         throw new UnauthenticatedError(error.message, { cause: error });
       }
 
-      throw new UnauthenticatedError("An unexpected erorr occurred", {
+      throw new UnauthenticatedError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -205,7 +205,7 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
         throw new UnauthenticatedError(error.message, { cause: error });
       }
 
-      throw new UnauthenticatedError("An unexpected erorr occurred", {
+      throw new UnauthenticatedError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -226,7 +226,7 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
         throw new UnauthenticatedError(error.message, { cause: error });
       }
 
-      throw new UnauthenticatedError("An unexpected erorr occurred", {
+      throw new UnauthenticatedError("An unexpected error occurred", {
         cause: error,
       });
     }

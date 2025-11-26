@@ -20,7 +20,7 @@ import {
   createOrUpdateDoctorQualificationDetails,
   createOrUpdateDoctorWorkDetails,
   submitDoctorFullProfile,
-} from "../../../server-actions/doctorProfile-actions/doctorProfile-actions";
+} from "../../../server-actions/doctorProfile-actions";
 
 export interface DoctorProfileData {
   personalDetails?: TDoctorPersonalDetails;

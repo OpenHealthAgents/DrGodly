@@ -55,7 +55,7 @@ export class RbacRepository implements IrbacRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -99,7 +99,7 @@ export class RbacRepository implements IrbacRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -145,7 +145,7 @@ export class RbacRepository implements IrbacRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }

@@ -26,6 +26,10 @@ export interface IDoctorProfileRepository {
     userId: string,
     orgId?: string
   ): Promise<TDoctor | null>;
+  getDoctorInitialProfileByUniqueFields(
+    orgId: string,
+    userId: string
+  ): Promise<TDoctorInitialProfile | null>;
   createDoctorPersonalDetails(
     createData: TCreateOrUpdateDoctorProfileDetail
   ): Promise<TDoctorPersonalDetails>;
