@@ -17,6 +17,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { HTMLInputTypeAttribute } from "react";
 import {
   Controller,
   ControllerProps,
@@ -57,7 +58,11 @@ type TFormControlFunc<
   TTransformedValues = TFieldValues
 >(
   props: FormControlProps<TFieldValues, TName, TTransformedValues> &
-    ExtraProps & { className?: string; placeholder?: string }
+    ExtraProps & {
+      className?: string;
+      placeholder?: string;
+      type?: HTMLInputTypeAttribute;
+    }
 ) => React.ReactNode;
 
 function FormBase<
@@ -126,6 +131,7 @@ function FormBase<
 export const FormInput: TFormControlFunc = ({
   className,
   placeholder,
+  type,
   ...props
 }) => {
   return (
@@ -136,6 +142,7 @@ export const FormInput: TFormControlFunc = ({
           value={field.value ?? ""}
           placeholder={placeholder}
           className={className}
+          type={type}
         />
       )}
     </FormBase>
@@ -150,7 +157,12 @@ export const FormTextarea: TFormControlFunc = ({
   return (
     <FormBase {...props}>
       {(field) => (
-        <Textarea {...field} className={className} placeholder={placeholder} />
+        <Textarea
+          {...field}
+          className={className}
+          placeholder={placeholder}
+          value={field.value ?? ""}
+        />
       )}
     </FormBase>
   );

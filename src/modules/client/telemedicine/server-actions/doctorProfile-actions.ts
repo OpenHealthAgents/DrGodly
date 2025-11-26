@@ -115,7 +115,7 @@ export const createOrUpdateDoctorPersonalDetails = createServerAction()
         revalidatePath: true,
         operationErrorMessage: `Failed to ${
           input.id ? "update" : "create"
-        } doctor profile.`,
+        } doctor personal profile.`,
       }
     );
   });

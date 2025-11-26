@@ -25,7 +25,7 @@ import {
   CreateDoctorByHPRidSchema,
   TCreateDoctorByHPRid,
 } from "@/modules/shared/schemas/telemedicine/doctorProfile/doctorProfileValidationSchema";
-import { getDoctorProfileByHPRId } from "../../server-actions/doctorProfile-actions/doctorProfile-actions";
+import { getDoctorProfileByHPRId } from "../../server-actions/doctorProfile-actions";
 
 export const CreateDoctorByHPRIdModal = () => {
   const session = useSession();

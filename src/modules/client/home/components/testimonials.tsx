@@ -38,7 +38,7 @@ function LandingPageTestimonials() {
 
   return (
     <section className="py-20 sm:py-28 bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -69,8 +69,8 @@ function LandingPageTestimonials() {
                     </div>
                     <Quote className="w-8 h-8 text-primary/20" />
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground mb-6 italic">
+                  <CardContent className="h-full flex flex-col justify-between gap-6">
+                    <p className="text-muted-foreground italic flex-1">
                       {item.content}
                     </p>
                     <div className="flex items-center gap-4">

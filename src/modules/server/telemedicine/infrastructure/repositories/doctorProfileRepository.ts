@@ -108,7 +108,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -171,7 +171,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -227,7 +227,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -304,7 +304,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -384,7 +384,71 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async getDoctorInitialProfileByUniqueFields(
+    orgId: string,
+    userId: string
+  ): Promise<TDoctorInitialProfile | null> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    // Start log
+    logOperation("start", {
+      name: "getDoctorInitialProfileByUniqueFieldsRepository",
+      startTimeMs,
+      context: {
+        operationId,
+      },
+    });
+
+    try {
+      const initialDoctorProfile = await prismaTelemedicine.doctor.findUnique({
+        where: {
+          orgId_userId: {
+            orgId,
+            userId,
+          },
+        },
+      });
+
+      if (!initialDoctorProfile) return null;
+
+      const data = await DoctorInitialProfileSchema.parseAsync(
+        initialDoctorProfile
+      );
+
+      // Success log
+      logOperation("success", {
+        name: "getDoctorInitialProfileByUniqueFieldsRepository",
+        startTimeMs,
+        context: {
+          operationId,
+        },
+      });
+
+      return data;
+    } catch (error) {
+      // Error log
+      logOperation("error", {
+        name: "getDoctorInitialProfileByUniqueFieldsRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -517,7 +581,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -685,7 +749,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -767,7 +831,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -865,7 +929,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -945,7 +1009,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -1042,7 +1106,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -1106,7 +1170,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -1172,7 +1236,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }
@@ -1458,7 +1522,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
         throw new OperationError(error.message, { cause: error });
       }
 
-      throw new OperationError("An unexpected erorr occurred", {
+      throw new OperationError("An unexpected error occurred", {
         cause: error,
       });
     }

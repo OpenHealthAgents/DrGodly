@@ -1,20 +1,22 @@
-// types/availability.ts
-export type TimeRange = {
-  from: string; // "09:00" (24h)
-  to: string; // "15:30"
-};
+export interface TimeSlot {
+  id: string;
+  start: string;
+  end: string;
+  error?: string;
+}
 
-export type DaySchedule = {
-  enabled: boolean;
-  sessions: TimeRange[]; // can be empty if not enabled
-};
+export interface DaySchedule {
+  id: string; // 'sunday', 'monday', etc.
+  label: string;
+  isEnabled: boolean;
+  slots: TimeSlot[];
+}
 
-export type WeeklyDefault = Record<number, DaySchedule>; // 0 (Sun) - 6 (Sat)
-
-export type DateOverride = {
-  id?: string;
-  date: string; // "YYYY-MM-DD"
-  isHoliday: boolean;
-  sessions?: TimeRange[]; // absent or [] when isHoliday=true
-  doctorId?: string;
-};
+export type Days =
+  | "sunday"
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday";

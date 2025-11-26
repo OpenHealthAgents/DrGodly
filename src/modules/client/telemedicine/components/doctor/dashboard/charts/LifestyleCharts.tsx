@@ -1,18 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
 import { Activity, Heart, Footprints, Moon } from "lucide-react";
 import { LifestyleData } from "@/modules/client/telemedicine/datas/doctor-dashboard";
 import { useState } from "react";
@@ -21,6 +8,10 @@ import ActionTooltipProvider from "@/modules/shared/providers/action-tooltip-pro
 import { Button } from "@/components/ui/button";
 import { CgCompress } from "react-icons/cg";
 import { RiExpandHorizontalLine } from "@remixicon/react";
+import { HeartRateChart } from "./heartRateChart";
+import { StepsChart } from "./stepsChart";
+import { SleepChart } from "./sleepChart";
+import { ActivityChart } from "./activityChart";
 
 interface LifestyleChartsProps {
   lifestyle: LifestyleData;
@@ -72,169 +63,19 @@ export const LifestyleCharts = ({ lifestyle }: LifestyleChartsProps) => {
           </TabsList>
 
           <TabsContent value="heart-rate" className="mt-6">
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">
-                Average heart rate over the past week
-              </p>
-              <ResponsiveContainer width="100%" height={250}>
-                <LineChart data={lifestyle.heartRate}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                  <XAxis
-                    dataKey="date"
-                    stroke="var(--muted-foreground)"
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
-                    tickLine={{ stroke: "var(--muted-foreground)" }}
-                    axisLine={{ stroke: "var(--muted-foreground)" }}
-                  />
-                  <YAxis
-                    stroke="var(--muted-foreground)"
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
-                    tickLine={{ stroke: "var(--muted-foreground)" }}
-                    axisLine={{ stroke: "var(--muted-foreground)" }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "var(--card)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "var(--radius)",
-                      color: "var(--foreground)",
-                    }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke="var(--chart-1)"
-                    strokeWidth={2}
-                    dot={{ fill: "var(--chart-1)" }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            <HeartRateChart heartRate={lifestyle.heartRate} />
           </TabsContent>
 
           <TabsContent value="steps" className="mt-6">
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">
-                Daily step count for the past week
-              </p>
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={lifestyle.steps}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                  <XAxis
-                    dataKey="date"
-                    stroke="var(--muted-foreground)"
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
-                    tickLine={{ stroke: "var(--muted-foreground)" }}
-                    axisLine={{ stroke: "var(--muted-foreground)" }}
-                  />
-                  <YAxis
-                    stroke="var(--muted-foreground)"
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
-                    tickLine={{ stroke: "var(--muted-foreground)" }}
-                    axisLine={{ stroke: "var(--muted-foreground)" }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "var(--card)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "var(--radius)",
-                      color: "var(--foreground)",
-                    }}
-                  />
-                  <Bar
-                    dataKey="value"
-                    fill="var(--chart-2)"
-                    radius={[8, 8, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+            <StepsChart steps={lifestyle.steps} />
           </TabsContent>
 
           <TabsContent value="sleep" className="mt-6">
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">
-                Hours of sleep per night (past week)
-              </p>
-
-              <ResponsiveContainer width="100%" height={250}>
-                <AreaChart data={lifestyle.sleep}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-
-                  <XAxis
-                    dataKey="date"
-                    stroke="var(--muted-foreground)"
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
-                    tickLine={{ stroke: "var(--muted-foreground)" }}
-                    axisLine={{ stroke: "var(--muted-foreground)" }}
-                  />
-
-                  <YAxis
-                    stroke="var(--muted-foreground)"
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
-                    tickLine={{ stroke: "var(--muted-foreground)" }}
-                    axisLine={{ stroke: "var(--muted-foreground)" }}
-                  />
-
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "var(--card)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "var(--radius)",
-                      color: "var(--foreground)",
-                    }}
-                  />
-
-                  <Area
-                    type="monotone"
-                    dataKey="value"
-                    stroke="var(--chart-1)"
-                    fill="var(--chart-1)"
-                    fillOpacity={0.3}
-                    activeDot={{ r: 4, stroke: "var(--card)", strokeWidth: 2 }}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
+            <SleepChart sleep={lifestyle.sleep} />
           </TabsContent>
 
           <TabsContent value="activity" className="mt-6">
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">
-                Active minutes per day (past week)
-              </p>
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={lifestyle.activity}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                  <XAxis
-                    dataKey="date"
-                    stroke="var(--muted-foreground)"
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
-                    tickLine={{ stroke: "var(--muted-foreground)" }}
-                    axisLine={{ stroke: "var(--muted-foreground)" }}
-                  />
-                  <YAxis
-                    stroke="var(--muted-foreground)"
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
-                    tickLine={{ stroke: "var(--muted-foreground)" }}
-                    axisLine={{ stroke: "var(--muted-foreground)" }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "var(--card)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "var(--radius)",
-                      color: "var(--foreground)",
-                    }}
-                  />
-                  <Bar
-                    dataKey="value"
-                    fill="var(--chart-3)"
-                    radius={[8, 8, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+            <ActivityChart activity={lifestyle.activity} />
           </TabsContent>
         </Tabs>
       </CardContent>

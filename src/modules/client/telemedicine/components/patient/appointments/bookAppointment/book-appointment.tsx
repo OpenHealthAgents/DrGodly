@@ -220,39 +220,47 @@ export function BookAppointment() {
       {/* Step 2: Choose Time */}
       {step === 2 && selectedDoctor && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="flex items-center gap-2 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <Button
               variant="ghost"
               size="sm"
               onClick={handlePrevStep}
-              className="-ml-2"
+              className="-ml-2 text-muted-foreground self-start"
             >
               <ChevronLeft className="w-4 h-4 mr-1" /> Back
             </Button>
-            <div className="h-4 w-px bg-zinc-700 mx-2"></div>
-            <div className="flex items-center gap-2">
+            <Button
+              variant="badge"
+              className="flex items-center gap-2 rounded-full"
+            >
+              <span className="text-muted-foreground text-sm">
+                Booking with
+              </span>
               <Avatar className="h-6 w-6">
                 <AvatarImage src={selectedDoctor.image} />
                 <AvatarFallback>{selectedDoctor.name[0]}</AvatarFallback>
               </Avatar>
-              Booking with{" "}
-              <span className="text-foreground">{selectedDoctor.name}</span>
-            </div>
+              <span className="text-foreground text-sm font-semibold">
+                {selectedDoctor.name}
+              </span>
+            </Button>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left: Services */}
             <div className="lg:col-span-1 space-y-4">
-              <h3 className="font-semibold">Appointment Type</h3>
+              <h3 className="font-medium text-sm text-muted-foreground">
+                Appointment Type
+              </h3>
               <div className="space-y-3">
                 {(SERVICES[selectedDoctor.specialty] || []).map((service) => (
                   <Card
                     key={service.id}
                     onClick={() => setSelectedService(service)}
-                    className={`p-4 rounded-lg border cursor-pointer transition-all flex flex-row justify-between items-center ${
+                    className={`p-4 rounded-lg border cursor-pointer hover:shadow-md transition-all flex flex-row justify-between items-center ${
                       selectedService?.id === service.id
-                        ? "border-primary bg-primary/10"
-                        : "hover:border-primary/20 hover:bg-primary/5"
+                        ? "border-primary bg-primary/5 shadow-md"
+                        : "hover:border-primary/50 border-border"
                     }`}
                   >
                     <div>
@@ -273,9 +281,12 @@ export function BookAppointment() {
             <div className="lg:col-span-2 space-y-8">
               {/* Date Scroller */}
               <div>
-                <h3 className="font-semibold mb-4">Available Dates</h3>
+                <h3 className="font-semibold mb-4">
+                  Available Dates{" "}
+                  {selectedDate ? `(${selectedDate.toDateString()})` : null}
+                </h3>
                 <div className="relative group">
-                  <div className="overflow-x-auto pb-4 flex gap-3 snap-x hide-scrollbar px-1">
+                  <div className="overflow-x-auto pb-4 flex gap-3 snap-x px-1">
                     {calendarDates.map((date, idx) => {
                       const isSelected =
                         selectedDate?.toDateString() === date.toDateString();

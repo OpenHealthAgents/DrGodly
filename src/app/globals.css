@@ -7,6 +7,7 @@
   --breakpoint-3xl: 110rem;
   --breakpoint-xxs: 310px;
   --breakpoint-xs: 420px;
+
   --color-success: hsl(142.1 70.6% 45.3%);
   --color-success-foreground: hsl(144.9 80.4% 10%);
 
@@ -132,44 +133,31 @@
   --progress-bar: #e4e4e7;
 }
 
-/* Medical Theme - Light (Teal) */
 [data-theme="teal-light"] {
   --radius: 0.5rem;
-
-  /* neutrals match shadcn's light baseline */
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.141 0.005 285.823);
-
-  /* teal accents */
-  --primary: oklch(0.488 0.243 196); /* deep teal */
+  --primary: oklch(0.488 0.243 196);
   --primary-foreground: oklch(0.97 0.014 254.604);
-
-  /* subdued surfaces (neutral) */
   --secondary: oklch(0.967 0.001 286.375);
   --secondary-foreground: oklch(0.21 0.006 285.885);
   --muted: oklch(0.967 0.001 286.375);
   --muted-foreground: oklch(0.552 0.016 285.938);
   --accent: oklch(0.967 0.001 286.375);
   --accent-foreground: oklch(0.21 0.006 285.885);
-
   --destructive: oklch(0.577 0.245 27.325);
-
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.708 0 0);
-
-  /* chart palette (teal family) */
+  --border: oklch(0.93 0.02 196);
+  --input: oklch(0.93 0.02 196);
+  --ring: oklch(0.65 0.12 196);
   --chart-1: oklch(0.809 0.105 191);
   --chart-2: oklch(0.623 0.214 196);
   --chart-3: oklch(0.546 0.245 198);
   --chart-4: oklch(0.488 0.243 200);
   --chart-5: oklch(0.424 0.199 205);
-
-  /* sidebar */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.141 0.005 285.823);
   --sidebar-primary: oklch(0.546 0.245 196);
@@ -177,49 +165,35 @@
   --sidebar-accent: oklch(0.967 0.001 286.375);
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.708 0 0);
-
-  --progress-bar: #0d9488; /* teal-600 */
+  --sidebar-ring: oklch(0.65 0.12 196);
+  --progress-bar: #0d9488;
 }
 
-/* Medical Theme - Dark (Teal) */
 [data-theme="teal-dark"] {
   --radius: 0.5rem;
-
-  /* neutrals match shadcn's dark baseline */
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.21 0.006 285.885);
   --popover-foreground: oklch(0.985 0 0);
-
-  /* teal accents */
   --primary: oklch(0.488 0.243 196);
   --primary-foreground: oklch(0.97 0.014 254.604);
-
-  /* subdued surfaces (neutral) */
   --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.274 0.006 286.033);
   --muted-foreground: oklch(0.705 0.015 286.067);
   --accent: oklch(0.274 0.006 286.033);
   --accent-foreground: oklch(0.985 0 0);
-
   --destructive: oklch(0.704 0.191 22.216);
-
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-
-  /* chart palette (teal family) */
+  --border: oklch(0.28 0.02 196);
+  --input: oklch(0.32 0.02 196);
+  --ring: oklch(0.56 0.12 196);
   --chart-1: oklch(0.809 0.105 191);
   --chart-2: oklch(0.623 0.214 196);
   --chart-3: oklch(0.546 0.245 198);
   --chart-4: oklch(0.488 0.243 200);
   --chart-5: oklch(0.424 0.199 205);
-
-  /* sidebar */
   --sidebar: oklch(0.21 0.006 285.885);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.623 0.214 196);
@@ -227,9 +201,8 @@
   --sidebar-accent: oklch(0.274 0.006 286.033);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.439 0 0);
-
-  --progress-bar: #2dd4bf; /* teal-400 */
+  --sidebar-ring: oklch(0.56 0.12 196);
+  --progress-bar: #2dd4bf;
 }
 
 [data-theme="red-light"] {
@@ -539,7 +512,7 @@
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.92 0.004 286.32);
   --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.708 0 0);
+  --ring: oklch(0.488 0.243 264.376);
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
@@ -552,7 +525,7 @@
   --sidebar-accent: oklch(0.967 0.001 286.375);
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: oklch(0.488 0.243 264.376);
   --progress-bar: #2563eb;
 }
 
@@ -575,7 +548,7 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: oklch(0.488 0.243 264.376);
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
@@ -588,7 +561,7 @@
   --sidebar-accent: oklch(0.274 0.006 286.033);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.439 0 0);
+  --sidebar-ring: oklch(0.488 0.243 264.376);
   --progress-bar: #60a5fa;
 }
 

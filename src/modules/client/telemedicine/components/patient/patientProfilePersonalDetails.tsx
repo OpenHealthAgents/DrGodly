@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Form,
@@ -27,7 +27,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { FieldGroup } from "@/components/ui/field";
@@ -46,19 +46,52 @@ import {
   FormSelect,
   FormTextarea,
 } from "@/modules/shared/custom-form-fields";
+import { TPatientWithPersonalProfile } from "@/modules/shared/entities/models/telemedicine/patientProfile";
+import { toast } from "sonner";
+import { useServerAction } from "zsa-react";
+import { createorUpdatePatientPersonalDetails } from "../../server-actions/patientProfile-actions";
+
+type TUser = {
+  id: string;
+  name: string;
+  username?: string | null;
+  currentOrgId?: string | null;
+};
 
 interface PersonalDetailsStepProps {
-  data?: TPatientPersonalDetails;
+  data: TPatientWithPersonalProfile | null;
+  errorMessage?: string;
+  user: TUser;
 }
 
 export function PatientProfilePersonalDetails({
   data,
+  errorMessage,
+  user,
 }: PersonalDetailsStepProps) {
   const [open, setOpen] = useState(false);
 
+  const { execute, isPending } = useServerAction(
+    createorUpdatePatientPersonalDetails,
+    {
+      onSuccess() {
+        toast.success(
+          `Personal details ${
+            data?.personal?.id ? "updated" : "created"
+          } successfully.`
+        );
+      },
+      onError({ err }) {
+        toast.error("Error!", {
+          description: err.message,
+        });
+      },
+    }
+  );
+
   const form = useForm<TPatientPersonalDetails>({
     resolver: zodResolver(PatientPersonalDetailsSchema),
-    defaultValues: data || {
+    defaultValues: data?.personal ?? {
       name: "",
       dateOfBirth: undefined,
 
@@ -77,9 +110,33 @@ export function PatientProfilePersonalDetails({
     },
   });
 
-  const handleSubmit = (values: TPatientPersonalDetails) => {
-    console.log(values);
+  const handleSubmit = async (values: TPatientPersonalDetails) => {
+    if (!data?.id) return;
+
+    let id: string | null;
+
+    if (data?.personal?.id) {
+      id = data?.personal?.id;
+    } else {
+      id = null;
+    }
+
+    await execute({
+      patientId: data?.id,
+      orgId: user.currentOrgId!,
+      id,
+      operationBy: user.id,
+      ...values,
+    });
   };
+
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error("Error!", {
+        description: errorMessage,
+      });
+    }
+  }, [errorMessage]);
 
   return (
     <Form {...form}>
@@ -198,7 +255,11 @@ export function PatientProfilePersonalDetails({
               <FormItem>
                 <FormLabel>Mobile *</FormLabel>
                 <FormControl>
-                  <Input placeholder="+91 1234567890" {...field} />
+                  <Input
+                    placeholder="+91 1234567890"
+                    {...field}
+                    value={field.value ?? ""}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -234,6 +295,7 @@ export function PatientProfilePersonalDetails({
                     type="email"
                     placeholder="example@email.com"
                     {...field}
+                    value={field.value ?? ""}
                   />
                 </FormControl>
                 <FormMessage />
@@ -385,8 +447,13 @@ export function PatientProfilePersonalDetails({
           />
         </FieldGroup>
 
-        <Button size="sm" className="w-fit self-end">
-          Create Profile
+        <Button
+          size="sm"
+          className="w-fit self-end"
+          disabled={isPending || !!errorMessage}
+        >
+          {isPending && <Loader2 className="animate-spin" />}
+          {data?.personal ? "Update" : "Create"} Profile
         </Button>
       </form>
     </Form>

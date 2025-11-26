@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import DoctorProfileAndRegister from "@/modules/client/telemedicine/components/step-form/doctor/step-form";
-import { getDoctorDataById } from "@/modules/client/telemedicine/server-actions/doctorProfile-actions/doctorProfile-actions";
+import { getDoctorDataById } from "@/modules/client/telemedicine/server-actions/doctorProfile-actions";
 import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
 import { notFound } from "next/navigation";
 

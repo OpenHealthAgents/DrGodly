@@ -1,5 +1,5 @@
 import { DoctorsProfileListTable } from "@/modules/client/telemedicine/components/tables/application-admin/doctors-profile-list-table";
-import { getAllDoctorsData } from "@/modules/client/telemedicine/server-actions/doctorProfile-actions/doctorProfile-actions";
+import { getAllDoctorsData } from "@/modules/client/telemedicine/server-actions/doctorProfile-actions";
 import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
 
 async function TelemedicineAdminManageDoctorsPage() {

@@ -6,7 +6,7 @@ import type { ZSAError } from "zsa";
 import { useTranslations } from "next-intl";
 import { TDoctorDatas } from "@/modules/shared/entities/models/telemedicine/doctorProfile";
 import { useServerAction } from "zsa-react";
-import { createDoctorInitialProfile } from "../../../server-actions/doctorProfile-actions/doctorProfile-actions";
+import { createDoctorInitialProfile } from "../../../server-actions/doctorProfile-actions";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
 import { Loader2, Plus } from "lucide-react";

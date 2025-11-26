@@ -39,7 +39,7 @@ const RootNavBarPage = ({
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2 text-primary">
@@ -47,7 +47,8 @@ const RootNavBarPage = ({
                 <Activity className="w-5 h-5" />
               </div>
               <span className="text-2xl font-bold text-foreground tracking-tight">
-                HealthCare
+                {/* HealthCare */}
+                DrGodly
               </span>
             </Link>
 

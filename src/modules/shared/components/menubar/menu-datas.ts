@@ -1,4 +1,5 @@
 import {
+  BriefcaseMedical,
   Building,
   CalendarClock,
   CalendarPlus,
@@ -7,7 +8,9 @@ import {
   LayoutDashboard,
   Palette,
   Settings,
+  Settings2,
   ShieldUser,
+  Stethoscope,
   UserCog,
   UserRoundCog,
   Wrench,
@@ -114,6 +117,33 @@ export const telemedicineSidebarData = {
           url: "/bezs/telemedicine/doctor",
           icon: LayoutDashboard,
         },
+        {
+          title: "Professional Settings",
+          icon: Stethoscope,
+          items: [
+            {
+              title: "Services",
+              url: "/bezs/telemedicine/doctor/settings/services",
+              icon: BriefcaseMedical,
+            },
+            {
+              title: "Availability",
+              url: "/bezs/telemedicine/doctor/settings/availability",
+              icon: CalendarClock,
+            },
+          ],
+        },
+        {
+          title: "Settings",
+          icon: Settings2,
+          items: [
+            {
+              title: "Profile",
+              url: "/bezs/telemedicine/doctor/settings/profile",
+              icon: UserCog,
+            },
+          ],
+        },
       ],
     },
     {
@@ -131,7 +161,7 @@ export const telemedicineSidebarData = {
         },
         {
           title: "Book Appointment",
-          url: "/bezs/telemedicine/patient/appointments/book-appointment",
+          url: "/bezs/telemedicine/patient/appointments/book",
           icon: CalendarPlus,
         },
         {
@@ -141,26 +171,26 @@ export const telemedicineSidebarData = {
         },
       ],
     },
-    {
-      title: "Others",
-      items: [
-        {
-          title: "Settings",
-          icon: Settings,
-          items: [
-            {
-              title: "Profile",
-              url: "/bezs/telemedicine/doctor/profile",
-              icon: UserCog,
-            },
-            {
-              title: "Availability",
-              url: "/bezs/telemedicine/doctor/availability",
-              icon: CalendarClock,
-            },
-          ],
-        },
-      ],
-    },
+    // {
+    //   title: "Others",
+    //   items: [
+    //     {
+    //       title: "Settings",
+    //       icon: Settings,
+    //       items: [
+    //         {
+    //           title: "Profile",
+    //           url: "/bezs/telemedicine/doctor/profile",
+    //           icon: UserCog,
+    //         },
+    //         {
+    //           title: "Availability",
+    //           url: "/bezs/telemedicine/doctor/availability",
+    //           icon: CalendarClock,
+    //         },
+    //       ],
+    //     },
+    //   ],
+    // },
   ],
 };

@@ -1,6 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  CreateDoctorServiceModal,
+  DeleteDoctorServiceModal,
+} from "../modals/doctor";
 
 export const DoctorModalProvider = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -11,5 +15,10 @@ export const DoctorModalProvider = () => {
 
   if (!isMounted) return null;
 
-  return <></>;
+  return (
+    <>
+      <CreateDoctorServiceModal />
+      <DeleteDoctorServiceModal />
+    </>
+  );
 };

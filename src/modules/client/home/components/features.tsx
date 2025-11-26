@@ -24,7 +24,7 @@ const itemVariants = {
   visible: {
     y: 0,
     opacity: 1,
-    transition: { duration: 0.5, ease: "easeOut" },
+    transition: { duration: 0.5, ease: "easeOut" as const },
   },
 };
 
@@ -77,7 +77,7 @@ function LangingPageFeatures() {
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
           variants={itemVariants}

@@ -194,26 +194,98 @@ export const DOCTORS: Doctor[] = [
 
 export const SERVICES: Record<string, Service[]> = {
   Dentist: [
-    { id: "d1", name: "Regular Checkup", duration: 60, price: 120 },
-    { id: "d2", name: "Teeth Cleaning", duration: 45, price: 90 },
-    { id: "d3", name: "Consultation", duration: 30, price: 75 },
-    { id: "d4", name: "Emergency Visit", duration: 30, price: 150 },
+    {
+      id: "d1",
+      name: "Regular Checkup",
+      duration: 60,
+      price: 120,
+      supportedModes: ["INPERSON"],
+    },
+    {
+      id: "d2",
+      name: "Teeth Cleaning",
+      duration: 45,
+      price: 90,
+      supportedModes: ["INPERSON"],
+    },
+    {
+      id: "d3",
+      name: "Consultation",
+      duration: 30,
+      price: 75,
+      supportedModes: ["INPERSON", "VIRTUAL"],
+    },
+    {
+      id: "d4",
+      name: "Emergency Visit",
+      duration: 30,
+      price: 150,
+      supportedModes: ["INPERSON"],
+    },
   ],
   Dermatologist: [
-    { id: "s1", name: "Skin Consultation", duration: 30, price: 150 },
-    { id: "s2", name: "Acne Treatment", duration: 45, price: 200 },
+    {
+      id: "s1",
+      name: "Skin Consultation",
+      duration: 30,
+      price: 150,
+      supportedModes: ["INPERSON"],
+    },
+    {
+      id: "s2",
+      name: "Acne Treatment",
+      duration: 45,
+      price: 200,
+      supportedModes: ["INPERSON"],
+    },
   ],
   Cardiologist: [
-    { id: "c1", name: "Initial Consultation", duration: 60, price: 300 },
-    { id: "c2", name: "Follow-up", duration: 30, price: 150 },
+    {
+      id: "c1",
+      name: "Initial Consultation",
+      duration: 60,
+      price: 300,
+      supportedModes: ["INPERSON", "VIRTUAL"],
+    },
+    {
+      id: "c2",
+      name: "Follow-up",
+      duration: 30,
+      price: 150,
+      supportedModes: ["INPERSON", "VIRTUAL"],
+    },
   ],
   Pediatrician: [
-    { id: "p1", name: "Wellness Check", duration: 30, price: 100 },
-    { id: "p2", name: "Sick Visit", duration: 30, price: 120 },
+    {
+      id: "p1",
+      name: "Wellness Check",
+      duration: 30,
+      price: 100,
+      supportedModes: ["INPERSON"],
+    },
+    {
+      id: "p2",
+      name: "Sick Visit",
+      duration: 30,
+      price: 120,
+      supportedModes: ["INPERSON"],
+    },
   ],
   Orthopedist: [
-    { id: "o1", name: "Injury Assessment", duration: 45, price: 250 },
-    { id: "o2", name: "Physical Therapy Intro", duration: 60, price: 180 },
+    {
+      id: "o1",
+      name: "Injury Assessment",
+      duration: 45,
+      price: 250,
+      supportedModes: ["INPERSON"],
+    },
+    {
+      id: "o2",
+      name: "Physical Therapy Intro",
+      duration: 60,
+      price: 180,
+      supportedModes: ["INPERSON"],
+    },
   ],
 };
 

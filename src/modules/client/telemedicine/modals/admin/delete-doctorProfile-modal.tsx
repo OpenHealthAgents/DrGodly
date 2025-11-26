@@ -14,7 +14,7 @@ import { useAdminModalStore } from "../../stores/admin-modal-store";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useServerAction } from "zsa-react";
-import { deleteDoctorProfile } from "../../server-actions/doctorProfile-actions/doctorProfile-actions";
+import { deleteDoctorProfile } from "../../server-actions/doctorProfile-actions";
 
 export const DeleteDoctorProfileModal = () => {
   const closeModal = useAdminModalStore((state) => state.onClose);

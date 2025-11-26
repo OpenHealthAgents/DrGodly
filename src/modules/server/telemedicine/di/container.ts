@@ -3,8 +3,12 @@ import { Container } from "inversify";
 import { DI_RETURN_TYPES, DI_SYMBOLS } from "./types";
 import {
   AbdmServiceModule,
+  AppointmentModule,
   DoctorProfileModule,
+  DoctorServiceModule,
   PatientProfileModule,
+  IdResolverRepositoryModule,
+  OrgAccessCheckRepositoryModule,
 } from "./modules";
 
 const TelemedicineContainer = new Container({ defaultScope: "Singleton" });
@@ -13,6 +17,10 @@ const initializeContainer = () => {
   TelemedicineContainer.load(DoctorProfileModule);
   TelemedicineContainer.load(AbdmServiceModule);
   TelemedicineContainer.load(PatientProfileModule);
+  TelemedicineContainer.load(AppointmentModule);
+  TelemedicineContainer.load(DoctorServiceModule);
+  TelemedicineContainer.load(IdResolverRepositoryModule);
+  TelemedicineContainer.load(OrgAccessCheckRepositoryModule);
 };
 
 initializeContainer();

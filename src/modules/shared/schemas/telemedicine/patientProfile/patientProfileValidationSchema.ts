@@ -108,3 +108,8 @@ export const PatientProfileCreateOrUpdateValidationSchema = z
 export type TPatientProfileCreateValidation = z.infer<
   typeof PatientProfileCreateOrUpdateValidationSchema
 >;
+
+export const GetPatientWithPersonalProfileSchema = z.object({
+  orgId: z.string(),
+  userId: z.string(),
+});
