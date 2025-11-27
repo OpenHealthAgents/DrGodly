@@ -1,6 +1,7 @@
+import { TService } from "@/modules/shared/entities/models/telemedicine/service";
 import { create } from "zustand";
 
-export type ModalType = "addService" | "deleteService";
+export type ModalType = "addService" | "deleteService" | "editService";
 
 interface DoctoeStore {
   type: ModalType | null;
@@ -8,6 +9,7 @@ interface DoctoeStore {
   userId?: string;
   orgId?: string;
   serviceId?: string;
+  serviceData?: TService;
   doctorData?: any;
   appointmentData?: any;
   trigger: number;
@@ -19,6 +21,7 @@ interface DoctoeStore {
     userId?: string;
     orgId?: string;
     serviceId?: string;
+    serviceData?: TService;
     doctorData?: any;
     appointmentData?: any;
   }) => void;
@@ -35,8 +38,9 @@ const _useDoctoeModalStore = create<DoctoeStore>((set) => ({
     serviceId = undefined,
     orgId = undefined,
     userId = undefined,
-    doctorData = null,
-    appointmentData = null,
+    serviceData = undefined,
+    doctorData = undefined,
+    appointmentData = undefined,
   }) =>
     set({
       isOpen: true,
@@ -44,6 +48,7 @@ const _useDoctoeModalStore = create<DoctoeStore>((set) => ({
       userId,
       orgId,
       serviceId,
+      serviceData,
       doctorData,
       appointmentData,
     }),
@@ -56,8 +61,9 @@ const _useDoctoeModalStore = create<DoctoeStore>((set) => ({
       serviceId: undefined,
       userId: undefined,
       orgId: undefined,
-      doctorData: null,
-      appointmentData: null,
+      serviceData: undefined,
+      doctorData: undefined,
+      appointmentData: undefined,
     }),
   incrementTrigger: () => set((state) => ({ trigger: state.trigger + 1 })),
   incrementInModalTrigger: () =>

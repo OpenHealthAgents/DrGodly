@@ -56,7 +56,14 @@ function ServicesCard({ row, user }: TServiceCardProps) {
             <DropdownMenuContent align="start" side="left">
               <DropdownMenuItem
                 className="cursor-pointer"
-                // onClick={}
+                onClick={() =>
+                  openModal({
+                    type: "editService",
+                    serviceData: data,
+                    userId: user.id,
+                    orgId: user.orgId,
+                  })
+                }
               >
                 <PencilLine />
                 Edit

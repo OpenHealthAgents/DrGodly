@@ -54,6 +54,16 @@ enum AppointmentMode {
     INPERSON
 }
 
+enum DayOfWeek {
+    SUNDAY
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+}
+
 // ───────────────────────────
 // ROOT DOCTOR
 // ───────────────────────────
@@ -71,12 +81,13 @@ model Doctor {
     isCompleted         Boolean @default(false)
     isABDMDoctorProfile Boolean @default(false)
 
-    personal      DoctorPersonalDetail?
-    qualification DoctorQualification?
-    workDetail    DoctorWorkDetail?
-    concent       DoctorConcent?
-    appointments  Appointment[]
-    services      Service[]
+    personal             DoctorPersonalDetail?
+    qualification        DoctorQualification?
+    workDetail           DoctorWorkDetail?
+    concent              DoctorConcent?
+    appointments         Appointment[]
+    services             Service[]
+    weeklyAvailabilities WeeklyAvailability[]
 
     createdBy String?
     updatedBy String?
@@ -346,6 +357,39 @@ model Service {
     updatedAt DateTime @updatedAt
 
     @@unique([orgId, doctorId, name])
+}
+
+model WeeklyAvailability {
+    id        String  @id @default(uuid())
+    orgId     String
+    dayOfWeek String
+    isEnabled Boolean @default(false)
+
+    doctorId String
+    doctor   Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+    slots AvailabilitySlot[]
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([orgId, doctorId, dayOfWeek])
+}
+
+model AvailabilitySlot {
+    id                   String             @id @default(uuid())
+    orgId                String
+    start                String
+    end                  String
+    weeklyAvailabilityId String
+    weeklyAvailability   WeeklyAvailability @relation(fields: [weeklyAvailabilityId], references: [id], onDelete: Cascade)
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 ////////////////////////////////////////////////////////////

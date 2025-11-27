@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { AlertTriangleIcon, Loader2 } from "lucide-react";
 import { useServerAction } from "zsa-react";
 import { useDoctoeModalStore } from "../../stores/doctor-modal-store";
 import { deleteDoctorService } from "../../server-actions/doctorService-action";
@@ -56,13 +56,18 @@ export const DeleteDoctorServiceModal = () => {
   return (
     <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Delete App</DialogTitle>
-          <DialogDescription>
-            Deleting this service will permanently remove it from your service
-            list and related records.
-          </DialogDescription>
-        </DialogHeader>
+        <div className="flex items-start space-x-4">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100">
+            <AlertTriangleIcon className="h-6 w-6 text-red-600" />
+          </div>
+          <DialogHeader>
+            <DialogTitle>Delete Service</DialogTitle>
+            <DialogDescription>
+              Deleting this service will permanently remove it from your service
+              list and related records.
+            </DialogDescription>
+          </DialogHeader>
+        </div>
         <DialogFooter>
           <DialogClose asChild>
             <Button size="sm" variant="outline" disabled={isPending}>

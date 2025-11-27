@@ -5,3 +5,4 @@ export { AppointmentModule } from "./appointment.module";
 export { DoctorServiceModule } from "./doctorService.module";
 export { OrgAccessCheckRepositoryModule } from "./orgAccessCheck.repository..module";
 export { IdResolverRepositoryModule } from "./idResolver.repository..module";
+export { DoctorWeeklyAvailabilityModule } from "./doctorWeeklyAvailability.repository..module";

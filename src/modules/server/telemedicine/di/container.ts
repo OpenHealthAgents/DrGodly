@@ -9,6 +9,7 @@ import {
   PatientProfileModule,
   IdResolverRepositoryModule,
   OrgAccessCheckRepositoryModule,
+  DoctorWeeklyAvailabilityModule,
 } from "./modules";
 
 const TelemedicineContainer = new Container({ defaultScope: "Singleton" });
@@ -21,6 +22,7 @@ const initializeContainer = () => {
   TelemedicineContainer.load(DoctorServiceModule);
   TelemedicineContainer.load(IdResolverRepositoryModule);
   TelemedicineContainer.load(OrgAccessCheckRepositoryModule);
+  TelemedicineContainer.load(DoctorWeeklyAvailabilityModule);
 };
 
 initializeContainer();

@@ -37,10 +37,11 @@ import { cn } from "@/lib/utils";
 import { useDoctoeModalStore } from "../../stores/doctor-modal-store";
 import { FormInput, FormTextarea } from "@/modules/shared/custom-form-fields";
 import {
-  CreateDoctorServiceFormSchema,
-  TCreateDoctorServiceForm,
+  CreateDoctorServiceFormSchema as EditDoctorServiceFormSchema,
+  TCreateDoctorServiceForm as TEditDoctorServiceForm,
 } from "@/modules/shared/schemas/telemedicine/doctorService/doctorServiceValidationSchema";
-import { createDoctorService } from "../../server-actions/doctorService-action";
+import { EditDoctorService } from "../../server-actions/doctorService-action";
+import { useEffect } from "react";
 
 const currencies = ["USD", "INR", "EUR", "GBP"] as const;
 
@@ -90,17 +91,18 @@ function ModeTile({
   );
 }
 
-export const CreateDoctorServiceModal: React.FC = () => {
+export const EditDoctorServiceModal: React.FC = () => {
   const closeModal = useDoctoeModalStore((s) => s.onClose);
   const modalType = useDoctoeModalStore((s) => s.type);
   const isOpen = useDoctoeModalStore((s) => s.isOpen);
   const userId = useDoctoeModalStore((s) => s.userId);
   const orgId = useDoctoeModalStore((s) => s.orgId);
+  const serviceData = useDoctoeModalStore((s) => s.serviceData);
 
-  const isModalOpen = isOpen && modalType === "addService";
+  const isModalOpen = isOpen && modalType === "editService";
 
-  const form = useForm<TCreateDoctorServiceForm>({
-    resolver: zodResolver(CreateDoctorServiceFormSchema),
+  const form = useForm<TEditDoctorServiceForm>({
+    resolver: zodResolver(EditDoctorServiceFormSchema),
     defaultValues: {
       name: "",
       duration: 30,
@@ -112,13 +114,25 @@ export const CreateDoctorServiceModal: React.FC = () => {
     mode: "onTouched",
   });
 
+  useEffect(() => {
+    if (!isModalOpen || !serviceData || !userId || !orgId) return;
+    form.reset({
+      name: serviceData.name,
+      duration: serviceData.duration,
+      supportedModes: serviceData.supportedModes,
+      description: serviceData.description,
+      priceAmount: serviceData.priceAmount,
+      priceCurrency: serviceData.priceCurrency,
+    });
+  }, [form, isModalOpen, orgId, serviceData, userId]);
+
   const {
     formState: { isSubmitting },
   } = form;
 
-  const { execute } = useServerAction(createDoctorService, {
+  const { execute } = useServerAction(EditDoctorService, {
     onSuccess() {
-      toast.success("Service Created.");
+      toast.success("Service Updated.");
       handleCloseModal();
     },
     onError({ err }: any) {
@@ -151,8 +165,8 @@ export const CreateDoctorServiceModal: React.FC = () => {
     });
   };
 
-  async function onSubmit(values: TCreateDoctorServiceForm) {
-    if (!userId || !orgId) {
+  async function onSubmit(values: TEditDoctorServiceForm) {
+    if (!userId || !orgId || !serviceData) {
       toast.error("Unauthorized", {
         description: "User or Organization information is missing.",
       });
@@ -160,6 +174,7 @@ export const CreateDoctorServiceModal: React.FC = () => {
     }
 
     await execute({
+      id: serviceData?.id,
       userId,
       orgId,
       operationBy: userId,
@@ -173,9 +188,9 @@ export const CreateDoctorServiceModal: React.FC = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <DialogHeader>
-              <DialogTitle>Create Service</DialogTitle>
+              <DialogTitle>Edit Service</DialogTitle>
               <DialogDescription>
-                Define the service details, price and supported modes.
+                Make changes to the service details and save.
               </DialogDescription>
             </DialogHeader>
 
@@ -205,7 +220,13 @@ export const CreateDoctorServiceModal: React.FC = () => {
                         <span className="text-red-400">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input type="number" min={1} step={1} {...field} />
+                        <Input
+                          type="number"
+                          min={1}
+                          step={1}
+                          {...field}
+                          placeholder="30..."
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -230,7 +251,7 @@ export const CreateDoctorServiceModal: React.FC = () => {
                                 const v = e.target.value;
                                 field.onChange(v === "" ? null : Number(v));
                               }}
-                              placeholder="110"
+                              placeholder="110..."
                             />
                           </FormControl>
                           <FormMessage />
@@ -243,7 +264,10 @@ export const CreateDoctorServiceModal: React.FC = () => {
                       name="priceCurrency"
                       render={({ field }) => (
                         <FormItem className="m-0">
-                          <Select onValueChange={field.onChange}>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value ?? undefined}
+                          >
                             <FormControl>
                               <SelectTrigger className="md:w-[110px]">
                                 <SelectValue placeholder="Select a Currency" />
