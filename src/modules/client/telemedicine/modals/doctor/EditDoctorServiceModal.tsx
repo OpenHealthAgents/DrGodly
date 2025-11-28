@@ -222,8 +222,8 @@ export const EditDoctorServiceModal: React.FC = () => {
                       <FormControl>
                         <Input
                           type="number"
-                          min={1}
-                          step={1}
+                          min={5}
+                          step={5}
                           {...field}
                           placeholder="30..."
                         />

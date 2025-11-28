@@ -1,5 +1,6 @@
 import { IAppointmentRepository } from "../application/repositories/appointmentRepository.interface";
 import { IDoctorProfileRepository } from "../application/repositories/doctorProfileRepository.interface";
+import { IDoctorRepository } from "../application/repositories/doctorRepository.interface";
 import { IDoctorServiceRepository } from "../application/repositories/doctorServiceRepository.interface";
 import { IDoctorWeeklyAvailabilityRepository } from "../application/repositories/doctorWeeklyAvailabilityRepository.interface";
 import { IIdResolverRepository } from "../application/repositories/idResolverRepository.interface";
@@ -18,6 +19,7 @@ export const DI_SYMBOLS = {
   IDoctorWeeklyAvailabilityRepository: Symbol.for(
     "IDoctorWeeklyAvailabilityRepository"
   ),
+  IDoctorRepository: Symbol.for("IDoctorRepository"),
 
   // Services
   IABDMService: Symbol.for("IABDMService"),
@@ -32,6 +34,7 @@ export interface DI_RETURN_TYPES {
   IOrgAccessCheckRepository: IOrgAccessCheckRepository;
   IIdResolverRepository: IIdResolverRepository;
   IDoctorWeeklyAvailabilityRepository: IDoctorWeeklyAvailabilityRepository;
+  IDoctorRepository: IDoctorRepository;
 
   // Services
   IABDMService: IABDMService;

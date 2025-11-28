@@ -205,7 +205,7 @@ export const CreateDoctorServiceModal: React.FC = () => {
                         <span className="text-red-400">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input type="number" min={1} step={1} {...field} />
+                        <Input type="number" min={5} step={5} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

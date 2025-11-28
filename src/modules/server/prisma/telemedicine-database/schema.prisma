@@ -64,6 +64,14 @@ enum DayOfWeek {
     SATURDAY
 }
 
+enum ReviewStatus {
+    PENDING // awaiting moderation
+    PUBLISHED // visible publicly
+    HIDDEN // hidden by admin/mod
+    REPORTED // flagged by users
+    DELETED // soft-deleted (kept for audit)
+}
+
 // ───────────────────────────
 // ROOT DOCTOR
 // ───────────────────────────
@@ -88,6 +96,11 @@ model Doctor {
     appointments         Appointment[]
     services             Service[]
     weeklyAvailabilities WeeklyAvailability[]
+    reviews              Review[]
+    authoredReplies      ReviewReply[]
+
+    ratingAverage Float? @default(0)
+    ratingCount   Int    @default(0)
 
     createdBy String?
     updatedBy String?
@@ -415,6 +428,7 @@ model Patient {
     vitals         Vital[]
     lifestyle      Lifestyle?
     appointments   Appointment[]
+    reviews        Review[]
 
     createdBy String?
     updatedBy String?
@@ -584,7 +598,8 @@ model Appointment {
     time            String
     status          AppointmentStatus @default(PENDING)
     type            String
-    price           String
+    price           Float?
+    priceCurrency   String?
     note            String?
     appointmentMode AppointmentMode
     virtualRoomId   String?           @unique
@@ -592,9 +607,92 @@ model Appointment {
     patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
     doctor  Doctor  @relation(fields: [doctorId], references: [id], onDelete: Cascade)
 
-    reason       String?
+    review Review?
+
+    cancelReason String?
     conversation Json?
     report       Json?
     created_at   DateTime @default(now())
     updated_at   DateTime @updatedAt
+}
+
+// ───────────────────────────
+// Doctor Reviews
+// ───────────────────────────
+model Review {
+    id    String @id @default(uuid())
+    orgId String
+
+    doctorId String
+    doctor   Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+    patientId String
+    patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+    // Optional, but recommended if the review is tied to a specific visit
+    appointmentId Int?         @unique
+    appointment   Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+
+    rating      Int // enforce 1..5 in app/service layer (DB CHECK not portable in Prisma)
+    title       String?
+    comment     String?
+    isAnonymous Boolean @default(false)
+
+    status         ReviewStatus @default(PUBLISHED)
+    reportedReason String?
+
+    // Basic engagement signals (optional)
+    helpfulCount Int @default(0)
+
+    // One optional reply from the doctor/clinic
+    reply ReviewReply[]
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    // Uncomment one of the following depending on your policy:
+
+    // 1) One review per (patient, doctor) across all time:
+    // @@unique([patientId, doctorId])
+
+    // 2) One review per (patient, doctor, appointment) – already enforced via unique appointmentId
+    // leave as-is if you want multiple reviews across different appointments
+
+    @@index([orgId, doctorId, status])
+}
+
+enum ReviewAuthorRole {
+    DOCTOR
+    ADMIN
+}
+
+model ReviewReply {
+    id    String @id @default(uuid())
+    orgId String
+
+    reviewId String
+    review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+    // who replied
+    authorRole   ReviewAuthorRole
+    authorUserId String // the userId who posted the reply (doctor user or admin user)
+
+    // optional fast path to doctor profile (null for admin replies)
+    authorDoctorId String?
+    authorDoctor   Doctor? @relation(fields: [authorDoctorId], references: [id], onDelete: SetNull)
+
+    message String
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // OPTIONAL: enforce at most one reply per role per review:
+    // @@unique([reviewId, authorRole])
+
+    @@index([reviewId])
+    @@index([authorRole])
+    @@index([authorDoctorId])
 }

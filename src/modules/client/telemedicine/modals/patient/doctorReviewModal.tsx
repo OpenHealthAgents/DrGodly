@@ -37,7 +37,9 @@ export const DoctorReviewModal = () => {
           <DialogHeader>
             <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-2 pr-8">
               <img
-                src={doctorData.image}
+                src={
+                  doctorData.image || "https://picsum.photos/seed/jane/200/200"
+                }
                 alt={doctorData.name}
                 className="w-12 h-12 rounded-full object-cover border"
               />

@@ -63,9 +63,10 @@ export const AppointmentSchema = z.object({
   patientId: z.string(),
   appointmentDate: z.date(),
   appointmentMode: AppointmentModeEnum,
-  price: z.string(),
+  price: z.number().positive().nullable(),
+  priceCurrency: z.string().nullable(),
   virtualRoomId: z.string().nullable(),
-  reason: z.string().nullable(),
+  cancelReason: z.string().nullable(),
   conversation: z.union([
     z.string(),
     z.number(),
@@ -101,8 +102,31 @@ export const BookAppointmentSchema = z.object({
   time: z.string(),
   status: AppointmentStatusEnum,
   type: z.string(),
-  price: z.string(),
+  price: z.number().positive().nullable(),
+  priceCurrency: z.string().nullable(),
   appointmentMode: AppointmentModeEnum,
   virtualRoomId: z.string().nullable(),
+  conversation: z.any().nullable(),
+  report: z.any().nullable(),
+  note: z.string().nullable(),
 });
 export type TBookAppointment = z.infer<typeof BookAppointmentSchema>;
+
+export const BookAppointmentUseCaseSchema = BookAppointmentSchema.omit({
+  patientId: true,
+  doctorId: true,
+  virtualRoomId: true,
+  status: true,
+  type: true,
+  price: true,
+  priceCurrency: true,
+}).extend(
+  z.object({
+    patientUserId: z.string(),
+    doctorUserId: z.string(),
+    serviceId: z.string(),
+  }).shape
+);
+export type TBookAppointmentUseCase = z.infer<
+  typeof BookAppointmentUseCaseSchema
+>;
