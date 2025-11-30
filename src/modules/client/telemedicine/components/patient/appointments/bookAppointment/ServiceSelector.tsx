@@ -1,13 +1,13 @@
 import React from "react";
-import { Service } from "./types";
+import { SelectedService, Service } from "./types";
 import { MapPin, Video, Info } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsTrigger, TabsList } from "@/components/ui/tabs";
+import { Tabs, TabsTrigger, TabsList } from "@/components/ui/tabs";
 
 interface ServiceSelectorProps {
   services: Service[];
   selectedServiceId: string | null;
-  onSelect: (server: Service) => void;
+  onSelect: (server: SelectedService) => void;
   formatCurrency: (amount: number, country: string, currency: string) => string;
 }
 
@@ -63,7 +63,16 @@ export const ServiceSelector = ({
           filteredServices.map((service) => (
             <Card
               key={service.id}
-              onClick={() => onSelect(service)}
+              onClick={() =>
+                onSelect({
+                  id: service.id,
+                  name: service.name,
+                  duration: service.duration,
+                  priceAmount: service.priceAmount,
+                  priceCurrency: service.priceCurrency,
+                  selectedMode: bookingMode,
+                })
+              }
               className={`p-4 rounded-lg border cursor-pointer hover:shadow-md transition-all flex flex-row justify-between items-center ${
                 selectedServiceId === service.id
                   ? "border-primary bg-primary/5 shadow-md"
@@ -83,7 +92,6 @@ export const ServiceSelector = ({
               </div>
               {service.priceAmount && service.priceCurrency && (
                 <div className="text-primary font-mono font-semibold">
-                  $
                   {formatCurrency(
                     service.priceAmount,
                     "en-US",

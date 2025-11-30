@@ -22,50 +22,57 @@ export async function bookAppointmentUseCase(
 
   const { patientUserId, doctorUserId, serviceId, ...rest } = createData;
 
-  const doctorId = await idResolverRepository.resolveDoctorIdByUserIdAndOrgId(
-    doctorUserId,
-    rest.orgId
-  );
+  if (!rest.orgId) throw new Error("Organization is required");
 
-  const patientId = await idResolverRepository.resolvePatientIdByUserIdAndOrgId(
-    patientUserId,
-    rest.orgId
-  );
+  const [doctorId, patientId] = await Promise.all([
+    idResolverRepository.resolveDoctorIdByUserIdAndOrgId(
+      doctorUserId,
+      rest.orgId
+    ),
+    idResolverRepository.resolvePatientIdByUserIdAndOrgId(
+      patientUserId,
+      rest.orgId
+    ),
+  ]);
 
-  if (!doctorId) {
-    throw new Error("Doctor not found");
-  }
-
-  if (!patientId) {
-    throw new Error("Patient not found");
-  }
-
-  let virtualRoomId: string | null = null;
-
-  if (rest.appointmentMode === "VIRTUAL") {
-    virtualRoomId = generateRoomId();
-  }
+  if (!doctorId) throw new Error("Doctor not found");
+  if (!patientId) throw new Error("Patient not found");
 
   const service = await doctorServiceRepository.getDoctorServiceByIds(
     serviceId,
     doctorId,
     rest.orgId
   );
+  if (!service) throw new Error("Service not found");
 
-  if (!service) {
-    throw new Error("Service not found");
+  if (!service.supportedModes.includes(rest.appointmentMode)) {
+    throw new Error("Appointment mode not supported");
   }
 
-  const data = await appointmentRepository.bookAppointment({
+  // [MANDATORY]: check scheduling conflicts before booking
+  // await appointmentRepository.assertAvailability({
+  //   orgId: rest.orgId,
+  //   doctorId,
+  //   start: rest.startsAt,
+  //   durationMins: service.duration,
+  // });
+
+  const virtualRoomId =
+    rest.appointmentMode === "VIRTUAL" ? generateRoomId() : null;
+
+  const payload = {
     ...rest,
     doctorId,
     patientId,
     virtualRoomId,
-    status: "PENDING",
+    status: "PENDING" as const,
     type: service.name,
     price: service.priceAmount,
     priceCurrency: service.priceCurrency,
-  });
+    userId: patientUserId,
+  };
+
+  const data = await appointmentRepository.bookAppointment(payload);
 
   return data;
 }

@@ -1,6 +1,6 @@
 import AiIntake from "@/modules/client/telemedicine/components/patient/AiIntake";
 import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
-import { preIntakeAppointmentPrompt } from "../../data/prompt";
+import { preIntakeAppointmentPrompt } from "../../../data/prompt";
 
 async function PatintAskAIPage() {
   const session = await getServerSession();

@@ -11,7 +11,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { TIME_SLOTS, SPECIALTIES } from "./data";
-import { Doctor, Service } from "./types";
+import { Doctor, SelectedService } from "./types";
 import { Button } from "@/components/ui/button";
 import { StepIndicator } from "./stepIndicator";
 import { DoctorCard } from "./doctorCard";
@@ -37,7 +37,7 @@ import type { ZSAError } from "zsa";
 import { toast } from "sonner";
 import { ServiceSelector } from "./ServiceSelector";
 import { useServerAction } from "zsa-react";
-import { bookAppointment } from "@/modules/client/telemedicine/server-actions/doctorAppointment-action";
+import { bookAppointment } from "@/modules/client/telemedicine/server-actions/appointment-action";
 import { TBookAppointmentValidation } from "@/modules/shared/schemas/telemedicine/doctorAppointment/doctorAppointmentValidationSchema";
 
 type TProps = {
@@ -55,7 +55,8 @@ export function BookAppointment({ doctorsData, error, user }: TProps) {
 
   // Selection State
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
-  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [selectedService, setSelectedService] =
+    useState<SelectedService | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
@@ -182,7 +183,15 @@ export function BookAppointment({ doctorsData, error, user }: TProps) {
         (!selectedService ||
           !availableServices.find((s) => s.id === selectedService.id))
       ) {
-        setSelectedService(availableServices[0]);
+        const firstService = availableServices[0];
+        setSelectedService({
+          id: firstService.id,
+          duration: firstService.duration,
+          name: firstService.name,
+          priceAmount: firstService.priceAmount,
+          priceCurrency: firstService.priceCurrency,
+          selectedMode: firstService.supportedModes[0] || "VIRTUAL",
+        });
       }
       setStep(2);
     } else if (step === 2 && selectedDate && selectedTime && selectedService) {
@@ -200,9 +209,7 @@ export function BookAppointment({ doctorsData, error, user }: TProps) {
       !selectedService ||
       !selectedDate ||
       !selectedTime ||
-      !selectedService.name ||
-      !selectedService.priceAmount ||
-      !selectedService.priceCurrency
+      !selectedService.name
     ) {
       toast.error("Please complete all appointment details before confirming.");
       return;
@@ -215,7 +222,7 @@ export function BookAppointment({ doctorsData, error, user }: TProps) {
       appointmentDate: selectedDate,
       time: selectedTime,
       serviceId: selectedService.id,
-      appointmentMode: "VIRTUAL",
+      appointmentMode: selectedService.selectedMode,
       conversation: null,
       report: null,
       note: null,
@@ -373,7 +380,9 @@ export function BookAppointment({ doctorsData, error, user }: TProps) {
               formatCurrency={formatCurrency}
               selectedServiceId={selectedService?.id || null}
               services={selectedDoctor?.services}
-              onSelect={(service: Service) => setSelectedService(service)}
+              onSelect={(service: SelectedService) =>
+                setSelectedService(service)
+              }
             />
 
             {/* Right: Date & Time */}

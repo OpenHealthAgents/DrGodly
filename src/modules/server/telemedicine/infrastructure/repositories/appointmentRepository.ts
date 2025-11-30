@@ -38,9 +38,17 @@ export class AppointmentRepository implements IAppointmentRepository {
           doctorId,
           orgId,
         },
+        omit: {
+          doctorId: true,
+          patientId: true,
+        },
         include: {
           patient: {
             omit: {
+              id: true,
+              patientId: true,
+              isABHAPatientProfile: true,
+              isCompleted: true,
               createdAt: true,
               updatedAt: true,
               updatedBy: true,
@@ -59,6 +67,12 @@ export class AppointmentRepository implements IAppointmentRepository {
           },
           doctor: {
             omit: {
+              doctorId: true,
+              id: true,
+              isABDMDoctorProfile: true,
+              registrationNumber: true,
+              registrationProvider: true,
+              isCompleted: true,
               createdAt: true,
               updatedAt: true,
               updatedBy: true,
@@ -134,9 +148,17 @@ export class AppointmentRepository implements IAppointmentRepository {
           patientId,
           orgId,
         },
+        omit: {
+          doctorId: true,
+          patientId: true,
+        },
         include: {
           patient: {
             omit: {
+              id: true,
+              patientId: true,
+              isABHAPatientProfile: true,
+              isCompleted: true,
               createdAt: true,
               updatedAt: true,
               updatedBy: true,
@@ -155,6 +177,12 @@ export class AppointmentRepository implements IAppointmentRepository {
           },
           doctor: {
             omit: {
+              doctorId: true,
+              id: true,
+              isABDMDoctorProfile: true,
+              registrationNumber: true,
+              registrationProvider: true,
+              isCompleted: true,
               createdAt: true,
               updatedAt: true,
               updatedBy: true,
@@ -223,10 +251,14 @@ export class AppointmentRepository implements IAppointmentRepository {
       },
     });
 
+    const { userId, ...rest } = appointmentData;
+
     try {
       const appointement = await prismaTelemedicine.appointment.create({
         data: {
-          ...appointmentData,
+          ...rest,
+          createdBy: userId,
+          updatedBy: userId,
         },
         include: {
           patient: {

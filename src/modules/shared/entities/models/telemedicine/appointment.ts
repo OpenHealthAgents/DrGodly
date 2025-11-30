@@ -30,24 +30,14 @@ const PatientPersonalSchema = z.object({
 
 // --- Doctor and Patient Schemas ---
 const DoctorSchema = z.object({
-  id: z.string(),
   orgId: z.string(),
   userId: z.string().nullable(),
-  doctorId: z.number(),
-  registrationNumber: z.string().nullable(),
-  registrationProvider: z.string().nullable(),
-  isCompleted: z.boolean(),
-  isABDMDoctorProfile: z.boolean(),
   personal: DoctorPersonalSchema.nullable(),
 });
 
 const PatientSchema = z.object({
-  id: z.string(),
   orgId: z.string(),
   userId: z.string(),
-  patientId: z.number(),
-  isCompleted: z.boolean(),
-  isABHAPatientProfile: z.boolean(),
   personal: PatientPersonalSchema.nullable(),
 });
 
@@ -59,8 +49,6 @@ export const AppointmentSchema = z.object({
   status: AppointmentStatusEnum,
   time: z.string(),
   note: z.string().nullable(),
-  doctorId: z.string(),
-  patientId: z.string(),
   appointmentDate: z.date(),
   appointmentMode: AppointmentModeEnum,
   price: z.number().positive().nullable(),
@@ -83,8 +71,8 @@ export const AppointmentSchema = z.object({
     z.array(z.any()),
     z.null(),
   ]),
-  created_at: z.date(),
-  updated_at: z.date(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
   doctor: DoctorSchema,
   patient: PatientSchema,
 });
@@ -95,6 +83,7 @@ export const AppointmentsSchema = z.array(AppointmentSchema);
 export type TAppointments = z.infer<typeof AppointmentsSchema>;
 
 export const BookAppointmentSchema = z.object({
+  userId: z.string(),
   patientId: z.string(),
   doctorId: z.string(),
   orgId: z.string(),
@@ -120,6 +109,7 @@ export const BookAppointmentUseCaseSchema = BookAppointmentSchema.omit({
   type: true,
   price: true,
   priceCurrency: true,
+  userId: true,
 }).extend(
   z.object({
     patientUserId: z.string(),

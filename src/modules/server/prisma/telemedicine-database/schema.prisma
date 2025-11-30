@@ -612,8 +612,11 @@ model Appointment {
     cancelReason String?
     conversation Json?
     report       Json?
-    created_at   DateTime @default(now())
-    updated_at   DateTime @updatedAt
+
+    createdBy String?
+    updatedBy String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 // ───────────────────────────

@@ -1,5 +1,17 @@
 import z from "zod";
 
+const IdSchema = z.object({
+  appointmentId: z
+    .string({ invalid_type_error: "AppointmentId must be a string" })
+    .min(1, "AppointmentId is required"),
+  userId: z
+    .string({ invalid_type_error: "UserId must be a string" })
+    .min(1, "UserId is required"),
+  orgId: z
+    .string({ invalid_type_error: "Organization ID must be a string" })
+    .min(1, "Organization ID is required"),
+});
+
 export const AppointmentModeEnum = z.enum(["VIRTUAL", "INPERSON"], {
   required_error: "Appointment mode is required.",
 });
@@ -19,3 +31,8 @@ export const BookAppointmentValidationSchema = z.object({
 export type TBookAppointmentValidation = z.infer<
   typeof BookAppointmentValidationSchema
 >;
+
+export const GetAppointmentValidationSchema = IdSchema.pick({
+  userId: true,
+  orgId: true,
+});

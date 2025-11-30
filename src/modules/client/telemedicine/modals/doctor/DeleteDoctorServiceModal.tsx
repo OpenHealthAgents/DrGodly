@@ -13,16 +13,16 @@ import {
 import { toast } from "sonner";
 import { AlertTriangleIcon, Loader2 } from "lucide-react";
 import { useServerAction } from "zsa-react";
-import { useDoctoeModalStore } from "../../stores/doctor-modal-store";
+import { useDoctorModalStore } from "../../stores/doctor-modal-store";
 import { deleteDoctorService } from "../../server-actions/doctorService-action";
 
 export const DeleteDoctorServiceModal = () => {
-  const closeModal = useDoctoeModalStore((s) => s.onClose);
-  const modalType = useDoctoeModalStore((s) => s.type);
-  const isOpen = useDoctoeModalStore((s) => s.isOpen);
-  const userId = useDoctoeModalStore((s) => s.userId);
-  const orgId = useDoctoeModalStore((s) => s.orgId);
-  const serviceId = useDoctoeModalStore((s) => s.serviceId);
+  const closeModal = useDoctorModalStore((s) => s.onClose);
+  const modalType = useDoctorModalStore((s) => s.type);
+  const isOpen = useDoctorModalStore((s) => s.isOpen);
+  const userId = useDoctorModalStore((s) => s.userId);
+  const orgId = useDoctorModalStore((s) => s.orgId);
+  const serviceId = useDoctorModalStore((s) => s.serviceId);
 
   const isModalOpen = isOpen && modalType === "deleteService";
 

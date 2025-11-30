@@ -35,7 +35,7 @@ import {
 } from "./types";
 import { Link } from "@/i18n/navigation";
 import { usePathname } from "@/i18n/navigation";
-import * as LucideIcons from "lucide-react";
+import IconComponent from "../DynamicLucideIcon";
 
 export function NavGroup({ title, items }: NavGroupProps) {
   const { state, isMobile } = useSidebar();
@@ -68,9 +68,6 @@ function NavBadge({ children }: { children: ReactNode }) {
 
 function SidebarMenuLink({ item, href }: { item: NavLink; href: string }) {
   const { setOpenMobile } = useSidebar();
-  const Icon =
-    LucideIcons[item?.icon as keyof typeof LucideIcons] ||
-    LucideIcons.LayoutGrid;
 
   return (
     <SidebarMenuItem>
@@ -81,7 +78,7 @@ function SidebarMenuLink({ item, href }: { item: NavLink; href: string }) {
       >
         <Link href={item.url} onClick={() => setOpenMobile(false)}>
           {/* {item.icon && <item.icon />} */}
-          {item.icon && <Icon />}
+          {item.icon && <IconComponent name={item.icon} />}
           <span>{item.title}</span>
           {item.badge && <NavBadge>{item.badge}</NavBadge>}
         </Link>
@@ -98,9 +95,6 @@ function SidebarMenuCollapsible({
   href: string;
 }) {
   const { setOpenMobile } = useSidebar();
-  const Icon =
-    LucideIcons[item?.icon as keyof typeof LucideIcons] ||
-    LucideIcons.LayoutGrid;
 
   return (
     <Collapsible
@@ -112,7 +106,7 @@ function SidebarMenuCollapsible({
         <CollapsibleTrigger asChild>
           <SidebarMenuButton tooltip={item.title}>
             {/* {item.icon && <item.icon />} */}
-            {item.icon && <Icon />}
+            {item.icon && <IconComponent name={item.icon} />}
             <span>{item.title}</span>
             {item.badge && <NavBadge>{item.badge}</NavBadge>}
             <ChevronRight className="ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 rtl:rotate-180" />
@@ -121,10 +115,6 @@ function SidebarMenuCollapsible({
         <CollapsibleContent className="CollapsibleContent">
           <SidebarMenuSub>
             {item.items.map((subItem) => {
-              const Icon =
-                LucideIcons[subItem?.icon as keyof typeof LucideIcons] ||
-                LucideIcons.LayoutGrid;
-
               return (
                 <SidebarMenuSubItem key={subItem.title}>
                   <SidebarMenuSubButton
@@ -136,7 +126,7 @@ function SidebarMenuCollapsible({
                       onClick={() => setOpenMobile(false)}
                     >
                       {/* {subItem.icon && <subItem.icon />} */}
-                      {subItem.icon && <Icon />}
+                      {subItem.icon && <IconComponent name={subItem.icon} />}
                       <span>{subItem.title}</span>
                       {subItem.badge && <NavBadge>{subItem.badge}</NavBadge>}
                     </Link>
@@ -158,10 +148,6 @@ function SidebarMenuCollapsedDropdown({
   item: NavCollapsible;
   href: string;
 }) {
-  const Icon =
-    LucideIcons[item?.icon as keyof typeof LucideIcons] ||
-    LucideIcons.LayoutGrid;
-
   return (
     <SidebarMenuItem>
       <DropdownMenu>
@@ -171,7 +157,7 @@ function SidebarMenuCollapsedDropdown({
             isActive={checkIsActive(href, item)}
           >
             {/* {item.icon && <item.icon />} */}
-            {item.icon && <Icon />}
+            {item.icon && <IconComponent name={item.icon} />}
             <span>{item.title}</span>
             {item.badge && <NavBadge>{item.badge}</NavBadge>}
             <ChevronRight className="ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -182,20 +168,24 @@ function SidebarMenuCollapsedDropdown({
             {item.title} {item.badge ? `(${item.badge})` : ""}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {item.items.map((sub) => (
-            <DropdownMenuItem key={`${sub.title}-${sub.url}`} asChild>
-              <Link
-                href={sub.url}
-                className={`${checkIsActive(href, sub) ? "bg-secondary" : ""}`}
-              >
-                {sub.icon && <sub.icon />}
-                <span className="max-w-52 text-wrap">{sub.title}</span>
-                {sub.badge && (
-                  <span className="ms-auto text-xs">{sub.badge}</span>
-                )}
-              </Link>
-            </DropdownMenuItem>
-          ))}
+          {item.items.map((sub) => {
+            return (
+              <DropdownMenuItem key={`${sub.title}-${sub.url}`} asChild>
+                <Link
+                  href={sub.url}
+                  className={`${
+                    checkIsActive(href, sub) ? "bg-secondary" : ""
+                  }`}
+                >
+                  {sub.icon && <IconComponent name={sub.icon} />}
+                  <span className="max-w-52 text-wrap">{sub.title}</span>
+                  {sub.badge && (
+                    <span className="ms-auto text-xs">{sub.badge}</span>
+                  )}
+                </Link>
+              </DropdownMenuItem>
+            );
+          })}
         </DropdownMenuContent>
       </DropdownMenu>
     </SidebarMenuItem>

@@ -15,6 +15,15 @@ export interface Service {
   supportedModes: ("VIRTUAL" | "INPERSON")[];
 }
 
+export interface SelectedService {
+  id: string;
+  name: string;
+  duration: number;
+  priceAmount: number | null;
+  priceCurrency: string | null;
+  selectedMode: "VIRTUAL" | "INPERSON";
+}
+
 export interface weeklyAvailability {
   id: string;
   dayOfWeek: string;

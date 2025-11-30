@@ -12,11 +12,7 @@ import { NavUser } from "../nav-user";
 import { AppTitle } from "./app-title";
 import { usePathname } from "@/i18n/navigation";
 import { OrgSwitcher } from "./org-switcher";
-import {
-  adminSidebarData,
-  homeSidebarData,
-  telemedicineSidebarData,
-} from "./menu-datas";
+import { homeSidebarData } from "./menu-datas";
 import { useSession } from "@/modules/client/auth/betterauth/auth-client";
 import { useEffect, useMemo, useState } from "react";
 import { getRolewiseAppMenuItems } from "./utils";
@@ -38,75 +34,71 @@ type TOrgs = {
   logo: string | null;
 }[];
 
-type MenuItemsStateType = {
-  name: string;
-  slug: string;
-  icon: string | null;
-  description: string;
-}[];
+const MENU_ITEMS = {
+  navGroups: [
+    {
+      title: "Menu Items",
+      items: [],
+    },
+  ],
+};
 
 export function AppSidebar({ user, orgs }: { user: TUser; orgs: TOrgs }) {
   const pathname = usePathname();
   const { data, isPending } = useSession();
 
-  const defaultMenuItems = useMemo(() => {
-    if (pathname === "/bezs") {
-      return homeSidebarData;
-    } else {
-      return {
-        navGroups: [
-          {
-            title: "Menu Items",
-            items: [],
-          },
-        ],
-      };
-    }
-  }, [pathname]);
-
-  const appSlug = pathname.split("/")[2];
-  const isHomeRoute = appSlug === "/bezs";
-  const [menuItems, setMenuItems] = useState<any>(defaultMenuItems);
+  const [menuItems, setMenuItems] = useState<any>(MENU_ITEMS);
   const [error, setError] = useState<string | null>(null);
 
-  // let sidebarData;
-  // if (pathname.startsWith("/bezs/admin")) {
-  //   sidebarData = adminSidebarData;
-  // } else if (pathname.includes("/bezs/telemedicine")) {
-  //   sidebarData = telemedicineSidebarData;
-  // } else {
-  //   sidebarData = homeSidebarData;
-  // }
+  const segments = pathname.split("/").filter(Boolean);
+  const appSlug = segments[1] ?? "";
+  const isHome = pathname === "/bezs" || pathname === "/bezs/";
 
   useEffect(() => {
-    if (!isPending) {
-      const rolewiseAppMenus = getRolewiseAppMenuItems(data?.userRBAC, appSlug);
-      const items: any = {
-        navGroups: [
-          {
-            title: "Menu Items",
-            items: [],
-          },
-        ],
-      };
-
-      if (pathname !== "/bezs") {
-        rolewiseAppMenus?.forEach((item) => {
-          items.navGroups[0].items.push({
-            title: item.name,
-            url: item.slug,
-            icon: item.icon,
-          });
-        });
-        setMenuItems(items);
-        if (rolewiseAppMenus?.length === 0 || !rolewiseAppMenus) {
-          setError("Failed to get menu data");
-        } else {
-          setError(null);
-        }
-      }
+    if (isHome) {
+      setError(null);
+      setMenuItems(homeSidebarData);
+      return;
     }
-  }, [isPending, appSlug, data]);
+
+    if (isPending) {
+      setMenuItems(MENU_ITEMS);
+      return;
+    }
+
+    const rolewiseAppMenus = getRolewiseAppMenuItems(data?.userRBAC, appSlug);
+
+    if (!rolewiseAppMenus || rolewiseAppMenus.length === 0) {
+      setError("Failed to get menu data");
+      setMenuItems({
+        navGroups: [{ title: "Menu Items", items: [] }],
+      });
+      return;
+    }
+
+    const items = {
+      navGroups: [
+        {
+          title: "Menu Items",
+          items: rolewiseAppMenus
+            .map((item) => {
+              if (item.icon === "" || !item.icon) {
+                return null;
+              }
+              return {
+                title: item.name,
+                url: item.slug,
+                icon: item.icon,
+              };
+            })
+            .filter((i) => Boolean(i)),
+        },
+      ],
+    };
+
+    setMenuItems(items);
+    setError(null);
+  }, [appSlug, isHome, isPending, data?.userRBAC]);
 
   return (
     <Sidebar collapsible="icon" side="left">
@@ -118,17 +110,15 @@ export function AppSidebar({ user, orgs }: { user: TUser; orgs: TOrgs }) {
         )}
       </SidebarHeader>
       <SidebarContent>
-        {error && <div>{error}</div>}
-        {!isHomeRoute && isPending && (
-          <div className="flex items-center gap-2 px-4 mt-4 text-sm">
+        {menuItems.navGroups.map((props: any) => (
+          <NavGroup key={props.title} {...props} />
+        ))}
+        {error && <div className="px-4 text-sm">{error}</div>}
+        {!isHome && !error && isPending && (
+          <div className="flex items-center gap-2 px-4 text-sm">
             <Loader2 className="animate-spin size-4" /> Loading...
           </div>
         )}
-        {!error &&
-          !isPending &&
-          menuItems.navGroups.map((props: any) => (
-            <NavGroup key={props.title} {...props} />
-          ))}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} isSidebar />

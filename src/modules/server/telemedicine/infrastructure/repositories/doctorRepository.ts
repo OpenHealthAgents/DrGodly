@@ -29,7 +29,7 @@ export class DoctorRepository /* implements IDoctorRepository */ {
 
     try {
       const doctors = await prismaTelemedicine.doctor.findMany({
-        where: { orgId },
+        where: { orgId, isCompleted: true },
         orderBy: [{ ratingAverage: "desc" }, { createdAt: "desc" }],
         omit: {
           createdAt: true,

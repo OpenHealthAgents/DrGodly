@@ -28,7 +28,7 @@ interface DoctoeStore {
   onClose: () => void;
 }
 
-const _useDoctoeModalStore = create<DoctoeStore>((set) => ({
+const _useDoctorModalStore = create<DoctoeStore>((set) => ({
   type: null,
   isOpen: false,
   trigger: 0,
@@ -70,5 +70,5 @@ const _useDoctoeModalStore = create<DoctoeStore>((set) => ({
     set((state) => ({ triggerInModal: state.triggerInModal + 1 })),
 }));
 
-export const useDoctoeModalStore = _useDoctoeModalStore;
-export const doctorModalStore = _useDoctoeModalStore;
+export const useDoctorModalStore = _useDoctorModalStore;
+export const doctorModalStore = _useDoctorModalStore;

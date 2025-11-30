@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DoctorReviewModal } from "../modals/patient";
+import {
+  DoctorReviewModal,
+  AppointmentViewDialog,
+  BookAppointmentModal,
+} from "../modals/patient";
 
 export const PatientModalProvider = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -15,6 +19,8 @@ export const PatientModalProvider = () => {
   return (
     <>
       <DoctorReviewModal />
+      <BookAppointmentModal />
+      <AppointmentViewDialog />
     </>
   );
 };

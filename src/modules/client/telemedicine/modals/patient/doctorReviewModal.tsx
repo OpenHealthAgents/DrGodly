@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -14,7 +13,7 @@ import { Star, User } from "lucide-react";
 import { useSession } from "@/modules/client/auth/betterauth/auth-client";
 import { usePatientModalStore } from "../../stores/patient-modal-store";
 
-export const DoctorReviewModal = () => {
+const DoctorReviewModal = () => {
   const session = useSession();
   const closeModal = usePatientModalStore((state) => state.onClose);
   const modalType = usePatientModalStore((state) => state.type);
@@ -116,3 +115,5 @@ export const DoctorReviewModal = () => {
     </Dialog>
   );
 };
+
+export { DoctorReviewModal };

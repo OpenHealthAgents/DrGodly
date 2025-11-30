@@ -34,7 +34,7 @@ import { Loader2, Stethoscope, Video, CheckCircle2 } from "lucide-react";
 import { useServerAction } from "zsa-react";
 import { FieldGroup } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
-import { useDoctoeModalStore } from "../../stores/doctor-modal-store";
+import { useDoctorModalStore } from "../../stores/doctor-modal-store";
 import { FormInput, FormTextarea } from "@/modules/shared/custom-form-fields";
 import {
   CreateDoctorServiceFormSchema as EditDoctorServiceFormSchema,
@@ -92,12 +92,12 @@ function ModeTile({
 }
 
 export const EditDoctorServiceModal: React.FC = () => {
-  const closeModal = useDoctoeModalStore((s) => s.onClose);
-  const modalType = useDoctoeModalStore((s) => s.type);
-  const isOpen = useDoctoeModalStore((s) => s.isOpen);
-  const userId = useDoctoeModalStore((s) => s.userId);
-  const orgId = useDoctoeModalStore((s) => s.orgId);
-  const serviceData = useDoctoeModalStore((s) => s.serviceData);
+  const closeModal = useDoctorModalStore((s) => s.onClose);
+  const modalType = useDoctorModalStore((s) => s.type);
+  const isOpen = useDoctorModalStore((s) => s.isOpen);
+  const userId = useDoctorModalStore((s) => s.userId);
+  const orgId = useDoctorModalStore((s) => s.orgId);
+  const serviceData = useDoctorModalStore((s) => s.serviceData);
 
   const isModalOpen = isOpen && modalType === "editService";
 
