@@ -44,9 +44,10 @@ enum AbnormalFlag {
 enum AppointmentStatus {
     PENDING
     SCHEDULED
+    RESCHEDULED
     CANCELLED
     COMPLETED
-    INPROGRESS
+    // INPROGRESS
 }
 
 enum AppointmentMode {
@@ -613,10 +614,45 @@ model Appointment {
     conversation Json?
     report       Json?
 
-    createdBy String?
-    updatedBy String?
+    createdBy         String?
+    updatedBy         String?
+    createdAt         DateTime           @default(now())
+    updatedAt         DateTime           @updatedAt
+    appointmentEvents AppointmentAudit[]
+}
+
+// model AppointmentActuals {}
+
+enum AppointmentEventKind {
+    RESCHEDULED
+    CANCELLED
+}
+
+enum AppointmentActorType {
+    PATIENT
+    DOCTOR
+    STAFF
+    SYSTEM
+}
+
+model AppointmentAudit {
+    id            Int         @id @default(autoincrement())
+    appointmentId Int
+    appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+
+    kind      AppointmentEventKind // RESCHEDULED | CANCELLED
+    actorType AppointmentActorType // who did it
+    actorId   String? // optional user id of actor
+    reason    String? // free text reason
+
+    // only used for RESCHEDULED
+    fromDateTime DateTime?
+    toDateTime   DateTime?
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@index([appointmentId, createdAt])
 }
 
 // ───────────────────────────

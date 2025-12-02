@@ -7,6 +7,7 @@ export const AppointmentStatusEnum = z.enum([
   "CANCELLED",
   "COMPLETED",
   "INPROGRESS",
+  "RESCHEDULED",
 ]);
 
 export const AppointmentModeEnum = z.enum(["VIRTUAL", "INPERSON"]);

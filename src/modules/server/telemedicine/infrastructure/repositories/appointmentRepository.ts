@@ -38,6 +38,9 @@ export class AppointmentRepository implements IAppointmentRepository {
           doctorId,
           orgId,
         },
+        orderBy: {
+          appointmentDate: "desc",
+        },
         omit: {
           doctorId: true,
           patientId: true,
