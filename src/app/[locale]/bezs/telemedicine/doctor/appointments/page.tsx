@@ -1,6 +1,6 @@
 import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
-import { getPatientAppointments } from "@/modules/client/telemedicine/server-actions/appointment-action";
-import AppointmentsTable from "@/modules/client/telemedicine/components/patient/appointments/listAppointments/AppointmentsTable";
+import { getDoctorAppointments } from "@/modules/client/telemedicine/server-actions/appointment-action";
+import AppointmentsTable from "@/modules/client/telemedicine/components/doctor/appointments/listAppointments/AppointmentsTable";
 import { redirect } from "@/i18n/navigation";
 import { getLocale } from "next-intl/server";
 
@@ -21,7 +21,7 @@ async function AppointmentsPage() {
     orgId: session.user?.currentOrgId,
   };
 
-  const [appointments, error] = await getPatientAppointments({
+  const [appointments, error] = await getDoctorAppointments({
     userId: user.id,
     orgId: user.orgId,
   });

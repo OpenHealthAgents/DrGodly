@@ -14,7 +14,7 @@ import { usePathname } from "@/i18n/navigation";
 import { OrgSwitcher } from "./org-switcher";
 import { homeSidebarData } from "./menu-datas";
 import { useSession } from "@/modules/client/auth/betterauth/auth-client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { getRolewiseAppMenuItems } from "./utils";
 import { Loader2 } from "lucide-react";
 
@@ -43,6 +43,8 @@ const MENU_ITEMS = {
   ],
 };
 
+const roleBasedApps = ["telemedicine", "admin", "filenest", "aihub"];
+
 export function AppSidebar({ user, orgs }: { user: TUser; orgs: TOrgs }) {
   const pathname = usePathname();
   const { data, isPending } = useSession();
@@ -52,7 +54,10 @@ export function AppSidebar({ user, orgs }: { user: TUser; orgs: TOrgs }) {
 
   const segments = pathname.split("/").filter(Boolean);
   const appSlug = segments[1] ?? "";
-  const isHome = pathname === "/bezs" || pathname === "/bezs/";
+  const isHome =
+    pathname === "/bezs" ||
+    pathname === "/bezs/" ||
+    !roleBasedApps.includes(appSlug);
 
   useEffect(() => {
     if (isHome) {

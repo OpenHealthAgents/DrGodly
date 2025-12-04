@@ -2,7 +2,13 @@ import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ProfileAvatar } from "@/modules/shared/components/ProfileAvatar";
 import { AppointmentStatusIndicator } from "../../../AppointmentStatusIndicator";
-import { CalendarClock, EllipsisVertical, Trash2, X } from "lucide-react";
+import {
+  CalendarClock,
+  Check,
+  EllipsisVertical,
+  Trash2,
+  X,
+} from "lucide-react";
 import { TanstackTableColumnSorting } from "@/modules/shared/components/table/tanstack-table-column-sorting";
 import {
   DropdownMenu,
@@ -143,7 +149,7 @@ export const appointmentColumn: ColumnDef<TAppointment>[] = [
               openModal({
                 type: "viewAppointment",
                 appointmentData,
-                patientOrDoctor: "PATIENT",
+                patientOrDoctor: "DOCTOR",
               })
             }
           >
@@ -159,6 +165,20 @@ export const appointmentColumn: ColumnDef<TAppointment>[] = [
               <EllipsisVertical />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" side="left">
+              {(status === "PENDING" || status === "RESCHEDULED") && (
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() =>
+                    openModal({
+                      type: "confirmAppointment",
+                      appointmentData,
+                    })
+                  }
+                >
+                  <Check />
+                  Confirm
+                </DropdownMenuItem>
+              )}
               {(status === "PENDING" ||
                 status === "RESCHEDULED" ||
                 status === "SCHEDULED") && (
@@ -209,7 +229,7 @@ export const appointmentColumn: ColumnDef<TAppointment>[] = [
               appointmentData.status === "RESCHEDULED") && (
               <Link
                 className={cn(buttonVariants({ size: "sm" }), "rounded-full")}
-                href={`/bezs/telemedicine/patient/appointments/online-consultation?appointmentId=${appointmentData.id}`}
+                href={`/bezs/telemedicine/doctor/appointments/online-consultation?appointmentId=${appointmentData.id}`}
               >
                 Consult Online
               </Link>

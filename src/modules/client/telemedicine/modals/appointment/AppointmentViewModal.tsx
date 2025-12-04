@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Dialog,
@@ -7,10 +7,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogClose
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   CalendarDays,
   Clock,
@@ -19,26 +19,31 @@ import {
   CreditCard,
   MapPin,
   ClipboardList,
-  FileText
-} from "lucide-react"
-import { format } from "date-fns"
-import { useSession } from "@/modules/client/auth/betterauth/auth-client"
-import { usePatientModalStore } from "../../stores/patient-modal-store"
-import { AppointmentStatusIndicator } from "../../components/AppointmentStatusIndicator"
+  FileText,
+} from "lucide-react";
+import { format } from "date-fns";
+import { useSession } from "@/modules/client/auth/betterauth/auth-client";
+import { useAppointmentModalStore } from "../../stores/appointment-modal-store";
+import { AppointmentStatusIndicator } from "../../components/AppointmentStatusIndicator";
 
-export function AppointmentViewDialog() {
-  const session = useSession()
-  const closeModal = usePatientModalStore(state => state.onClose)
-  const modalType = usePatientModalStore(state => state.type)
-  const isOpen = usePatientModalStore(state => state.isOpen)
-  const appointment = usePatientModalStore(state => state.appointmentData)
+export function AppointmentViewModal() {
+  const session = useSession();
+  const closeModal = useAppointmentModalStore((state) => state.onClose);
+  const modalType = useAppointmentModalStore((state) => state.type);
+  const isOpen = useAppointmentModalStore((state) => state.isOpen);
+  const appointment = useAppointmentModalStore(
+    (state) => state.appointmentData
+  );
+  const patientOrDoctor = useAppointmentModalStore(
+    (state) => state.patientOrDoctor
+  );
 
-  const isModalOpen = isOpen && modalType === "viewAppointment"
+  const isModalOpen = isOpen && modalType === "viewAppointment";
 
-  if (!session || !isModalOpen) return null
+  if (!session || !isModalOpen) return null;
 
   function handleCloseModal() {
-    closeModal()
+    closeModal();
   }
 
   if (!appointment) {
@@ -51,8 +56,13 @@ export function AppointmentViewDialog() {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-    )
+    );
   }
+
+  const cancelledBy =
+    appointment.cancelledBy === patientOrDoctor
+      ? "You"
+      : appointment.cancelledBy ?? "UNKNOWN";
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
@@ -69,20 +79,15 @@ export function AppointmentViewDialog() {
         {/* Header Row */}
         <div className="mt-2 flex items-center justify-between">
           <h3 className="text-xl font-semibold">{appointment.type}</h3>
-          {/*<Badge
-            className="px-3 py-1 text-sm capitalize"
-            variant={
-              appointment.status === "COMPLETED"
-                ? "default"
-                : appointment.status === "PENDING"
-                  ? "outline"
-                  : "destructive"
-            }
-          >
-            {appointment.status}
-          </Badge>*/}
           <AppointmentStatusIndicator status={appointment.status} />
         </div>
+
+        {appointment.status === "CANCELLED" && (
+          <div className="text-muted-foreground">
+            <p>Cancelled by {cancelledBy}</p>
+            <p>Reason: {appointment.cancelReason ?? "Not Specified"}</p>
+          </div>
+        )}
 
         <Separator className="my-4" />
 
@@ -171,5 +176,5 @@ export function AppointmentViewDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

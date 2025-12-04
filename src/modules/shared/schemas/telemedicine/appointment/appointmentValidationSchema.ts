@@ -24,8 +24,6 @@ export const BookAppointmentValidationSchema = z.object({
   time: z.string({ required_error: "Appointment time is required." }),
   serviceId: z.string({ required_error: "Service ID is required." }),
   appointmentMode: AppointmentModeEnum,
-  conversation: z.any().nullable(),
-  report: z.any().nullable(),
   note: z.string().nullable(),
 });
 export type TBookAppointmentValidation = z.infer<
@@ -36,3 +34,36 @@ export const GetAppointmentValidationSchema = IdSchema.pick({
   userId: true,
   orgId: true,
 });
+
+export const RescheduleAppointmentValidationSchema = z.object({
+  orgId: z.string({ required_error: "Organization ID is required." }),
+  userId: z.string({ required_error: "User ID is required." }),
+  appointmentId: z.string({ required_error: "Appointment ID is required." }),
+  time: z.string({ required_error: "Appointment time is required." }),
+  appointmentDate: z.date({ required_error: "Appointment date is required." }),
+});
+export type TRescheduleAppointmentValidation = z.infer<
+  typeof RescheduleAppointmentValidationSchema
+>;
+
+export const CancelAppointmentValidationSchema = IdSchema.pick({
+  userId: true,
+  orgId: true,
+  appointmentId: true,
+}).extend(
+  z.object({
+    cancelReason: z.string().nullable(),
+  }).shape
+);
+export type TCancelAppointmentValidation = z.infer<
+  typeof CancelAppointmentValidationSchema
+>;
+
+export const DeleteAppointmentValidationSchema = z.object({
+  orgId: z.string({ required_error: "Organization ID is required." }),
+  userId: z.string({ required_error: "User ID is required." }),
+  appointmentId: z.string({ required_error: "Appointment ID is required." }),
+});
+export type TDeleteAppointmentValidation = z.infer<
+  typeof DeleteAppointmentValidationSchema
+>;

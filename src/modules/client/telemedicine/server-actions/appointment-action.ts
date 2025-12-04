@@ -2,16 +2,29 @@
 
 import {
   bookAppointmentController,
+  cancelAppointmentController,
+  confirmAppointmentController,
+  deleteAppointmentController,
+  getAppointmentForOnlineConsultationController,
   getAppointmentsForDoctorController,
   getAppointmentsForPatientController,
+  rescheduleAppointmentController,
   TBookAppointmentControllerOutput,
+  TCancelAppointmentControllerOutput,
+  TConfirmAppointmentControllerOutput,
+  TDeleteAppointmentControllerOutput,
+  TGetAppointmentForOnlineConsultationControllerOutput,
   TGetAppointmentsForDoctorControllerOutput,
   TGetAppointmentsForPatientControllerOutput,
+  TRescheduleAppointmentControllerOutput,
 } from "@/modules/server/telemedicine/interface-adapters/controllers/appointment";
 import {
   BookAppointmentValidationSchema,
+  CancelAppointmentValidationSchema,
+  DeleteAppointmentValidationSchema,
   GetAppointmentValidationSchema,
-} from "@/modules/shared/schemas/telemedicine/doctorAppointment/doctorAppointmentValidationSchema";
+  RescheduleAppointmentValidationSchema,
+} from "@/modules/shared/schemas/telemedicine/appointment/appointmentValidationSchema";
 import { withMonitoring } from "@/modules/shared/utils/serverActionWithMonitoring";
 import { createServerAction } from "zsa";
 
@@ -47,6 +60,74 @@ export const getDoctorAppointments = createServerAction()
       () => getAppointmentsForDoctorController(input),
       {
         operationErrorMessage: "Failed to get appointments.",
+      }
+    );
+  });
+
+export const getAppointmentForOnlineConsultation = createServerAction()
+  .input(DeleteAppointmentValidationSchema, { skipInputParsing: true })
+  .handler(async ({ input }) => {
+    return await withMonitoring<TGetAppointmentForOnlineConsultationControllerOutput>(
+      "getAppointmentForOnlineConsultation",
+      () => getAppointmentForOnlineConsultationController(input),
+      {
+        operationErrorMessage: "Failed to get appointment.",
+      }
+    );
+  });
+
+export const rescheduleAppointment = createServerAction()
+  .input(RescheduleAppointmentValidationSchema, { skipInputParsing: true })
+  .handler(async ({ input }) => {
+    return await withMonitoring<TRescheduleAppointmentControllerOutput>(
+      "rescheduleAppointment",
+      () => rescheduleAppointmentController(input),
+      {
+        revalidatePath: true,
+        url: "/bezs/telemedicine/patient/appointments",
+        operationErrorMessage: "Failed to reschedule appointment.",
+      }
+    );
+  });
+
+export const cancelAppointment = createServerAction()
+  .input(CancelAppointmentValidationSchema, { skipInputParsing: true })
+  .handler(async ({ input }) => {
+    return await withMonitoring<TCancelAppointmentControllerOutput>(
+      "cancelAppointment",
+      () => cancelAppointmentController(input),
+      {
+        revalidatePath: true,
+        url: "/bezs/telemedicine/patient/appointments",
+        operationErrorMessage: "Failed to cancel appointment.",
+      }
+    );
+  });
+
+export const deleteAppointment = createServerAction()
+  .input(DeleteAppointmentValidationSchema, { skipInputParsing: true })
+  .handler(async ({ input }) => {
+    return await withMonitoring<TDeleteAppointmentControllerOutput>(
+      "deleteAppointment",
+      () => deleteAppointmentController(input),
+      {
+        revalidatePath: true,
+        url: "/bezs/telemedicine/patient/appointments",
+        operationErrorMessage: "Failed to delete appointment.",
+      }
+    );
+  });
+
+export const confirmAppointment = createServerAction()
+  .input(DeleteAppointmentValidationSchema, { skipInputParsing: true })
+  .handler(async ({ input }) => {
+    return await withMonitoring<TConfirmAppointmentControllerOutput>(
+      "deleteAppointment",
+      () => confirmAppointmentController(input),
+      {
+        revalidatePath: true,
+        url: "/bezs/telemedicine/patient/appointments",
+        operationErrorMessage: "Failed to confirm appointment.",
       }
     );
   });

@@ -38,7 +38,8 @@ import { toast } from "sonner";
 import { ServiceSelector } from "./ServiceSelector";
 import { useServerAction } from "zsa-react";
 import { bookAppointment } from "@/modules/client/telemedicine/server-actions/appointment-action";
-import { TBookAppointmentValidation } from "@/modules/shared/schemas/telemedicine/doctorAppointment/doctorAppointmentValidationSchema";
+import { TBookAppointmentValidation } from "@/modules/shared/schemas/telemedicine/appointment/appointmentValidationSchema";
+import { DateScroller } from "../../../DateScroll";
 
 type TProps = {
   doctorsData: TGetDoctorsByOrgOutput | null;
@@ -223,14 +224,10 @@ export function BookAppointment({ doctorsData, error, user }: TProps) {
       time: selectedTime,
       serviceId: selectedService.id,
       appointmentMode: selectedService.selectedMode,
-      conversation: null,
-      report: null,
       note: null,
     };
 
     const [, bookAppointmentError] = await execute(data);
-
-    console.log(bookAppointmentError);
 
     if (bookAppointmentError) return;
 
@@ -369,7 +366,7 @@ export function BookAppointment({ doctorsData, error, user }: TProps) {
                 <AvatarFallback>{selectedDoctor.name[0]}</AvatarFallback>
               </Avatar>
               <span className="text-foreground text-sm font-semibold">
-                {selectedDoctor.name}
+                Dr. {selectedDoctor.name}
               </span>
             </Button>
           </div>
@@ -393,43 +390,11 @@ export function BookAppointment({ doctorsData, error, user }: TProps) {
                   Available Dates{" "}
                   {selectedDate ? `(${selectedDate.toDateString()})` : null}
                 </h3>
-                <div className="relative group">
-                  <div className="overflow-x-auto pb-4 flex gap-3 snap-x px-1">
-                    {calendarDates.map((date, idx) => {
-                      const isSelected =
-                        selectedDate?.toDateString() === date.toDateString();
-                      const isToday =
-                        new Date().toDateString() === date.toDateString();
-
-                      return (
-                        <Button
-                          variant={isSelected ? "default" : "outline"}
-                          key={idx}
-                          onClick={() => setSelectedDate(date)}
-                          className={`flex-shrink-0 h-fit snap-start w-26 p-2 rounded-lg border flex flex-col items-center justify-center gap-1 transition-all`}
-                        >
-                          <span
-                            className={`text-xs font-bold uppercase text-muted-foreground ${
-                              isSelected && "text-primary-foreground"
-                            }`}
-                          >
-                            {isToday
-                              ? "Today"
-                              : date.toLocaleDateString("en-US", {
-                                  weekday: "short",
-                                })}
-                          </span>
-                          <span className={`text-lg`}>
-                            {date.toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </span>
-                        </Button>
-                      );
-                    })}
-                  </div>
-                </div>
+                <DateScroller
+                  dates={calendarDates}
+                  onSelect={setSelectedDate}
+                  selectedDate={selectedDate}
+                />
               </div>
 
               {/* Time Grid */}

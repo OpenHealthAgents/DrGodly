@@ -1,6 +1,6 @@
 import { InputParseError } from "../../../../../shared/entities/errors/commonError";
 import { TAppointment } from "../../../../../shared/entities/models/telemedicine/appointment";
-import { BookAppointmentValidationSchema } from "../../../../../shared/schemas/telemedicine/doctorAppointment/doctorAppointmentValidationSchema";
+import { BookAppointmentValidationSchema } from "../../../../../shared/schemas/telemedicine/appointment/appointmentValidationSchema";
 import { bookAppointmentUseCase } from "../../../application/useCases/appointment/bookAppointment.useCase";
 
 function presenter(data: TAppointment) {

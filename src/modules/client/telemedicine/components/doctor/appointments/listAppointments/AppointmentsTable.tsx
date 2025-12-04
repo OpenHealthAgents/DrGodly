@@ -3,9 +3,8 @@
 import DataTable from "@/modules/shared/components/table/data-table";
 import { IAppointmentTableProps } from "./types";
 import { appointmentColumn } from "./appointmentColumn";
-import { usePatientModalStore } from "@/modules/client/telemedicine/stores/patient-modal-store";
 import { EmptyState } from "@/modules/shared/components/EmptyState";
-import { CalendarPlus, Plus } from "lucide-react";
+import { CalendarPlus } from "lucide-react";
 
 const APPOINTMENT_STATUS = [
   "PENDING",
@@ -16,8 +15,6 @@ const APPOINTMENT_STATUS = [
 ];
 
 function AppointmentsTable({ appointments, error }: IAppointmentTableProps) {
-  const openModal = usePatientModalStore((state) => state.onOpen);
-
   if (error) {
     return (
       <EmptyState
@@ -35,14 +32,7 @@ function AppointmentsTable({ appointments, error }: IAppointmentTableProps) {
       <EmptyState
         icon={<CalendarPlus />}
         title="No Appointments Yet"
-        description="You have no scheduled appointments. Create a new one to get started."
-        buttonLabel="Book Appointment"
-        buttonIcon={<Plus />}
-        buttonOnClick={() => {
-          openModal({
-            type: "bookAppointment",
-          });
-        }}
+        description="You have no scheduled appointments."
         error={error}
       />
     );
@@ -54,19 +44,13 @@ function AppointmentsTable({ appointments, error }: IAppointmentTableProps) {
       data={appointments ?? []}
       dataSize={appointments?.length ?? 0}
       label={"Your Appointments"}
-      addLabelName={"Book Appointment"}
-      searchField="doctor"
       filterField="status"
+      isAddButton={false}
       filterValues={APPOINTMENT_STATUS}
       fallbackText={
         (appointments?.length === 0 && "No Appointments Found") ||
-        "create appointment"
+        "No Appointments"
       }
-      openModal={() => {
-        openModal({
-          type: "bookAppointment",
-        });
-      }}
     />
   );
 }

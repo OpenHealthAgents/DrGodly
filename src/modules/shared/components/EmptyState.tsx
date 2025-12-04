@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { AlertCircle, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -10,35 +10,58 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { ZSAError } from "zsa";
+import { useRouter } from "@/i18n/navigation";
 
 interface EmptyDataProps {
   icon: React.ReactNode;
   title: string;
   description: string;
   buttonIcon?: React.ReactNode;
-  buttonLabel: string;
+  buttonLabel?: string;
   buttonOnClick?: () => void;
+  error?: ZSAError | null;
 }
 
 export function EmptyState(props: EmptyDataProps) {
+  const router = useRouter();
+  const { error } = props;
+
   return (
     <Empty className="border-2 border-dashed">
       <EmptyHeader>
-        <EmptyMedia variant="icon">{props.icon}</EmptyMedia>
-        <EmptyTitle>{props.title}</EmptyTitle>
-        <EmptyDescription>{props.description}</EmptyDescription>
+        <EmptyMedia variant="icon">
+          {error ? <AlertCircle className="text-red-400" /> : props.icon}
+        </EmptyMedia>
+        <EmptyTitle>{error ? "An Error Occurred!" : props.title}</EmptyTitle>
+        <EmptyDescription>
+          {error ? error.message : props.description}
+        </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button
-          onClick={() => {
-            if (props.buttonOnClick) {
-              props.buttonOnClick();
-            }
-          }}
-        >
-          {props.buttonIcon || <Plus />}
-          {props.buttonLabel}
-        </Button>
+        {error ? (
+          <Button
+            onClick={() => {
+              router.refresh();
+            }}
+          >
+            <RefreshCw />
+            Reload
+          </Button>
+        ) : (
+          props.buttonLabel && (
+            <Button
+              onClick={() => {
+                if (props.buttonOnClick) {
+                  props.buttonOnClick();
+                }
+              }}
+            >
+              {props.buttonIcon ?? <Plus />}
+              {props.buttonLabel ?? "Action"}
+            </Button>
+          )
+        )}
       </EmptyContent>
     </Empty>
   );

@@ -6,7 +6,6 @@ export const AppointmentStatusEnum = z.enum([
   "SCHEDULED",
   "CANCELLED",
   "COMPLETED",
-  "INPROGRESS",
   "RESCHEDULED",
 ]);
 
@@ -42,9 +41,18 @@ const PatientSchema = z.object({
   personal: PatientPersonalSchema.nullable(),
 });
 
+const AppointmentActual = z.object({
+  id: z.number(),
+  orgId: z.string(),
+  appointmentId: z.string(),
+  intakeConversation: z.any().nullable(),
+  intakeReport: z.any().nullable(),
+  virtualConversation: z.any().nullable(),
+});
+
 // --- Main Appointment Schema ---
 export const AppointmentSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   orgId: z.string(),
   type: z.string(),
   status: AppointmentStatusEnum,
@@ -56,24 +64,10 @@ export const AppointmentSchema = z.object({
   priceCurrency: z.string().nullable(),
   virtualRoomId: z.string().nullable(),
   cancelReason: z.string().nullable(),
-  conversation: z.union([
-    z.string(),
-    z.number(),
-    z.boolean(),
-    z.record(z.any()),
-    z.array(z.any()),
-    z.null(),
-  ]),
-  report: z.union([
-    z.string(),
-    z.number(),
-    z.boolean(),
-    z.record(z.any()),
-    z.array(z.any()),
-    z.null(),
-  ]),
+  cancelledBy: z.enum(["PATIENT", "DOCTOR"]).nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
+  appointmentActual: AppointmentActual.nullable(),
   doctor: DoctorSchema,
   patient: PatientSchema,
 });
@@ -96,8 +90,8 @@ export const BookAppointmentSchema = z.object({
   priceCurrency: z.string().nullable(),
   appointmentMode: AppointmentModeEnum,
   virtualRoomId: z.string().nullable(),
-  conversation: z.any().nullable(),
-  report: z.any().nullable(),
+  // conversation: z.any().nullable(),
+  // report: z.any().nullable(),
   note: z.string().nullable(),
 });
 export type TBookAppointment = z.infer<typeof BookAppointmentSchema>;
@@ -121,3 +115,75 @@ export const BookAppointmentUseCaseSchema = BookAppointmentSchema.omit({
 export type TBookAppointmentUseCase = z.infer<
   typeof BookAppointmentUseCaseSchema
 >;
+
+export const RescheduleAppointmentSchema = BookAppointmentSchema.pick({
+  userId: true,
+  orgId: true,
+  appointmentDate: true,
+  time: true,
+}).extend(
+  z.object({
+    actorType: z.enum(["PATIENT", "DOCTOR"]),
+    appointmentId: z.string(),
+    fromDate: z.date(),
+    fromTime: z.string(),
+  }).shape
+);
+export type TRescheduleAppointment = z.infer<
+  typeof RescheduleAppointmentSchema
+>;
+
+export const RescheduleAppointmentUseCaseSchema =
+  RescheduleAppointmentSchema.pick({
+    appointmentId: true,
+    userId: true,
+    orgId: true,
+    appointmentDate: true,
+    time: true,
+  });
+export type TRescheduleAppointmentUseCase = z.infer<
+  typeof RescheduleAppointmentUseCaseSchema
+>;
+
+export const CancelAppointmentSchema = z.object({
+  userId: z.string(),
+  orgId: z.string(),
+  actorType: z.enum(["PATIENT", "DOCTOR"]),
+  appointmentId: z.string(),
+  cancelReason: z.string().nullable(),
+});
+export type TCancelAppointment = z.infer<typeof CancelAppointmentSchema>;
+
+export const CancelAppointmentUseCaseSchema = CancelAppointmentSchema.pick({
+  appointmentId: true,
+  userId: true,
+  orgId: true,
+  cancelReason: true,
+});
+export type TCancelAppointmentUseCase = z.infer<
+  typeof CancelAppointmentUseCaseSchema
+>;
+
+export const confirmAppointmentUseCaseSchema = z.object({
+  appointmentId: z.string(),
+  userId: z.string(),
+  orgId: z.string(),
+});
+export type TConfirmAppointmentUseCase = z.infer<
+  typeof confirmAppointmentUseCaseSchema
+>;
+
+export const GetAppointmentByIdsSchema = z.object({
+  patientId: z.string(),
+  doctorId: z.string(),
+  orgId: z.string(),
+  id: z.string(),
+  appointmentDate: z.date(),
+  time: z.string(),
+  status: AppointmentStatusEnum,
+  isDoctorDeleted: z.boolean(),
+  isPatientDeleted: z.boolean(),
+  type: z.string(),
+  appointmentMode: z.enum(["VIRTUAL", "INPERSON"]),
+});
+export type TGetAppointmentByIds = z.infer<typeof GetAppointmentByIdsSchema>;
