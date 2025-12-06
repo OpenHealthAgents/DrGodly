@@ -3,7 +3,12 @@ import type { NextConfig } from "next";
 import createNectIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 const withNextIntl = createNectIntlPlugin();

@@ -1,84 +1,99 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import {
-  LiveKitRoom,
-  GridLayout,
-  ParticipantTile,
-  ControlBar,
-} from "@livekit/components-react";
-import { Room } from "livekit-client";
+import { useEffect, useState } from "react";
+import { LiveKitRoom } from "@livekit/components-react";
+import { toast } from "sonner";
+import { RoomControlUI } from "./RoomControl";
 import { TranscriptPanel } from "./TranscriptionPanel";
 
-export default function ConsultPage({
+type Transcript = {
+  name: string;
+  text: string;
+  timestamp: string;
+};
+
+export default function Consult({
   roomId,
   participant,
 }: {
   roomId: string;
-  participant: { name?: string; role?: "doctor" | "patient" };
+  participant: { name?: string };
 }) {
-  const [token, setToken] = useState<string | null>(null);
-  const [url, setUrl] = useState<string | null>(null);
-  const [roomObj, setRoomObj] = useState<Room | null>(null);
-
-  const identity = useMemo(
-    () =>
-      `${participant?.role ?? "patient"}-${Math.random()
-        .toString(36)
-        .slice(2, 8)}`,
-    [participant?.role]
-  );
+  const [token, setToken] = useState("");
+  const [isEnded, setIsEnded] = useState(false);
+  const [transcripts, setTranscripts] = useState<Transcript[]>([]);
 
   useEffect(() => {
-    const join = async () => {
-      const res = await fetch("/api/token", {
-        method: "POST",
-        body: JSON.stringify({
-          roomName: roomId,
-          identity,
-          name:
-            participant?.name ??
-            (participant?.role === "doctor" ? "Doctor" : "Patient"),
-          isDoctor: participant?.role === "doctor",
-        }),
-      });
-      const json = await res.json();
-      setToken(json.token);
-      setUrl(json.url);
-    };
-    join();
-  }, [roomId, identity, participant?.name, participant?.role]);
+    (async () => {
+      try {
+        const resp = await fetch("/api/livekit-token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ roomId, name: participant.name }),
+        });
+        const data = await resp.json();
+        setToken(data.token);
+      } catch (e) {
+        console.error(e);
+        toast.error("Something went wrong");
+      }
+    })();
+  }, [roomId, participant.name]);
 
-  if (!token || !url) return <div className="p-6">Connecting…</div>;
+  if (!token) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-950 text-white">
+        Getting token...
+      </div>
+    );
+  }
+
+  const onLeave = () => {
+    setIsEnded(true);
+  };
+
+  function captureTranscript(transcript: Transcript) {
+    setTranscripts((prev) => [...prev, transcript]);
+  }
 
   return (
-    <div className="h-screen w-full flex">
-      <div className="flex-1 flex flex-col">
-        <LiveKitRoom
-          token={token}
-          serverUrl={url}
-          connect={true}
-          onConnected={(room) => setRoomObj(room)}
-          audio={true}
-          video={true}
-        >
-          <div className="flex-1 p-3">
-            <GridLayout
-              tracks={"camera"}
-              style={{ height: "calc(100vh - 140px)" }}
+    <LiveKitRoom
+      video={true}
+      audio={true}
+      token={token}
+      serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
+      data-lk-theme="default"
+      style={{ height: "100vh" }}
+      onDisconnected={onLeave}
+      className="bg-gray-950"
+    >
+      <>
+        <div className="flex flex-col h-full w-full">
+          {/* Top Bar */}
+          <div className="h-14 bg-gray-900 border-b border-gray-800 flex items-center justify-between px-4">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-white">Room:</span>
+              <span className="text-indigo-400 font-mono">{roomId}</span>
+            </div>
+            <button
+              onClick={() => {
+                onLeave();
+              }}
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors"
             >
-              <ParticipantTile />
-            </GridLayout>
+              Leave
+            </button>
           </div>
-          <div className="p-3">
-            <ControlBar />
+          <div className="flex-1 flex overflow-hidden">
+            <RoomControlUI />
+            <TranscriptPanel
+              roomId={roomId}
+              transcripts={transcripts}
+              setTranscripts={captureTranscript}
+            />
           </div>
-        </LiveKitRoom>
-      </div>
-
-      <div className="hidden md:block w-96 p-3">
-        <TranscriptPanel room={roomObj} />
-      </div>
-    </div>
+        </div>
+      </>
+    </LiveKitRoom>
   );
 }
