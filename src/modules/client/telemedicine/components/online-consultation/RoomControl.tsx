@@ -22,7 +22,7 @@ export function RoomControlUI() {
   );
 
   return (
-    <div className="flex-1 bg-gray-950 relative p-4">
+    <div className="flex-1 relative">
       <GridLayout tracks={tracks}>
         <ParticipantTile />
       </GridLayout>

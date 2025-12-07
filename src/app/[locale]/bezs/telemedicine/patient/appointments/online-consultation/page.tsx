@@ -3,7 +3,7 @@ import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
 import { redirect } from "@/i18n/navigation";
 import { getAppointmentForOnlineConsultation } from "@/modules/client/telemedicine/server-actions/appointment-action";
 import { getLocale } from "next-intl/server";
-import Consult from "@/modules/client/telemedicine/components/online-consultation/Consult";
+import Consult from "@/modules/client/telemedicine/components/patient/online-consultation/Consult";
 
 const PatientOnlineConsultationPage = async (
   props: PageProps<"/[locale]/bezs/telemedicine/patient/appointments/online-consultation">
@@ -34,13 +34,27 @@ const PatientOnlineConsultationPage = async (
   }
 
   const participant = {
-    name: `${data?.doctor.personal?.fullName} (Patient)` || "Patient",
+    name: `${data?.patient.personal?.name} (Patient)` || "Patient",
+  };
+
+  const details = {
+    doctor: {
+      name: data.doctor.personal?.fullName,
+      speciality: "unknown",
+    },
+    patient: {
+      name: data.patient.personal?.name,
+    },
   };
 
   return (
     <>
       <div>
-        <Consult participant={participant} roomId={data.virtualRoomId!} />
+        <Consult
+          participant={participant}
+          roomId={data.virtualRoomId!}
+          details={details}
+        />
       </div>
     </>
   );
