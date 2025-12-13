@@ -1,14 +1,10 @@
 "use client";
 
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { SelectItem } from "@/components/ui/select";
 import { FolderOpen, Loader2 } from "lucide-react";
-import {
-  CreateOrUpdateLocalStorageFormSchema,
-  TCreateOrUpdateLocalStorageFormSchema,
-} from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+import { TCreateOrUpdateLocalStorageFormSchema } from "@/modules/shared/schemas/filenest/adminValidationSchemas";
 import {
   FormInput,
   FormSelect,
@@ -32,34 +28,25 @@ import {
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 
 interface LocalStorageFormProps {
-  onSubmit: (data: TCreateOrUpdateLocalStorageFormSchema) => void;
+  onSubmit: (data: TCreateOrUpdateLocalStorageFormSchema) => Promise<void>;
   onCancel: () => void;
-  initialData?: Partial<TCreateOrUpdateLocalStorageFormSchema>;
 }
 
 export function LocalStorageForm({
   onSubmit,
   onCancel,
-  initialData,
 }: LocalStorageFormProps) {
-  const form = useForm<TCreateOrUpdateLocalStorageFormSchema>({
-    resolver: zodResolver(CreateOrUpdateLocalStorageFormSchema),
-    defaultValues: {
-      name: initialData?.name || "",
-      basePath: initialData?.basePath || "",
-      maxFileSize: initialData?.maxFileSize || 500,
-      isActive: initialData?.isActive ?? true,
-    },
-  });
+  const form = useFormContext<TCreateOrUpdateLocalStorageFormSchema>();
 
-  const isSubmitting = form.formState.isSubmitting;
+  const {
+    formState: { isSubmitting },
+  } = form;
 
-  const handleSubmit = (data: TCreateOrUpdateLocalStorageFormSchema) => {
-    onSubmit(data);
+  const handleSubmit = async (data: TCreateOrUpdateLocalStorageFormSchema) => {
+    await onSubmit(data);
   };
 
   const handleCancel = () => {
-    form.reset();
     onCancel();
   };
 

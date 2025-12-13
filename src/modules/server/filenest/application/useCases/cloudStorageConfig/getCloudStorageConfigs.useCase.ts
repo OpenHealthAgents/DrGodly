@@ -1,9 +1,9 @@
-import { getSharedInjection } from "../../../../server/shared/di/container";
+import { getSharedInjection } from "../../../../shared/di/container";
 import {
   TCloudStorageConfigsSchema,
   TGetCloudStorageConfig,
-} from "../../../../shared/entities/models/filenest/cloudStorage";
-import { getFilenestInjection } from "../../di/container";
+} from "../../../../../shared/entities/models/filenest/cloudStorage";
+import { getFilenestInjection } from "../../../di/container";
 
 export async function getCloudStorageConfigsUseCase({
   userId,

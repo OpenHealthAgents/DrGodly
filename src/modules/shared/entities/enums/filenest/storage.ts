@@ -17,3 +17,13 @@ export const cloudStorageVendorOptions = CloudStorageVendor.map((v) => ({
       ? "Azure Blob Storage"
       : v,
 }));
+
+const StorageType = ["LOCAL", "CLOUD"] as const;
+export type TStorageType = (typeof StorageType)[number];
+
+export const ZodEStorageType = z.enum(StorageType);
+
+export const storageTypeOptions = StorageType.map((v) => ({
+  value: v,
+  label: v === "LOCAL" ? "Local" : v === "CLOUD" ? "Cloud" : v,
+}));

@@ -13,8 +13,14 @@ import { useFilenestAdminStoreModal } from "../../stores/admin-store-modal";
 import { useServerAction } from "zsa-react";
 import { handleInputParseError } from "@/modules/shared/utils/handleInputParseError";
 import { CloudStorageForm } from "../../forms/admin/CloudStorageForm";
-import { TCreateOrUpdateCloudStorageFormSchema } from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+import {
+  CreateOrUpdateCloudStorageFormSchema,
+  TCreateOrUpdateCloudStorageFormSchema,
+} from "@/modules/shared/schemas/filenest/adminValidationSchemas";
 import { updateCloudStorageConfig } from "../../server-actions/cloud-storage-action";
+import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 
 export const EditCloudStorageModal = () => {
   const session = useSession();
@@ -27,20 +33,41 @@ export const EditCloudStorageModal = () => {
 
   const isModalOpen = isOpen && modalType === "editCloudStorage";
 
+  const form = useForm<TCreateOrUpdateCloudStorageFormSchema>({
+    resolver: zodResolver(CreateOrUpdateCloudStorageFormSchema),
+    defaultValues: {
+      name: cloudStorageConfigData?.name || "",
+      vendor: cloudStorageConfigData?.vendor || "AWS_S3",
+      region: cloudStorageConfigData?.region || "",
+      bucketName: cloudStorageConfigData?.bucketName || "",
+      containerName: cloudStorageConfigData?.containerName || "",
+      clientId: cloudStorageConfigData?.clientId || "",
+      clientSecret: cloudStorageConfigData?.clientSecret || "",
+      maxFileSize: cloudStorageConfigData?.maxFileSize || 500,
+      isActive: cloudStorageConfigData?.isActive ?? true,
+    },
+  });
+
+  useEffect(() => {
+    if (!cloudStorageConfigData) return;
+
+    form.reset(cloudStorageConfigData);
+  }, [cloudStorageConfigData, form]);
+
   const { execute } = useServerAction(updateCloudStorageConfig, {
     onSuccess({ data }) {
       toast.success(`${data?.name ?? ""} cloud storage edited.`);
       handleCloseModal();
     },
     onError({ err }) {
-      // const handled = handleInputParseError({
-      //   err,
-      //   form,
-      //   toastMessage: "Form validation failed",
-      //   toastDescription: "Please correct the highlighted fields below.",
-      // });
+      const handled = handleInputParseError({
+        err,
+        form,
+        toastMessage: "Form validation failed",
+        toastDescription: "Please correct the highlighted fields below.",
+      });
 
-      // if (handled) return;
+      if (handled) return;
 
       toast.error("An unexpected error occurred.", {
         description: err.message ?? "Please try again later.",
@@ -72,6 +99,7 @@ export const EditCloudStorageModal = () => {
   }
 
   function handleCloseModal() {
+    form.reset();
     closeModal();
   }
 
@@ -85,11 +113,16 @@ export const EditCloudStorageModal = () => {
             collection.
           </DialogDescription>
         </DialogHeader>
-        <CloudStorageForm
-          onCancel={handleCloseModal}
-          onSubmit={handleCreateCloudStorage}
-          initialData={cloudStorageConfigData}
-        />
+        {!cloudStorageConfigData || !session ? (
+          <p className="text-center py-10">Failed to get Cloud Storage Data</p>
+        ) : (
+          <FormProvider {...form}>
+            <CloudStorageForm
+              onCancel={handleCloseModal}
+              onSubmit={handleCreateCloudStorage}
+            />
+          </FormProvider>
+        )}
       </DialogContent>
     </Dialog>
   );

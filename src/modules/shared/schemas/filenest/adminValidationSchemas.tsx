@@ -1,5 +1,8 @@
 import z from "zod";
-import { ZodECloudStorageVendor } from "../../entities/enums/filenest/storage";
+import {
+  ZodECloudStorageVendor,
+  ZodEStorageType,
+} from "../../entities/enums/filenest/storage";
 
 const IdsSchema = z.object({
   id: z.bigint().positive().min(BigInt(1), "ID is required"),
@@ -91,12 +94,21 @@ export type TCreateOrUpdateCloudStorageFormSchema = z.infer<
   typeof CreateOrUpdateCloudStorageFormSchema
 >;
 
+///////////////////////////////////////////////
+
 const BaseLocalStorageSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
   basePath: z.string().min(1, "Base path is required"),
   maxFileSize: z.number().min(1),
   isActive: z.boolean(),
 });
+
+export const GetLocalStorageConfigsValidationSchema = IdsSchema.omit({
+  id: true,
+});
+export type TGetLocalStorageConfigsValidationSchema = z.infer<
+  typeof GetLocalStorageConfigsValidationSchema
+>;
 
 export const CreateLocalStorageValidationSchema = BaseLocalStorageSchema.and(
   IdsSchema.omit({
@@ -113,7 +125,159 @@ export type TUpdateLocalStorageValidationSchema = z.infer<
   typeof UpdateLocalStorageValidationSchema
 >;
 
+export const DeleteLocalStorageValidationSchema = IdsSchema.pick({
+  id: true,
+  orgId: true,
+  userId: true,
+});
+export type TDeleteLocalStorageValidationSchema = z.infer<
+  typeof DeleteLocalStorageValidationSchema
+>;
+
 export const CreateOrUpdateLocalStorageFormSchema = BaseLocalStorageSchema;
 export type TCreateOrUpdateLocalStorageFormSchema = z.infer<
   typeof CreateOrUpdateLocalStorageFormSchema
+>;
+
+// ----- AppStorageSetting -----
+const BaseAppStorageSettingSchema = z
+  .object({
+    appId: z.string().min(1, "App ID is required"),
+    appSlug: z.string().min(1, "App slug is required"),
+    name: z.string().min(1, "Name is required").max(100),
+    type: ZodEStorageType, // "CLOUD" | "LOCAL"
+    subFolder: z.string().min(1, "Sub folder is required"),
+    basePath: z.string().nullable(),
+    maxFileSize: z.number().int().min(1),
+    isActive: z.boolean(),
+    priority: z.number().int().min(0).default(100),
+
+    cloudStorageConfigId: z.bigint().nullable(),
+    localStorageConfigId: z.bigint().nullable(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.type === "CLOUD") {
+      if (!data.cloudStorageConfigId) {
+        ctx.addIssue({
+          path: ["cloudStorageConfigId"],
+          code: z.ZodIssueCode.custom,
+          message: "cloudStorageConfigId is required for CLOUD",
+        });
+      }
+      if (data.localStorageConfigId) {
+        ctx.addIssue({
+          path: ["localStorageConfigId"],
+          code: z.ZodIssueCode.custom,
+          message: "localStorageConfigId must be null for CLOUD",
+        });
+      }
+    }
+
+    if (data.type === "LOCAL") {
+      if (!data.localStorageConfigId) {
+        ctx.addIssue({
+          path: ["localStorageConfigId"],
+          code: z.ZodIssueCode.custom,
+          message: "localStorageConfigId is required for LOCAL",
+        });
+      }
+      if (data.cloudStorageConfigId) {
+        ctx.addIssue({
+          path: ["cloudStorageConfigId"],
+          code: z.ZodIssueCode.custom,
+          message: "cloudStorageConfigId must be null for LOCAL",
+        });
+      }
+    }
+  });
+
+export const GetAppStorageSettingsValidationSchema = z.object({
+  orgId: z.string().min(1),
+  userId: z.string().min(1),
+});
+export type TGetAppStorageSettingsValidationSchema = z.infer<
+  typeof GetAppStorageSettingsValidationSchema
+>;
+
+export const CreateAppStorageSettingValidationSchema =
+  BaseAppStorageSettingSchema.and(
+    IdsSchema.omit({
+      id: true,
+    })
+  );
+export type TCreateAppStorageSettingValidationSchema = z.infer<
+  typeof CreateAppStorageSettingValidationSchema
+>;
+
+export const UpdateAppStorageSettingValidationSchema =
+  BaseAppStorageSettingSchema.and(IdsSchema);
+export type TUpdateAppStorageSettingValidationSchema = z.infer<
+  typeof UpdateAppStorageSettingValidationSchema
+>;
+
+export const DeleteAppStorageSettingValidationSchema = IdsSchema.pick({
+  id: true,
+  orgId: true,
+  userId: true,
+});
+export type TDeleteAppStorageSettingValidationSchema = z.infer<
+  typeof DeleteAppStorageSettingValidationSchema
+>;
+
+// Optional: form schema
+export const CreateOrUpdateAppStorageSettingFormSchema =
+  BaseAppStorageSettingSchema;
+export type TCreateOrUpdateAppStorageSettingFormSchema = z.infer<
+  typeof CreateOrUpdateAppStorageSettingFormSchema
+>;
+
+//////////////////////
+
+const BaseFileEntitySchema = z.object({
+  orgId: z.string().min(1, "Org ID is required"),
+  type: z.string().min(1, "Type is required"),
+  name: z.string().min(1, "Name is required").max(200),
+  label: z.string().min(1, "Label is required").max(200),
+  subFolder: z.string().nullable(),
+  isActive: z.boolean(),
+});
+
+// LIST
+export const GetFileEntitiesValidationSchema = z.object({
+  orgId: z.string().min(1),
+  userId: z.string().min(1),
+});
+export type TGetFileEntitiesValidationSchema = z.infer<
+  typeof GetFileEntitiesValidationSchema
+>;
+
+// CREATE
+export const CreateFileEntityValidationSchema = BaseFileEntitySchema.and(
+  IdsSchema.omit({ id: true })
+);
+export type TCreateFileEntityValidationSchema = z.infer<
+  typeof CreateFileEntityValidationSchema
+>;
+
+// UPDATE
+export const UpdateFileEntityValidationSchema =
+  BaseFileEntitySchema.and(IdsSchema);
+export type TUpdateFileEntityValidationSchema = z.infer<
+  typeof UpdateFileEntityValidationSchema
+>;
+
+// DELETE
+export const DeleteFileEntityValidationSchema = IdsSchema.pick({
+  id: true,
+  orgId: true,
+  userId: true,
+});
+export type TDeleteFileEntityValidationSchema = z.infer<
+  typeof DeleteFileEntityValidationSchema
+>;
+
+// Optional: Form schema for client forms
+export const CreateOrUpdateFileEntityFormSchema = BaseFileEntitySchema;
+export type TCreateOrUpdateFileEntityFormSchema = z.infer<
+  typeof CreateOrUpdateFileEntityFormSchema
 >;

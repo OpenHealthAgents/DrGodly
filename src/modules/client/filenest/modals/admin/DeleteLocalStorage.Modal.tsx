@@ -15,20 +15,20 @@ import { Loader2 } from "lucide-react";
 import { useServerAction } from "zsa-react";
 import { useFilenestAdminStoreModal } from "../../stores/admin-store-modal";
 import { useSession } from "@/modules/client/auth/betterauth/auth-client";
-import { deleteCloudStorageConfig } from "../../server-actions/cloud-storage-action";
+import { deleteLocalStorageConfig } from "../../server-actions/local-storage-action";
 
-export const DeleteCloudStorageModal = () => {
+export const DeleteLocalStorageModal = () => {
   const session = useSession();
   const closeModal = useFilenestAdminStoreModal((state) => state.onClose);
   const modalType = useFilenestAdminStoreModal((state) => state.type);
   const isOpen = useFilenestAdminStoreModal((state) => state.isOpen);
-  const cloudStorageconfigId = useFilenestAdminStoreModal(
-    (state) => state.cloudStorageconfigId
+  const localStorageconfigId = useFilenestAdminStoreModal(
+    (state) => state.localStorageConfigId
   );
 
-  const isModalOpen = isOpen && modalType === "deleteCloudStorage";
+  const isModalOpen = isOpen && modalType === "deleteLocalStorage";
 
-  const { execute, isPending } = useServerAction(deleteCloudStorageConfig, {
+  const { execute, isPending } = useServerAction(deleteLocalStorageConfig, {
     onSuccess({ data }) {
       toast.success(`${data?.name ?? ""} cloud storage Deleted.`);
       handleCloseModal();
@@ -46,13 +46,13 @@ export const DeleteCloudStorageModal = () => {
       return;
     }
 
-    if (!cloudStorageconfigId) {
+    if (!localStorageconfigId) {
       toast.error("Cloud Storage Config not found.");
       return;
     }
 
     await execute({
-      id: cloudStorageconfigId,
+      id: localStorageconfigId,
       orgId: session.data.user.currentOrgId,
       userId: session.data.user.id,
     });
@@ -66,7 +66,7 @@ export const DeleteCloudStorageModal = () => {
     <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Cloud Storage</DialogTitle>
+          <DialogTitle>Delete Local Storage</DialogTitle>
           <DialogDescription>
             This action cannot be undone. This will permanently delete the
             storage configuration.

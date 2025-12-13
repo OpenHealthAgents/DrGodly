@@ -13,7 +13,13 @@ import { useFilenestAdminStoreModal } from "../../stores/admin-store-modal";
 import { useServerAction } from "zsa-react";
 import { handleInputParseError } from "@/modules/shared/utils/handleInputParseError";
 import { LocalStorageForm } from "../../forms/admin/LocalStorageForm";
-import { TCreateOrUpdateLocalStorageFormSchema } from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+import {
+  CreateOrUpdateLocalStorageFormSchema,
+  TCreateOrUpdateLocalStorageFormSchema,
+} from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+import { FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createLocalStorageConfig } from "../../server-actions/local-storage-action";
 
 export const CreateLocalStorageModal = () => {
   const session = useSession();
@@ -23,40 +29,55 @@ export const CreateLocalStorageModal = () => {
 
   const isModalOpen = isOpen && modalType === "createLocalStorage";
 
-  // const { execute } = useServerAction(createApp, {
-  //   onSuccess({ data }) {
-  //     toast.success(`${data?.name ?? ""} app created.`);
-  //     handleCloseModal();
-  //   },
-  //   onError({ err }) {
-  //     const handled = handleInputParseError({
-  //       err,
-  //       form,
-  //       toastMessage: "Form validation failed",
-  //       toastDescription: "Please correct the highlighted fields below.",
-  //     });
+  const form = useForm<TCreateOrUpdateLocalStorageFormSchema>({
+    resolver: zodResolver(CreateOrUpdateLocalStorageFormSchema),
+    defaultValues: {
+      name: "",
+      basePath: "",
+      maxFileSize: 500,
+      isActive: true,
+    },
+  });
 
-  //     if (handled) return;
+  const { execute } = useServerAction(createLocalStorageConfig, {
+    onSuccess({ data }) {
+      toast.success(`${data?.name ?? ""} app created.`);
+      handleCloseModal();
+    },
+    onError({ err }) {
+      const handled = handleInputParseError({
+        err,
+        form,
+        toastMessage: "Form validation failed",
+        toastDescription: "Please correct the highlighted fields below.",
+      });
 
-  //     toast.error("An unexpected error occurred.", {
-  //       description: err.message ?? "Please try again later.",
-  //     });
-  //   },
-  // });
+      if (handled) return;
+
+      toast.error("An unexpected error occurred.", {
+        description: err.message ?? "Please try again later.",
+      });
+    },
+  });
 
   async function handleCreateCloudStorage(
     values: TCreateOrUpdateLocalStorageFormSchema
   ) {
-    if (!session) {
+    if (!session || !session.data?.user || !session.data.user?.currentOrgId) {
       return;
     }
 
-    console.log(values);
+    const data = {
+      ...values,
+      userId: session.data.user.id,
+      orgId: session.data.user.currentOrgId,
+    };
 
-    // await execute({ ...values });
+    await execute(data);
   }
 
   function handleCloseModal() {
+    form.reset();
     closeModal();
   }
 
@@ -64,16 +85,18 @@ export const CreateLocalStorageModal = () => {
     <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Cloud Storage</DialogTitle>
+          <DialogTitle>Add Local Storage</DialogTitle>
           <DialogDescription>
             Fill in the local storage (vps) details to add a new one to your
             collection.
           </DialogDescription>
         </DialogHeader>
-        <LocalStorageForm
-          onCancel={handleCloseModal}
-          onSubmit={handleCreateCloudStorage}
-        />
+        <FormProvider {...form}>
+          <LocalStorageForm
+            onCancel={handleCloseModal}
+            onSubmit={handleCreateCloudStorage}
+          />
+        </FormProvider>
       </DialogContent>
     </Dialog>
   );

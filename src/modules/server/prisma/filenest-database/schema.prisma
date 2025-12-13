@@ -74,6 +74,8 @@ model LocalStorageConfig {
 
     appStorageSettings AppStorageSetting[]
 
+    createdBy String?
+    updatedBy String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -93,7 +95,7 @@ model AppStorageSetting {
     appSlug     String
     name        String
     type        StorageType
-    subFolder   String? // optional per-app subfolder like "filenest"
+    subFolder   String
     basePath    String? // can override global basePath
     maxFileSize Int
 
@@ -127,7 +129,7 @@ model AppStorageSetting {
 // ------------------------------------------------------------
 
 model FileEntity {
-    id        String  @id @default(cuid())
+    id        BigInt  @id @default(autoincrement())
     orgId     String
     type      String
     name      String
@@ -185,7 +187,7 @@ model UserFile {
     /**
      * Dynamic entity
      */
-    fileEntityId String
+    fileEntityId BigInt
     fileEntity   FileEntity @relation(fields: [fileEntityId], references: [id])
 
     createdBy String

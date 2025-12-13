@@ -1,9 +1,9 @@
-import { getSharedInjection } from "../../../../server/shared/di/container";
+import { getSharedInjection } from "../../../../shared/di/container";
 import {
   TCloudStorageConfigSchema,
   TDeleteCloudStorage,
-} from "../../../../shared/entities/models/filenest/cloudStorage";
-import { getFilenestInjection } from "../../di/container";
+} from "../../../../../shared/entities/models/filenest/cloudStorage";
+import { getFilenestInjection } from "../../../di/container";
 
 export async function deleteCloudStorageConfigUseCase(
   deleteData: TDeleteCloudStorage & { userId: string }

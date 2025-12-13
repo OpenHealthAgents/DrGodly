@@ -1,7 +1,7 @@
 import { TCloudStorageConfigSchema } from "../../../../../shared/entities/models/filenest/cloudStorage";
 import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
 import { DeleteCloudStorageValidationSchema } from "../../../../../shared/schemas/filenest/adminValidationSchemas";
-import { deleteCloudStorageConfigUseCase } from "../../../application/useCases/deleteCloudStorageConfig.useCase";
+import { deleteCloudStorageConfigUseCase } from "../../../application/useCases/cloudStorageConfig/deleteCloudStorageConfig.useCase";
 
 function presenter(data: TCloudStorageConfigSchema) {
   return data;

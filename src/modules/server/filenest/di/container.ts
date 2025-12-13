@@ -1,12 +1,20 @@
 import "reflect-metadata";
 import { Container } from "inversify";
 import { DI_RETURN_TYPES, DI_SYMBOLS } from "./types";
-import { CloudStorageModule } from "./modules";
+import {
+  AppStorageSettingModule,
+  CloudStorageModule,
+  FileEntityModule,
+  LocalStorageModule,
+} from "./modules";
 
 const FilenestContainer = new Container({ defaultScope: "Singleton" });
 
 const initializeContainer = () => {
   FilenestContainer.load(CloudStorageModule);
+  FilenestContainer.load(LocalStorageModule);
+  FilenestContainer.load(AppStorageSettingModule);
+  FilenestContainer.load(FileEntityModule);
 };
 
 initializeContainer();

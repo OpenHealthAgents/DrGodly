@@ -13,8 +13,13 @@ import { useFilenestAdminStoreModal } from "../../stores/admin-store-modal";
 import { useServerAction } from "zsa-react";
 import { handleInputParseError } from "@/modules/shared/utils/handleInputParseError";
 import { CloudStorageForm } from "../../forms/admin/CloudStorageForm";
-import { TCreateOrUpdateCloudStorageFormSchema } from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+import {
+  CreateOrUpdateCloudStorageFormSchema,
+  TCreateOrUpdateCloudStorageFormSchema,
+} from "@/modules/shared/schemas/filenest/adminValidationSchemas";
 import { createCloudStorageConfig } from "../../server-actions/cloud-storage-action";
+import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export const CreateCloudStorageModal = () => {
   const session = useSession();
@@ -24,20 +29,35 @@ export const CreateCloudStorageModal = () => {
 
   const isModalOpen = isOpen && modalType === "createCloudStorage";
 
+  const form = useForm<TCreateOrUpdateCloudStorageFormSchema>({
+    resolver: zodResolver(CreateOrUpdateCloudStorageFormSchema),
+    defaultValues: {
+      name: "",
+      vendor: "AWS_S3",
+      region: "",
+      bucketName: "",
+      containerName: "",
+      clientId: "",
+      clientSecret: "",
+      maxFileSize: 500,
+      isActive: true,
+    },
+  });
+
   const { execute } = useServerAction(createCloudStorageConfig, {
     onSuccess({ data }) {
       toast.success(`${data?.name ?? ""} cloud storage created.`);
       handleCloseModal();
     },
     onError({ err }) {
-      // const handled = handleInputParseError({
-      //   err,
-      //   form,
-      //   toastMessage: "Form validation failed",
-      //   toastDescription: "Please correct the highlighted fields below.",
-      // });
+      const handled = handleInputParseError({
+        err,
+        form,
+        toastMessage: "Form validation failed",
+        toastDescription: "Please correct the highlighted fields below.",
+      });
 
-      // if (handled) return;
+      if (handled) return;
 
       toast.error("An unexpected error occurred.", {
         description: err.message ?? "Please try again later.",
@@ -75,10 +95,12 @@ export const CreateCloudStorageModal = () => {
             collection.
           </DialogDescription>
         </DialogHeader>
-        <CloudStorageForm
-          onCancel={handleCloseModal}
-          onSubmit={handleCreateCloudStorage}
-        />
+        <FormProvider {...form}>
+          <CloudStorageForm
+            onCancel={handleCloseModal}
+            onSubmit={handleCreateCloudStorage}
+          />
+        </FormProvider>
       </DialogContent>
     </Dialog>
   );

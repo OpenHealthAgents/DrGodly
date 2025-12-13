@@ -5,7 +5,9 @@ import {
   CreateCloudStorageModal,
   CreateLocalStorageModal,
   DeleteCloudStorageModal,
+  DeleteLocalStorageModal,
   EditCloudStorageModal,
+  EditLocalStorageModal,
 } from "../modals/admin";
 
 export const FilenestAdminModalProvider = () => {
@@ -21,8 +23,10 @@ export const FilenestAdminModalProvider = () => {
     <>
       <CreateCloudStorageModal />
       <EditCloudStorageModal />
-      <CreateLocalStorageModal />
       <DeleteCloudStorageModal />
+      <CreateLocalStorageModal />
+      <EditLocalStorageModal />
+      <DeleteLocalStorageModal />
     </>
   );
 };

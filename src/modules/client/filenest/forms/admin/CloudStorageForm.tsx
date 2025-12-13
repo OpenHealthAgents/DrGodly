@@ -1,15 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useEffect, useState } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { SelectItem } from "@/components/ui/select";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import {
-  CreateOrUpdateCloudStorageFormSchema,
-  TCreateOrUpdateCloudStorageFormSchema,
-} from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+import { TCreateOrUpdateCloudStorageFormSchema } from "@/modules/shared/schemas/filenest/adminValidationSchemas";
 import { cloudStorageVendorOptions } from "@/modules/shared/entities/enums/filenest/storage";
 import {
   FormInput,
@@ -32,37 +28,29 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
-import { TCloudStorageConfig } from "../../types/cloudStorage";
 
 interface CloudStorageFormProps {
   onSubmit: (data: TCreateOrUpdateCloudStorageFormSchema) => Promise<void>;
   onCancel: () => void;
-  initialData?: TCloudStorageConfig | null;
 }
 
 export function CloudStorageForm({
   onSubmit,
   onCancel,
-  initialData,
 }: CloudStorageFormProps) {
   const [showSecret, setShowSecret] = useState(false);
 
-  const form = useForm<TCreateOrUpdateCloudStorageFormSchema>({
-    resolver: zodResolver(CreateOrUpdateCloudStorageFormSchema),
-    defaultValues: {
-      name: initialData?.name || "",
-      vendor: initialData?.vendor || "AWS_S3",
-      region: initialData?.region || "",
-      bucketName: initialData?.bucketName || "",
-      containerName: initialData?.containerName || "",
-      clientId: initialData?.clientId || "",
-      clientSecret: initialData?.clientSecret || "",
-      maxFileSize: initialData?.maxFileSize || 500,
-      isActive: initialData?.isActive ?? true,
-    },
-  });
+  const form = useFormContext<TCreateOrUpdateCloudStorageFormSchema>();
 
   const vendor = form.watch("vendor");
+
+  useEffect(() => {
+    if (vendor === "AWS_S3") {
+      form.setValue("containerName", "");
+    } else if (vendor === "AZURE_BLOB") {
+      form.setValue("bucketName", "");
+    }
+  }, [vendor, form]);
 
   const {
     formState: { isSubmitting },
@@ -74,7 +62,6 @@ export function CloudStorageForm({
 
   const handleCancel = () => {
     setShowSecret(false);
-    form.reset();
     onCancel();
   };
 
