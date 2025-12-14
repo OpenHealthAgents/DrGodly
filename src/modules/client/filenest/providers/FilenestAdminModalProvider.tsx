@@ -3,10 +3,13 @@
 import { useEffect, useState } from "react";
 import {
   CreateCloudStorageModal,
+  CreateFileEntityModal,
   CreateLocalStorageModal,
   DeleteCloudStorageModal,
+  DeleteFileEntityModal,
   DeleteLocalStorageModal,
   EditCloudStorageModal,
+  EditFileEntityModal,
   EditLocalStorageModal,
 } from "../modals/admin";
 
@@ -27,6 +30,9 @@ export const FilenestAdminModalProvider = () => {
       <CreateLocalStorageModal />
       <EditLocalStorageModal />
       <DeleteLocalStorageModal />
+      <CreateFileEntityModal />
+      <EditFileEntityModal />
+      <DeleteFileEntityModal />
     </>
   );
 };

@@ -129,7 +129,7 @@ function FormBase<
   );
 }
 
-export const FormInput: TFormControlFunc = ({
+export const FormInput: TFormControlFunc<{ controlFirst?: boolean }> = ({
   className,
   placeholder,
   type,

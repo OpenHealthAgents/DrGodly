@@ -234,7 +234,6 @@ export type TCreateOrUpdateAppStorageSettingFormSchema = z.infer<
 //////////////////////
 
 const BaseFileEntitySchema = z.object({
-  orgId: z.string().min(1, "Org ID is required"),
   type: z.string().min(1, "Type is required"),
   name: z.string().min(1, "Name is required").max(200),
   label: z.string().min(1, "Label is required").max(200),

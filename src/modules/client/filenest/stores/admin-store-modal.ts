@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { TCloudStorageConfig } from "../types/cloudStorage";
 import { TLocalStorageConfig } from "../types/localStorage";
+import { TFileEntity } from "../types/fileEntities";
+import { TAppSetting, TAppSettingsColumnProps } from "../types/appSettings";
 
 export type ModalType =
   | "createCloudStorage"
@@ -8,7 +10,13 @@ export type ModalType =
   | "deleteCloudStorage"
   | "createLocalStorage"
   | "editLocalStorage"
-  | "deleteLocalStorage";
+  | "deleteLocalStorage"
+  | "createAppSetting"
+  | "editAppSetting"
+  | "deleteAppSetting"
+  | "createFileEntity"
+  | "editFileEntity"
+  | "deleteFileEntity";
 
 interface AdminStoreModal {
   type: ModalType | null;
@@ -17,16 +25,28 @@ interface AdminStoreModal {
   triggerInModal: number;
   cloudStorageConfigData?: TCloudStorageConfig | null;
   localStorageConfigData?: TLocalStorageConfig | null;
+  appSettingData?: TAppSetting | null;
+  fileEntityData?: TFileEntity | null;
   cloudStorageconfigId?: bigint | null;
   localStorageConfigId?: bigint | null;
+  fileEntityDataId?: bigint | null;
+  appSettingDataId?: bigint | null;
+  //
+  appSettingsRequiredDatas?: TAppSettingsColumnProps | null;
+  //
   incrementTrigger: () => void;
   incrementInModalTrigger: () => void;
   onOpen: (props: {
     type: ModalType;
     cloudStorageConfigData?: TCloudStorageConfig | null;
-    cloudStorageconfigId?: bigint | null;
     localStorageConfigData?: TLocalStorageConfig | null;
+    fileEntityData?: TFileEntity | null;
+    appSettingData?: TAppSetting | null;
+    cloudStorageconfigId?: bigint | null;
     localStorageConfigId?: bigint | null;
+    fileEntityDataId?: bigint | null;
+    appSettingDataId?: bigint | null;
+    appSettingsRequiredDatas?: TAppSettingsColumnProps | null;
   }) => void;
   onClose: () => void;
 }
@@ -39,26 +59,38 @@ const _useFilenestAdminStoreModal = create<AdminStoreModal>((set) => ({
   onOpen: ({
     type,
     cloudStorageConfigData = null,
-    cloudStorageconfigId = null,
     localStorageConfigData = null,
+    fileEntityData = null,
+    appSettingData = null,
+    cloudStorageconfigId = null,
     localStorageConfigId = null,
+    fileEntityDataId = null,
+    appSettingsRequiredDatas = null,
   }) =>
     set({
       isOpen: true,
       type,
       cloudStorageConfigData,
-      cloudStorageconfigId,
       localStorageConfigData,
+      fileEntityData,
+      appSettingData,
+      cloudStorageconfigId,
       localStorageConfigId,
+      fileEntityDataId,
+      appSettingsRequiredDatas,
     }),
   onClose: () =>
     set({
       type: null,
       isOpen: false,
       cloudStorageConfigData: null,
-      cloudStorageconfigId: null,
       localStorageConfigData: null,
+      fileEntityData: null,
+      appSettingData: null,
+      appSettingsRequiredDatas: null,
+      cloudStorageconfigId: null,
       localStorageConfigId: null,
+      fileEntityDataId: null,
       trigger: 0,
       triggerInModal: 0,
     }),
