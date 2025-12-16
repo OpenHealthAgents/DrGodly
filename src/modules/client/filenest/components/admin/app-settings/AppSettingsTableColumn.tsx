@@ -51,7 +51,7 @@ export const appSettingsTableColumn = ({
     id: "appData",
     accessorKey: "appData",
     cell({ row }) {
-      const appData = appDatas?.appDatas.find(
+      const appData = appDatas?.find(
         (appData) => appData.id === row.original.appId
       );
       return <span className="truncate">{appData?.name}</span>;
@@ -98,26 +98,6 @@ export const appSettingsTableColumn = ({
     cell({ row }) {
       const subFolder = row.original.subFolder;
       return <span className="truncate">{subFolder}</span>;
-    },
-  },
-  {
-    header: "Priority",
-    accessorKey: "priority",
-    cell({ row }) {
-      const priority = row.original.priority;
-      return (
-        <Badge
-          className={cn(
-            buttonVariants({
-              size: "sm",
-              variant: "secondary",
-              className: "cursor-default h-6 rounded-xl",
-            })
-          )}
-        >
-          {priority}
-        </Badge>
-      );
     },
   },
   {

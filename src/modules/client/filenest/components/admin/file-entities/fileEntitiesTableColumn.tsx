@@ -13,8 +13,11 @@ import { TFileEntity } from "../../../types/fileEntities";
 import { Badge } from "@/components/ui/badge";
 import { filenestAdminStoreModal } from "../../../stores/admin-store-modal";
 import { formatSmartDate } from "@/modules/shared/helper";
+import { TGetAppsByOrgIdControllerOutput } from "@/modules/server/shared/app/interface-adapters/controllers";
 
-export const fileEntitiesTableColumn: ColumnDef<TFileEntity>[] = [
+export const fileEntitiesTableColumn = (
+  appDatas: TGetAppsByOrgIdControllerOutput | null
+): ColumnDef<TFileEntity>[] => [
   {
     header: ({ column }) => {
       const isSorted = column.getIsSorted();
@@ -124,6 +127,11 @@ export const fileEntitiesTableColumn: ColumnDef<TFileEntity>[] = [
                 openModal({
                   type: "editFileEntity",
                   fileEntityData,
+                  appSettingsRequiredDatas: {
+                    cloudStorageConfigs: null,
+                    localStorageConfigs: null,
+                    appDatas,
+                  },
                 })
               }
             >

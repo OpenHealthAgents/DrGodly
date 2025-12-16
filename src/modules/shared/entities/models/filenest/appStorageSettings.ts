@@ -20,10 +20,9 @@ export const AppStorageSettingSchema = z
     name: z.string().min(1, "Name is required"),
     type: ZodEStorageType, // e.g. "CLOUD" | "LOCAL"
     subFolder: z.string().min(1, "Sub folder is required"),
-    basePath: z.string().nullable(), // Prisma optional => null in DB
     maxFileSize: z.number().int().positive(),
     isActive: z.boolean(),
-    priority: z.number().int().min(0).default(100),
+    // priority: z.number().int().min(0).default(100),
 
     cloudStorageConfigId: z.bigint().nullable(),
     localStorageConfigId: z.bigint().nullable(),

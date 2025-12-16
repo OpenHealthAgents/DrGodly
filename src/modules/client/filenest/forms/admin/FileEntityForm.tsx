@@ -4,7 +4,11 @@ import { Controller, useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { FolderOpen, Loader2 } from "lucide-react";
 import { TCreateOrUpdateFileEntityFormSchema } from "@/modules/shared/schemas/filenest/adminValidationSchemas";
-import { FormInput, FormSwitch } from "@/modules/shared/custom-form-fields";
+import {
+  FormInput,
+  FormSelect,
+  FormSwitch,
+} from "@/modules/shared/custom-form-fields";
 import {
   Field,
   FieldContent,
@@ -20,13 +24,20 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
+import { TAppSettingsColumnProps } from "../../types/appSettings";
+import { SelectItem } from "@/components/ui/select";
 
 interface FileEntityFormProps {
+  appSettingsRequiredDatas?: TAppSettingsColumnProps | null;
   onSubmit: (data: TCreateOrUpdateFileEntityFormSchema) => Promise<void>;
   onCancel: () => void;
 }
 
-export function FileEntityForm({ onSubmit, onCancel }: FileEntityFormProps) {
+export function FileEntityForm({
+  appSettingsRequiredDatas,
+  onSubmit,
+  onCancel,
+}: FileEntityFormProps) {
   const form = useFormContext<TCreateOrUpdateFileEntityFormSchema>();
 
   const {
@@ -41,8 +52,43 @@ export function FileEntityForm({ onSubmit, onCancel }: FileEntityFormProps) {
     onCancel();
   };
 
+  const appSelectData = appSettingsRequiredDatas?.appDatas?.map((appData) => ({
+    value: appData.id,
+    label: appData.name,
+  }));
+
   return (
     <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+      {/* App Identification */}
+      <FieldGroup>
+        <FieldSet>
+          <FieldLegend>App Identification</FieldLegend>
+          <FieldGroup className="grid sm:grid-cols-2 gap-4">
+            <FormSelect
+              control={form.control}
+              name="appId"
+              label="Apps"
+              placeholder="Select a app"
+              customValue={form.watch("appId").toString()}
+              onCustomChange={(value) => {
+                const appSlug = appSettingsRequiredDatas?.appDatas?.find(
+                  (appData) => appData.id === value
+                )?.slug;
+
+                form.setValue("appId", value);
+                form.setValue("appSlug", appSlug!);
+              }}
+            >
+              {appSelectData?.map((appData) => (
+                <SelectItem key={appData.value} value={appData.value}>
+                  {appData.label}
+                </SelectItem>
+              ))}
+            </FormSelect>
+          </FieldGroup>
+        </FieldSet>
+      </FieldGroup>
+
       {/* Basic Info */}
       <FieldGroup>
         <FieldSet>

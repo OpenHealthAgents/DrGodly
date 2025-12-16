@@ -7,7 +7,11 @@ import { IFileEntitiesProps } from "../../../types/fileEntities";
 import DataTable from "@/modules/shared/components/table/data-table";
 import { fileEntitiesTableColumn } from "./fileEntitiesTableColumn";
 
-function FileEntitiesTable({ fileEntities, error }: IFileEntitiesProps) {
+function FileEntitiesTable({
+  appDatas,
+  fileEntities,
+  error,
+}: IFileEntitiesProps) {
   const openModal = useFilenestAdminStoreModal((state) => state.onOpen);
 
   if (error) {
@@ -31,7 +35,14 @@ function FileEntitiesTable({ fileEntities, error }: IFileEntitiesProps) {
         buttonLabel="Add File Entity"
         buttonIcon={<Plus />}
         buttonOnClick={() => {
-          openModal({ type: "createFileEntity" });
+          openModal({
+            type: "createFileEntity",
+            appSettingsRequiredDatas: {
+              cloudStorageConfigs: null,
+              localStorageConfigs: null,
+              appDatas,
+            },
+          });
         }}
       />
     );
@@ -39,16 +50,21 @@ function FileEntitiesTable({ fileEntities, error }: IFileEntitiesProps) {
 
   return (
     <DataTable
-      columns={fileEntitiesTableColumn}
+      columns={fileEntitiesTableColumn(appDatas)}
       data={fileEntities ?? []}
       dataSize={fileEntities?.length ?? 0}
-      label="File Entities Config"
-      addLabelName="Add File Entity"
+      label="File categories Config"
+      addLabelName="Add File Category"
       searchField="name"
-      fallbackText="No File Entity Config Found"
+      fallbackText="No File Category Config Found"
       openModal={() => {
         openModal({
           type: "createFileEntity",
+          appSettingsRequiredDatas: {
+            cloudStorageConfigs: null,
+            localStorageConfigs: null,
+            appDatas,
+          },
         });
       }}
     />

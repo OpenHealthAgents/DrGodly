@@ -30,6 +30,9 @@ export const EditFileEntityModal = () => {
   const fileEntityData = useFilenestAdminStoreModal(
     (state) => state.fileEntityData
   );
+  const appSettingsRequiredDatas = useFilenestAdminStoreModal(
+    (state) => state.appSettingsRequiredDatas
+  );
 
   const isModalOpen = isOpen && modalType === "editFileEntity";
 
@@ -113,6 +116,7 @@ export const EditFileEntityModal = () => {
         ) : (
           <FormProvider {...form}>
             <FileEntityForm
+              appSettingsRequiredDatas={appSettingsRequiredDatas}
               onCancel={handleCloseModal}
               onSubmit={handleCreateFileEntity}
             />

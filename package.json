@@ -17,6 +17,7 @@
     "auth:generate": "npx @better-auth/cli@latest generate --config ./src/modules/server/auth/betterauth/auth.ts --output ./auth.prisma --yes",
     "filenest-generate": "npx prisma generate --schema ./src/modules/server/prisma/filenest-database/schema.prisma",
     "filenest-db-push": "npx prisma db push --schema ./src/modules/server/prisma/filenest-database/schema.prisma",
+    "filenest-db-push-force": "npx prisma db push --schema ./src/modules/server/prisma/filenest-database/schema.prisma --force-reset",
     "filenest-studio": "npx prisma studio --schema ./src/modules/server/prisma/filenest-database/schema.prisma"
   },
   "dependencies": {
@@ -85,6 +86,7 @@
     "react": "19.1.0",
     "react-day-picker": "^9.11.1",
     "react-dom": "19.1.0",
+    "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.65.0",
     "react-icons": "^5.5.0",
     "react-resizable-panels": "^3.0.6",

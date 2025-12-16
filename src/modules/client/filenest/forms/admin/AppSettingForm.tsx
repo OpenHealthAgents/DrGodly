@@ -28,6 +28,7 @@ import {
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { TAppSettingsColumnProps } from "../../types/appSettings";
 import { storageTypeOptions } from "@/modules/shared/entities/enums/filenest/storage";
+import { useEffect } from "react";
 
 interface AppSettingFormProps {
   appSettingsRequiredDatas?: TAppSettingsColumnProps | null;
@@ -48,6 +49,11 @@ export function AppSettingForm({
 
   const type = form.watch("type");
 
+  useEffect(() => {
+    if (type === "LOCAL") form.setValue("cloudStorageConfigId", null);
+    if (type === "CLOUD") form.setValue("localStorageConfigId", null);
+  }, [type]);
+
   const handleSubmit = async (
     data: TCreateOrUpdateAppStorageSettingFormSchema
   ) => {
@@ -58,12 +64,10 @@ export function AppSettingForm({
     onCancel();
   };
 
-  const appSelectData = appSettingsRequiredDatas?.appDatas?.appDatas.map(
-    (appData) => ({
-      value: appData.id,
-      label: appData.name,
-    })
-  );
+  const appSelectData = appSettingsRequiredDatas?.appDatas?.map((appData) => ({
+    value: appData.id,
+    label: appData.name,
+  }));
 
   const cloudSelectData = appSettingsRequiredDatas?.cloudStorageConfigs?.map(
     (cloudConfig) => ({
@@ -93,10 +97,9 @@ export function AppSettingForm({
               placeholder="Select a app"
               customValue={form.watch("appId").toString()}
               onCustomChange={(value) => {
-                const appSlug =
-                  appSettingsRequiredDatas?.appDatas?.appDatas.find(
-                    (appData) => appData.id === value
-                  )?.slug;
+                const appSlug = appSettingsRequiredDatas?.appDatas?.find(
+                  (appData) => appData.id === value
+                )?.slug;
 
                 form.setValue("appId", value);
                 form.setValue("appSlug", appSlug!);
@@ -167,45 +170,6 @@ export function AppSettingForm({
                 );
               }}
             />
-
-            <Controller
-              control={form.control}
-              name="basePath"
-              render={({ field, fieldState }) => {
-                return (
-                  <Field className="gap-2" data-invalid={fieldState.invalid}>
-                    <FieldContent>
-                      <FieldLabel htmlFor={field.name}>
-                        Base Path Override (Optional)
-                      </FieldLabel>
-                    </FieldContent>
-                    <InputGroup>
-                      <InputGroupAddon>
-                        <FolderOpen className="text-muted-foreground" />
-                      </InputGroupAddon>
-                      <InputGroupInput
-                        {...field}
-                        id={field.name}
-                        aria-invalid={fieldState.invalid}
-                        value={field.value ?? ""}
-                        placeholder="/custom/path"
-                      />
-                    </InputGroup>
-                    <FieldError errors={[fieldState.error]} />
-                  </Field>
-                );
-              }}
-            />
-
-            <FormSwitch
-              control={form.control}
-              name="isActive"
-              label="Active Status"
-            >
-              <span className="text-sm text-muted-foreground">
-                {form.watch("isActive") ? "Active" : "Inactive"}
-              </span>
-            </FormSwitch>
           </FieldGroup>
         </FieldSet>
       </FieldGroup>
@@ -219,49 +183,78 @@ export function AppSettingForm({
               <FormSelect
                 control={form.control}
                 name="cloudStorageConfigId"
-                label="Local Storage Configuration"
+                label="Cloud Storage Configuration"
                 placeholder="Select a config"
-                customValue={form.watch("cloudStorageConfigId")}
+                customValue={form.watch("cloudStorageConfigId")?.toString()}
                 onCustomChange={(value) => {
-                  const appSlug =
-                    appSettingsRequiredDatas?.appDatas?.appDatas.find(
-                      (appData) => appData.id === value
-                    )?.slug;
-
-                  form.setValue("appId", value);
-                  form.setValue("appSlug", appSlug!);
+                  form.setValue("cloudStorageConfigId", BigInt(value));
                 }}
               >
-                {appSelectData?.map((appData) => (
-                  <SelectItem key={appData.value} value={appData.value}>
-                    {appData.label}
+                {cloudSelectData?.map((cloudConfig) => (
+                  <SelectItem
+                    key={cloudConfig.value}
+                    value={cloudConfig.value.toString()}
+                  >
+                    {cloudConfig.label}
                   </SelectItem>
                 ))}
               </FormSelect>
             ) : (
               <FormSelect
                 control={form.control}
-                name="appId"
-                label="Apps"
-                placeholder="Select a app"
-                customValue={form.watch("appId").toString()}
+                name="localStorageConfigId"
+                label="Local Storage Configuration"
+                placeholder="Select a config"
+                customValue={form.watch("localStorageConfigId")?.toString()}
                 onCustomChange={(value) => {
-                  const appSlug =
-                    appSettingsRequiredDatas?.appDatas?.appDatas.find(
-                      (appData) => appData.id === value
-                    )?.slug;
-
-                  form.setValue("appId", value);
-                  form.setValue("appSlug", appSlug!);
+                  form.setValue("localStorageConfigId", BigInt(value));
                 }}
               >
-                {appSelectData?.map((appData) => (
-                  <SelectItem key={appData.value} value={appData.value}>
-                    {appData.label}
+                {localSelectData?.map((localConfig) => (
+                  <SelectItem
+                    key={localConfig.value}
+                    value={localConfig.value.toString()}
+                  >
+                    {localConfig.label}
                   </SelectItem>
                 ))}
               </FormSelect>
             )}
+          </FieldGroup>
+        </FieldSet>
+      </FieldGroup>
+
+      {/* Settings */}
+      <FieldGroup>
+        <FieldSet>
+          <FieldLegend>Settings</FieldLegend>
+          <FieldGroup className="grid grid-cols-2 gap-4">
+            <FormSelect
+              control={form.control}
+              name="maxFileSize"
+              label="Maximum File Size"
+              placeholder="Select max size"
+              customValue={form.watch("maxFileSize").toString()}
+              onCustomChange={(value) =>
+                form.setValue("maxFileSize", parseInt(value))
+              }
+            >
+              {fileSizeOptions.map((size) => (
+                <SelectItem key={size.value} value={size.value.toString()}>
+                  {size.label}
+                </SelectItem>
+              ))}
+            </FormSelect>
+
+            <FormSwitch
+              control={form.control}
+              name="isActive"
+              label="Active Status"
+            >
+              <span className="text-sm text-muted-foreground">
+                {form.watch("isActive") ? "Active" : "Inactive"}
+              </span>
+            </FormSwitch>
           </FieldGroup>
         </FieldSet>
       </FieldGroup>

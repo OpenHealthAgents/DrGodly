@@ -1,6 +1,7 @@
 import { redirect } from "@/i18n/navigation";
 import FileEntitiesTable from "@/modules/client/filenest/components/admin/file-entities/FileEntitiesTable";
 import { getFileEntities } from "@/modules/client/filenest/server-actions/file-entity-action";
+import { getAppsByOrgId } from "@/modules/client/shared/server-actions/app-actions";
 import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
 import { getLocale } from "next-intl/server";
 
@@ -26,15 +27,21 @@ async function CloudStoragePage() {
     userId: user.id,
   });
 
+  const [appDatas, appDatasError] = await getAppsByOrgId({ orgId: user.orgId });
+
   return (
     <div className="space-y-8 w-full">
       <div className="space-y-1">
-        <h1 className="text-2xl font-semibold">File Entities</h1>
+        <h1 className="text-2xl font-semibold">File Categories</h1>
         <p className="text-sm">
           Define file categories for your storage system
         </p>
       </div>
-      <FileEntitiesTable fileEntities={fileEntities} error={error} />
+      <FileEntitiesTable
+        fileEntities={fileEntities}
+        appDatas={appDatas}
+        error={error || appDatasError}
+      />
     </div>
   );
 }

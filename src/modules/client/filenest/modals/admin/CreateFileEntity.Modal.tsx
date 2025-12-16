@@ -26,12 +26,17 @@ export const CreateFileEntityModal = () => {
   const closeModal = useFilenestAdminStoreModal((state) => state.onClose);
   const modalType = useFilenestAdminStoreModal((state) => state.type);
   const isOpen = useFilenestAdminStoreModal((state) => state.isOpen);
+  const appSettingsRequiredDatas = useFilenestAdminStoreModal(
+    (state) => state.appSettingsRequiredDatas
+  );
 
   const isModalOpen = isOpen && modalType === "createFileEntity";
 
   const form = useForm<TCreateOrUpdateFileEntityFormSchema>({
     resolver: zodResolver(CreateOrUpdateFileEntityFormSchema),
     defaultValues: {
+      appId: "",
+      appSlug: "",
       name: "",
       label: "",
       type: "",
@@ -93,6 +98,7 @@ export const CreateFileEntityModal = () => {
         </DialogHeader>
         <FormProvider {...form}>
           <FileEntityForm
+            appSettingsRequiredDatas={appSettingsRequiredDatas}
             onCancel={handleCloseModal}
             onSubmit={handleCreateFileEntity}
           />

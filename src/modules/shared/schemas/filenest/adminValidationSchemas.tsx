@@ -147,11 +147,8 @@ const BaseAppStorageSettingSchema = z
     name: z.string().min(1, "Name is required").max(100),
     type: ZodEStorageType, // "CLOUD" | "LOCAL"
     subFolder: z.string().min(1, "Sub folder is required"),
-    basePath: z.string().nullable(),
     maxFileSize: z.number().int().min(1),
     isActive: z.boolean(),
-    priority: z.number().int().min(0).default(100),
-
     cloudStorageConfigId: z.bigint().nullable(),
     localStorageConfigId: z.bigint().nullable(),
   })
@@ -234,6 +231,8 @@ export type TCreateOrUpdateAppStorageSettingFormSchema = z.infer<
 //////////////////////
 
 const BaseFileEntitySchema = z.object({
+  appId: z.string().min(1, "App ID is required"),
+  appSlug: z.string().min(1, "App slug is required"),
   type: z.string().min(1, "Type is required"),
   name: z.string().min(1, "Name is required").max(200),
   label: z.string().min(1, "Label is required").max(200),

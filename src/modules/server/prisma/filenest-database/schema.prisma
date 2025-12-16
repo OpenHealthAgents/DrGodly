@@ -96,12 +96,11 @@ model AppStorageSetting {
     name        String
     type        StorageType
     subFolder   String
-    basePath    String? // can override global basePath
     maxFileSize Int
 
     // routing controls
     isActive Boolean @default(false) // ✅ exactly one active per (orgId,appId,appSlug)
-    priority Int     @default(100) // lower = preferred (for planned failover)
+    // priority Int     @default(100) // lower = preferred (for planned failover)
 
     // For cloud
     cloudStorageConfigId BigInt?
@@ -131,6 +130,8 @@ model AppStorageSetting {
 model FileEntity {
     id        BigInt  @id @default(autoincrement())
     orgId     String
+    appId     String
+    appSlug   String
     type      String
     name      String
     label     String

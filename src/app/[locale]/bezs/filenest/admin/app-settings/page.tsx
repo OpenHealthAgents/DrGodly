@@ -1,9 +1,9 @@
 import { redirect } from "@/i18n/navigation";
-import { getAllAppsData } from "@/modules/client/admin/server-actions/app-actions";
 import AppSettingsTable from "@/modules/client/filenest/components/admin/app-settings/AppSettingsTable";
 import { getAppStorageSettings } from "@/modules/client/filenest/server-actions/app-storage-setting-action";
 import { getCloudStorageConfigs } from "@/modules/client/filenest/server-actions/cloud-storage-action";
 import { getLocalStorageConfigs } from "@/modules/client/filenest/server-actions/local-storage-action";
+import { getAppsByOrgId } from "@/modules/client/shared/server-actions/app-actions";
 import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
 import { getLocale } from "next-intl/server";
 
@@ -42,7 +42,7 @@ async function CloudStoragePage() {
       userId: user.id,
     });
 
-  const [appDatas, appDatasError] = await getAllAppsData();
+  const [appDatas, appDatasError] = await getAppsByOrgId({ orgId: user.orgId });
 
   return (
     <div className="space-y-8 w-full">

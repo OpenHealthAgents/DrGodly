@@ -7,3 +7,6 @@ export { DeleteLocalStorageModal } from "./DeleteLocalStorage.Modal";
 export { CreateFileEntityModal } from "./CreateFileEntity.Modal";
 export { EditFileEntityModal } from "./EditFileEntity.Modal";
 export { DeleteFileEntityModal } from "./DeleteFileEntity.Modal";
+export { CreateAppSettingModal } from "./CreateAppSetting.Modal";
+export { EditAppSettingModal } from "./EditAppSetting.Modal";
+export { DeleteAppSettingModal } from "./DeleteAppSetting.Modal";

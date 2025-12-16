@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from "react";
 import {
+  CreateAppSettingModal,
   CreateCloudStorageModal,
   CreateFileEntityModal,
   CreateLocalStorageModal,
+  DeleteAppSettingModal,
   DeleteCloudStorageModal,
   DeleteFileEntityModal,
   DeleteLocalStorageModal,
+  EditAppSettingModal,
   EditCloudStorageModal,
   EditFileEntityModal,
   EditLocalStorageModal,
@@ -33,6 +36,9 @@ export const FilenestAdminModalProvider = () => {
       <CreateFileEntityModal />
       <EditFileEntityModal />
       <DeleteFileEntityModal />
+      <CreateAppSettingModal />
+      <EditAppSettingModal />
+      <DeleteAppSettingModal />
     </>
   );
 };

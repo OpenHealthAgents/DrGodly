@@ -18,10 +18,11 @@ import {
 } from "@/modules/shared/schemas/filenest/adminValidationSchemas";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { updateAppStorageSetting } from "../../server-actions/app-storage-setting-action";
 import { AppSettingForm } from "../../forms/admin/AppSettingForm";
-import { createAppStorageSetting } from "../../server-actions/app-storage-setting-action";
 
-export const CreateAppSettingModal = () => {
+export const EditAppSettingModal = () => {
   const session = useSession();
   const closeModal = useFilenestAdminStoreModal((state) => state.onClose);
   const modalType = useFilenestAdminStoreModal((state) => state.type);
@@ -29,27 +30,36 @@ export const CreateAppSettingModal = () => {
   const appSettingsRequiredDatas = useFilenestAdminStoreModal(
     (state) => state.appSettingsRequiredDatas
   );
+  const appSettingData = useFilenestAdminStoreModal(
+    (state) => state.appSettingData
+  );
 
-  const isModalOpen = isOpen && modalType === "createAppSetting";
+  const isModalOpen = isOpen && modalType === "editAppSetting";
 
   const form = useForm({
     resolver: zodResolver(CreateOrUpdateAppStorageSettingFormSchema),
     defaultValues: {
-      appId: "",
-      appSlug: "",
-      name: "",
-      type: "LOCAL",
-      subFolder: "",
-      maxFileSize: 500,
-      isActive: false,
-      cloudStorageConfigId: null,
-      localStorageConfigId: null,
+      appId: appSettingData?.appId ?? "",
+      appSlug: appSettingData?.appSlug ?? "",
+      name: appSettingData?.name ?? "",
+      type: appSettingData?.type ?? "LOCAL",
+      subFolder: appSettingData?.subFolder ?? "",
+      maxFileSize: appSettingData?.maxFileSize ?? 500,
+      isActive: appSettingData?.isActive ?? false,
+      cloudStorageConfigId: appSettingData?.cloudStorageConfigId ?? null,
+      localStorageConfigId: appSettingData?.localStorageConfigId ?? null,
     },
   });
 
-  const { execute } = useServerAction(createAppStorageSetting, {
+  useEffect(() => {
+    if (!appSettingData) return;
+
+    form.reset(appSettingData);
+  }, [appSettingData, form]);
+
+  const { execute } = useServerAction(updateAppStorageSetting, {
     onSuccess({ data }) {
-      toast.success(`${data?.name ?? ""} app setting created.`);
+      toast.success(`${data?.name ?? ""} app setting edited.`);
       handleCloseModal();
     },
     onError({ err }) {
@@ -68,10 +78,16 @@ export const CreateAppSettingModal = () => {
     },
   });
 
-  async function handleCreateAppSetting(
+  async function handleCreateCloudStorage(
     values: TCreateOrUpdateAppStorageSettingFormSchema
   ) {
     if (!session || !session.data?.user || !session.data.user?.currentOrgId) {
+      toast.error("User not authenticated.");
+      return;
+    }
+
+    if (!appSettingData) {
+      toast.error("App Setting not found.");
       return;
     }
 
@@ -79,6 +95,7 @@ export const CreateAppSettingModal = () => {
       ...values,
       userId: session.data.user.id,
       orgId: session.data.user.currentOrgId,
+      id: appSettingData.id,
     };
 
     await execute(data);
@@ -93,19 +110,23 @@ export const CreateAppSettingModal = () => {
     <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add App Setting</DialogTitle>
+          <DialogTitle>Edit App Setting</DialogTitle>
           <DialogDescription>
-            Fill in the App settings details to add a new one to your
+            Edit the app setting details to update this entry in your
             collection.
           </DialogDescription>
         </DialogHeader>
-        <FormProvider {...form}>
-          <AppSettingForm
-            appSettingsRequiredDatas={appSettingsRequiredDatas}
-            onCancel={handleCloseModal}
-            onSubmit={handleCreateAppSetting}
-          />
-        </FormProvider>
+        {!appSettingData || !session ? (
+          <p className="text-center py-10">Failed to get App Setting Data</p>
+        ) : (
+          <FormProvider {...form}>
+            <AppSettingForm
+              onCancel={handleCloseModal}
+              onSubmit={handleCreateCloudStorage}
+              appSettingsRequiredDatas={appSettingsRequiredDatas}
+            />
+          </FormProvider>
+        )}
       </DialogContent>
     </Dialog>
   );

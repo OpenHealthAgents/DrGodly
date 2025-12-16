@@ -65,6 +65,7 @@ const _useFilenestAdminStoreModal = create<AdminStoreModal>((set) => ({
     cloudStorageconfigId = null,
     localStorageConfigId = null,
     fileEntityDataId = null,
+    appSettingDataId = null,
     appSettingsRequiredDatas = null,
   }) =>
     set({
@@ -77,6 +78,7 @@ const _useFilenestAdminStoreModal = create<AdminStoreModal>((set) => ({
       cloudStorageconfigId,
       localStorageConfigId,
       fileEntityDataId,
+      appSettingDataId,
       appSettingsRequiredDatas,
     }),
   onClose: () =>
@@ -91,6 +93,7 @@ const _useFilenestAdminStoreModal = create<AdminStoreModal>((set) => ({
       cloudStorageconfigId: null,
       localStorageConfigId: null,
       fileEntityDataId: null,
+      appSettingDataId: null,
       trigger: 0,
       triggerInModal: 0,
     }),

@@ -14,6 +14,8 @@ const RequiredFieldsSchema = z.object({
 
 export const FileEntitySchema = z
   .object({
+    appId: z.string().min(1, "App ID is required"),
+    appSlug: z.string().min(1, "App slug is required"),
     type: z.string().min(1, "Type is required"),
     name: z.string().min(1, "Name is required"),
     label: z.string().min(1, "Label is required"),

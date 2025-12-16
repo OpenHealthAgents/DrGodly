@@ -37,7 +37,14 @@ function AppSettingsTable({
         buttonLabel="Add Local Storage"
         buttonIcon={<Plus />}
         buttonOnClick={() => {
-          openModal({ type: "createAppSetting" });
+          openModal({
+            type: "createAppSetting",
+            appSettingsRequiredDatas: {
+              appDatas,
+              cloudStorageConfigs,
+              localStorageConfigs,
+            },
+          });
         }}
       />
     );
