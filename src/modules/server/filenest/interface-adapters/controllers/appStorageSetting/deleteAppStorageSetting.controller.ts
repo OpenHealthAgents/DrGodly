@@ -1,6 +1,6 @@
 import { TAppStorageSettingSchema } from "../../../../../shared/entities/models/filenest/appStorageSettings";
 import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
-import { DeleteAppStorageSettingValidationSchema } from "../../../../../shared/schemas/filenest/adminValidationSchemas";
+import { DeleteAppStorageSettingValidationSchema } from "../../../../../shared/schemas/filenest/filenestValidationSchemas";
 import { deleteAppStorageSettingUseCase } from "../../../application/useCases/appStorageSetting/deleteAppStorageSetting.useCase";
 
 function presenter(data: TAppStorageSettingSchema) {

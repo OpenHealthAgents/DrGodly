@@ -1,6 +1,6 @@
 import { TLocalStorageConfigSchema } from "../../../../../shared/entities/models/filenest/localStorage";
 import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
-import { DeleteLocalStorageValidationSchema } from "../../../../../shared/schemas/filenest/adminValidationSchemas";
+import { DeleteLocalStorageValidationSchema } from "../../../../../shared/schemas/filenest/filenestValidationSchemas";
 import { deleteLocalStorageConfigUseCase } from "../../../application/useCases/localStorageConfig/deleteLocalStorageConfig.useCase";
 
 function presenter(data: TLocalStorageConfigSchema) {

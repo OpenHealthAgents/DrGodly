@@ -5,6 +5,7 @@ import {
   TCreateFileEntity,
   TUpdateFileEntity,
   TDeleteFileEntity,
+  TGetFileEntitiesByAppId,
 } from "../../../../shared/entities/models/filenest/fileEntity";
 
 export interface IFileEntityRepository {
@@ -12,4 +13,12 @@ export interface IFileEntityRepository {
   createFileEntity(createData: TCreateFileEntity): Promise<TFileEntitySchema>;
   updateFileEntity(updateData: TUpdateFileEntity): Promise<TFileEntitySchema>;
   deleteFileEntity(deleteData: TDeleteFileEntity): Promise<TFileEntitySchema>;
+
+  getFileEntitiesByAppId(
+    getData: TGetFileEntitiesByAppId
+  ): Promise<TFileEntitiesSchema>;
+
+  getFileEntityById(
+    getData: TGetFileEntitiesByAppId & { id: bigint }
+  ): Promise<TFileEntitySchema | null>;
 }

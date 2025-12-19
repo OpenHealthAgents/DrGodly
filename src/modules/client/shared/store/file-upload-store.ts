@@ -1,3 +1,5 @@
+import { TGetFileUploadRequiredDataControllerOutput } from "@/modules/server/filenest/interface-adapters/controllers/fileUpload";
+import { ZSAError } from "zsa";
 import { create } from "zustand";
 
 export type ModalType = "fileUpload";
@@ -9,12 +11,16 @@ interface AdminStoreModal {
   triggerInModal: number;
   title?: string | null;
   description?: string | null;
+  error?: ZSAError | null;
+  fileUploadData?: TGetFileUploadRequiredDataControllerOutput | null;
   incrementTrigger: () => void;
   incrementInModalTrigger: () => void;
   onOpen: (props: {
     type: ModalType;
     title?: string;
     description?: string;
+    error?: ZSAError | null;
+    fileUploadData?: TGetFileUploadRequiredDataControllerOutput | null;
   }) => void;
   onClose: () => void;
 }
@@ -24,12 +30,20 @@ const _useFileUploadStore = create<AdminStoreModal>((set) => ({
   isOpen: false,
   trigger: 0,
   triggerInModal: 0,
-  onOpen: ({ type, title = null, description = null }) =>
+  onOpen: ({
+    type,
+    title = null,
+    description = null,
+    error = null,
+    fileUploadData = null,
+  }) =>
     set({
       isOpen: true,
       type,
       title,
       description,
+      error,
+      fileUploadData,
     }),
   onClose: () =>
     set({
@@ -37,6 +51,8 @@ const _useFileUploadStore = create<AdminStoreModal>((set) => ({
       isOpen: false,
       title: null,
       description: null,
+      error: null,
+      fileUploadData: null,
       trigger: 0,
       triggerInModal: 0,
     }),

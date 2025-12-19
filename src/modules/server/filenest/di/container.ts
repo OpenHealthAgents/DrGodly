@@ -5,6 +5,7 @@ import {
   AppStorageSettingModule,
   CloudStorageModule,
   FileEntityModule,
+  FileUploadModule,
   LocalStorageModule,
 } from "./modules";
 
@@ -15,6 +16,7 @@ const initializeContainer = () => {
   FilenestContainer.load(LocalStorageModule);
   FilenestContainer.load(AppStorageSettingModule);
   FilenestContainer.load(FileEntityModule);
+  FilenestContainer.load(FileUploadModule);
 };
 
 initializeContainer();

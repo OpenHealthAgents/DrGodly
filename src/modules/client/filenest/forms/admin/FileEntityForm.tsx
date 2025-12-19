@@ -3,7 +3,7 @@
 import { Controller, useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { FolderOpen, Loader2 } from "lucide-react";
-import { TCreateOrUpdateFileEntityFormSchema } from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+import { TCreateOrUpdateFileEntityFormSchema } from "@/modules/shared/schemas/filenest/filenestValidationSchemas";
 import {
   FormInput,
   FormSelect,

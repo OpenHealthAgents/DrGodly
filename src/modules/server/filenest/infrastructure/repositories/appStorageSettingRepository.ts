@@ -9,11 +9,14 @@ import {
   TDeleteAppStorageSetting,
   AppStorageSettingsSchema,
   AppStorageSettingSchema,
+  GetAppStorageAndUploadconfigByAppIdSchema,
+  TGetAppStorageAndUploadconfigByAppIdSchema,
 } from "../../../../shared/entities/models/filenest/appStorageSettings";
 import { randomUUID } from "crypto";
 import { logOperation } from "../../../../shared/utils/server-logger/log-operation";
 import { prismaFilenest } from "../../../../server/prisma/prisma";
 import { OperationError } from "../../../../shared/entities/errors/commonError";
+import { TGetFileEntitiesByAppId } from "../../../../shared/entities/models/filenest/fileEntity";
 
 @injectable()
 export class AppStorageSettingRepository
@@ -201,6 +204,142 @@ export class AppStorageSettingRepository
     } catch (error) {
       logOperation("error", {
         name: "deleteAppStorageSettingRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+        context: { operationId },
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+      throw new OperationError("An unexpected error occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async getAppStorageAndUploadconfigByAppId(
+    getData: TGetFileEntitiesByAppId
+  ): Promise<TGetAppStorageAndUploadconfigByAppIdSchema | null> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    logOperation("start", {
+      name: "getAppStorageAndUploadconfigByAppIdRepository",
+      startTimeMs,
+      context: { operationId },
+    });
+
+    const { appId, appSlug, orgId } = getData;
+
+    try {
+      const appSetting = await prismaFilenest.appStorageSetting.findFirst({
+        where: {
+          appId,
+          appSlug,
+          orgId,
+        },
+        include: {
+          cloudStorageConfig: {
+            where: {
+              isActive: true,
+            },
+          },
+          localStorageConfig: {
+            where: {
+              isActive: true,
+            },
+          },
+        },
+      });
+
+      if (!appSetting) {
+        logOperation("success", {
+          name: "getAppStorageAndUploadconfigByAppIdRepository",
+          startTimeMs,
+          context: { operationId },
+        });
+        return null;
+      }
+
+      const data = await GetAppStorageAndUploadconfigByAppIdSchema.parseAsync(
+        appSetting
+      );
+
+      logOperation("success", {
+        name: "getAppStorageAndUploadconfigByAppIdRepository",
+        startTimeMs,
+        context: { operationId },
+      });
+
+      return data;
+    } catch (error) {
+      logOperation("error", {
+        name: "getAppStorageAndUploadconfigByAppIdRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+        context: { operationId },
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+      throw new OperationError("An unexpected error occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async getAppStorageTypeByAppSlug(
+    getData: TGetFileEntitiesByAppId
+  ): Promise<TAppStorageSettingSchema | null> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    logOperation("start", {
+      name: "getAppStorageTypeByAppSlugRepository",
+      startTimeMs,
+      context: { operationId },
+    });
+
+    const { appId, appSlug, orgId } = getData;
+
+    try {
+      const appSetting = await prismaFilenest.appStorageSetting.findFirst({
+        where: {
+          appId,
+          appSlug,
+          orgId,
+        },
+        select: {
+          id: true,
+          type: true,
+        },
+      });
+
+      if (!appSetting) {
+        logOperation("success", {
+          name: "getAppStorageTypeByAppSlugRepository",
+          startTimeMs,
+          context: { operationId },
+        });
+        return null;
+      }
+
+      const data = await AppStorageSettingSchema.parseAsync(appSetting);
+
+      logOperation("success", {
+        name: "getAppStorageTypeByAppSlugRepository",
+        startTimeMs,
+        context: { operationId },
+      });
+
+      return data;
+    } catch (error) {
+      logOperation("error", {
+        name: "getAppStorageTypeByAppSlugRepository",
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",

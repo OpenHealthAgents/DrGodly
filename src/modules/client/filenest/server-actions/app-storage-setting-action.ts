@@ -16,7 +16,7 @@ import {
   DeleteAppStorageSettingValidationSchema,
   GetAppStorageSettingsValidationSchema,
   UpdateAppStorageSettingValidationSchema,
-} from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+} from "@/modules/shared/schemas/filenest/filenestValidationSchemas";
 
 import { withMonitoring } from "@/modules/shared/utils/serverActionWithMonitoring";
 import { createServerAction } from "zsa";

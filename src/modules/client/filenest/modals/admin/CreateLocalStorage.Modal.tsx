@@ -16,7 +16,7 @@ import { LocalStorageForm } from "../../forms/admin/LocalStorageForm";
 import {
   CreateOrUpdateLocalStorageFormSchema,
   TCreateOrUpdateLocalStorageFormSchema,
-} from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+} from "@/modules/shared/schemas/filenest/filenestValidationSchemas";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createLocalStorageConfig } from "../../server-actions/local-storage-action";

@@ -1,5 +1,7 @@
 import z from "zod";
 import { ZodEStorageType } from "../../enums/filenest/storage"; // match your enum path
+import { CloudStorageConfigSchema } from "./cloudStorage";
+import { LocalStorageConfigSchema } from "./localStorage";
 
 const IdsSchema = z.object({
   id: z.bigint().positive().min(BigInt(1), "ID is required"),
@@ -97,3 +99,13 @@ export type TUpdateAppStorageSetting = Omit<
   Pick<TIdsSchema, "userId">;
 
 export type TDeleteAppStorageSetting = Pick<TIdsSchema, "id" | "orgId">;
+
+export const GetAppStorageAndUploadconfigByAppIdSchema = z
+  .object({
+    cloudStorageConfig: CloudStorageConfigSchema.nullable(),
+    localStorageConfig: LocalStorageConfigSchema.nullable(),
+  })
+  .and(AppStorageSettingSchema);
+export type TGetAppStorageAndUploadconfigByAppIdSchema = z.infer<
+  typeof GetAppStorageAndUploadconfigByAppIdSchema
+>;

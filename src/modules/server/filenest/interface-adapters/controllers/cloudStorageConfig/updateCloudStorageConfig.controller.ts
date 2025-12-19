@@ -1,6 +1,6 @@
 import { TCloudStorageConfigSchema } from "../../../../../shared/entities/models/filenest/cloudStorage";
 import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
-import { UpdateCloudStorageValidationSchema } from "../../../../../shared/schemas/filenest/adminValidationSchemas";
+import { UpdateCloudStorageValidationSchema } from "../../../../../shared/schemas/filenest/filenestValidationSchemas";
 import { updateCloudStorageConfigUseCase } from "../../../application/useCases/cloudStorageConfig/updateCloudStorageConfig.useCase";
 
 function presenter(data: TCloudStorageConfigSchema) {

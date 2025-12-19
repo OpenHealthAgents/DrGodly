@@ -16,7 +16,7 @@ import { CloudStorageForm } from "../../forms/admin/CloudStorageForm";
 import {
   CreateOrUpdateCloudStorageFormSchema,
   TCreateOrUpdateCloudStorageFormSchema,
-} from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+} from "@/modules/shared/schemas/filenest/filenestValidationSchemas";
 import { updateCloudStorageConfig } from "../../server-actions/cloud-storage-action";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

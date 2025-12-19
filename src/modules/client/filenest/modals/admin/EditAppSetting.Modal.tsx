@@ -15,7 +15,7 @@ import { handleInputParseError } from "@/modules/shared/utils/handleInputParseEr
 import {
   CreateOrUpdateAppStorageSettingFormSchema,
   TCreateOrUpdateAppStorageSettingFormSchema,
-} from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+} from "@/modules/shared/schemas/filenest/filenestValidationSchemas";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";

@@ -9,14 +9,18 @@ import {
   TDeleteFileEntityControllerOutput,
   TGetFileEntitiesControllerOutput,
   TUpdateFileEntityControllerOutput,
+  TGetFileEntitiesByAppIdControllerOutput,
+  getFileEntitiesByAppIdController,
 } from "@/modules/server/filenest/interface-adapters/controllers/fileEntity";
 
 import {
   CreateFileEntityValidationSchema,
   DeleteFileEntityValidationSchema,
+  GetFileEntitiesByAppIdValidationSchema,
   GetFileEntitiesValidationSchema,
   UpdateFileEntityValidationSchema,
-} from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+} from "@/modules/shared/schemas/filenest/filenestValidationSchemas";
+import { getAppSlugServerOnly } from "@/modules/shared/utils/getAppSlugServerOnly";
 
 import { withMonitoring } from "@/modules/shared/utils/serverActionWithMonitoring";
 import { createServerAction } from "zsa";
@@ -71,6 +75,26 @@ export const deleteFileEntity = createServerAction()
         url: "/bezs/filenest/admin/file-entities",
         revalidatePath: true,
         operationErrorMessage: "Failed to delete File Entity.",
+      }
+    );
+  });
+
+export const getFileEntitiesByAppId = createServerAction()
+  .input(GetFileEntitiesByAppIdValidationSchema.omit({ appSlug: true }), {
+    skipInputParsing: true,
+  })
+  .handler(async ({ input }) => {
+    const { appSlug } = await getAppSlugServerOnly();
+    const data = {
+      ...input,
+      appSlug,
+    };
+
+    return await withMonitoring<TGetFileEntitiesByAppIdControllerOutput>(
+      "getFileEntities",
+      () => getFileEntitiesByAppIdController(data),
+      {
+        operationErrorMessage: "Failed to get File Entities.",
       }
     );
   });

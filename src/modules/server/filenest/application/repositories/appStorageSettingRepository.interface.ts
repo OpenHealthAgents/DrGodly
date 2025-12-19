@@ -1,3 +1,4 @@
+import { TGetFileEntitiesByAppId as TGetAppStorageSettingByAppId } from "../../../../shared/entities/models/filenest/fileEntity";
 import {
   TAppStorageSettingsSchema,
   TAppStorageSettingSchema,
@@ -5,6 +6,7 @@ import {
   TCreateAppStorageSetting,
   TUpdateAppStorageSetting,
   TDeleteAppStorageSetting,
+  TGetAppStorageAndUploadconfigByAppIdSchema,
 } from "../../../../shared/entities/models/filenest/appStorageSettings";
 
 export interface IAppStorageSettingRepository {
@@ -23,4 +25,12 @@ export interface IAppStorageSettingRepository {
   deleteAppStorageSetting(
     deleteData: TDeleteAppStorageSetting
   ): Promise<TAppStorageSettingSchema>;
+
+  getAppStorageAndUploadconfigByAppId(
+    getData: TGetAppStorageSettingByAppId
+  ): Promise<TGetAppStorageAndUploadconfigByAppIdSchema | null>;
+
+  getAppStorageTypeByAppSlug(
+    getData: Omit<TGetAppStorageSettingByAppId, "appId">
+  ): Promise<TAppStorageSettingSchema | null>;
 }

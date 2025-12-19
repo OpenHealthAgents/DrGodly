@@ -1,6 +1,6 @@
 import { TFileEntitySchema } from "../../../../../shared/entities/models/filenest/fileEntity";
 import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
-import { DeleteFileEntityValidationSchema } from "../../../../../shared/schemas/filenest/adminValidationSchemas";
+import { DeleteFileEntityValidationSchema } from "../../../../../shared/schemas/filenest/filenestValidationSchemas";
 import { deleteFileEntityUseCase } from "../../../application/useCases/fileEntity/deleteFileEntity.useCase";
 
 function presenter(data: TFileEntitySchema) {

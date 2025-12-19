@@ -8,6 +8,7 @@ const IdsSchema = z.object({
   id: z.bigint().positive().min(BigInt(1), "ID is required"),
   orgId: z.string().min(1, "Org ID is required"),
   userId: z.string().min(1, "User ID is required"),
+  appId: z.string().min(1, "App ID is required"),
 });
 
 const BaseCloudStorageSchema = z
@@ -60,6 +61,7 @@ const BaseCloudStorageSchema = z
 
 export const GetCloudStorageConfigsValidationSchema = IdsSchema.omit({
   id: true,
+  appId: true,
 });
 export type TGetCloudStorageConfigsValidationSchema = z.infer<
   typeof GetCloudStorageConfigsValidationSchema
@@ -105,6 +107,7 @@ const BaseLocalStorageSchema = z.object({
 
 export const GetLocalStorageConfigsValidationSchema = IdsSchema.omit({
   id: true,
+  appId: true,
 });
 export type TGetLocalStorageConfigsValidationSchema = z.infer<
   typeof GetLocalStorageConfigsValidationSchema
@@ -113,6 +116,7 @@ export type TGetLocalStorageConfigsValidationSchema = z.infer<
 export const CreateLocalStorageValidationSchema = BaseLocalStorageSchema.and(
   IdsSchema.omit({
     id: true,
+    appId: true,
   })
 );
 export type TLocalStorageValidationSchema = z.infer<
@@ -200,6 +204,7 @@ export const CreateAppStorageSettingValidationSchema =
   BaseAppStorageSettingSchema.and(
     IdsSchema.omit({
       id: true,
+      appId: true,
     })
   );
 export type TCreateAppStorageSettingValidationSchema = z.infer<
@@ -279,3 +284,10 @@ export const CreateOrUpdateFileEntityFormSchema = BaseFileEntitySchema;
 export type TCreateOrUpdateFileEntityFormSchema = z.infer<
   typeof CreateOrUpdateFileEntityFormSchema
 >;
+
+// getFileEntitiesByAppId
+export const GetFileEntitiesByAppIdValidationSchema = z.object({
+  orgId: z.string().min(1),
+  userId: z.string().min(1),
+  appSlug: z.string().min(1),
+});

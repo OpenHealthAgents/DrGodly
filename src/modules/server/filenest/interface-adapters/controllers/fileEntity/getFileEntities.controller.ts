@@ -1,6 +1,6 @@
 import { TFileEntitiesSchema } from "../../../../../shared/entities/models/filenest/fileEntity";
 import { InputParseError } from "../../../../../../modules/shared/entities/errors/commonError";
-import { GetFileEntitiesValidationSchema } from "../../../../../shared/schemas/filenest/adminValidationSchemas";
+import { GetFileEntitiesValidationSchema } from "../../../../../shared/schemas/filenest/filenestValidationSchemas";
 import { getFileEntitiesUseCase } from "../../../application/useCases/fileEntity/getFileEntities.useCase";
 
 function presenter(data: TFileEntitiesSchema) {

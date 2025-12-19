@@ -52,3 +52,9 @@ export type TUpdateFileEntity = Omit<
   Pick<TIdsSchema, "userId">;
 
 export type TDeleteFileEntity = Pick<TIdsSchema, "id" | "orgId">;
+
+export type TGetFileEntitiesByAppId = {
+  appId: string;
+  orgId: string;
+  appSlug: string;
+};

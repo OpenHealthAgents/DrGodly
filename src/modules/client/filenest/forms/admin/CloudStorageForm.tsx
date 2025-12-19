@@ -5,7 +5,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { SelectItem } from "@/components/ui/select";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { TCreateOrUpdateCloudStorageFormSchema } from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+import { TCreateOrUpdateCloudStorageFormSchema } from "@/modules/shared/schemas/filenest/filenestValidationSchemas";
 import { cloudStorageVendorOptions } from "@/modules/shared/entities/enums/filenest/storage";
 import {
   FormInput,

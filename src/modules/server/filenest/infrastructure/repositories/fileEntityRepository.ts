@@ -9,6 +9,7 @@ import {
   TDeleteFileEntity,
   FileEntitiesSchema,
   FileEntitySchema,
+  TGetFileEntitiesByAppId,
 } from "../../../../shared/entities/models/filenest/fileEntity";
 import { randomUUID } from "crypto";
 import { logOperation } from "../../../../shared/utils/server-logger/log-operation";
@@ -196,6 +197,117 @@ export class FileEntityRepository implements IFileEntityRepository {
     } catch (error) {
       logOperation("error", {
         name: "deleteFileEntityRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+        context: { operationId },
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+      throw new OperationError("An unexpected error occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async getFileEntitiesByAppId(
+    getData: TGetFileEntitiesByAppId
+  ): Promise<TFileEntitiesSchema> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    logOperation("start", {
+      name: "getFileEntitiesByAppIdRepository",
+      startTimeMs,
+      context: { operationId },
+    });
+
+    try {
+      const fileEntities = await prismaFilenest.fileEntity.findMany({
+        where: {
+          orgId: getData.orgId,
+          appId: getData.appId,
+          appSlug: getData.appSlug,
+          isActive: true,
+        },
+      });
+
+      const data = await FileEntitiesSchema.parseAsync(fileEntities);
+
+      logOperation("success", {
+        name: "getFileEntitiesByAppIdRepository",
+        startTimeMs,
+        context: { operationId },
+      });
+
+      return data;
+    } catch (error) {
+      logOperation("error", {
+        name: "getFileEntitiesByAppIdRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+        context: { operationId },
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+      throw new OperationError("An unexpected error occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async getFileEntityById(
+    getData: TGetFileEntitiesByAppId & { id: bigint }
+  ): Promise<TFileEntitySchema | null> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    logOperation("start", {
+      name: "getFileEntityByIdRepository",
+      startTimeMs,
+      context: { operationId },
+    });
+
+    const { appId, appSlug, id, orgId } = getData;
+
+    try {
+      const fileEntity = await prismaFilenest.fileEntity.findUnique({
+        where: {
+          id,
+          orgId,
+          appId,
+          appSlug,
+          isActive: true,
+        },
+      });
+
+      if (!fileEntity) {
+        logOperation("success", {
+          name: "getFileEntityByIdRepository",
+          startTimeMs,
+          context: { operationId },
+        });
+
+        return null;
+      }
+
+      const data = await FileEntitySchema.parseAsync(fileEntity);
+
+      logOperation("success", {
+        name: "getFileEntityByIdRepository",
+        startTimeMs,
+        context: { operationId },
+      });
+
+      return data;
+    } catch (error) {
+      logOperation("error", {
+        name: "getFileEntityByIdRepository",
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",

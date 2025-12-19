@@ -15,7 +15,7 @@ import { handleInputParseError } from "@/modules/shared/utils/handleInputParseEr
 import {
   CreateOrUpdateFileEntityFormSchema,
   TCreateOrUpdateFileEntityFormSchema,
-} from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+} from "@/modules/shared/schemas/filenest/filenestValidationSchemas";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileEntityForm } from "../../forms/admin/FileEntityForm";

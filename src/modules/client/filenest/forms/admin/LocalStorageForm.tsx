@@ -4,7 +4,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { SelectItem } from "@/components/ui/select";
 import { FolderOpen, Loader2 } from "lucide-react";
-import { TCreateOrUpdateLocalStorageFormSchema } from "@/modules/shared/schemas/filenest/adminValidationSchemas";
+import { TCreateOrUpdateLocalStorageFormSchema } from "@/modules/shared/schemas/filenest/filenestValidationSchemas";
 import {
   FormInput,
   FormSelect,
