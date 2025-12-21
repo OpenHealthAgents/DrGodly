@@ -10,6 +10,7 @@ import { useFileUploadStore } from "@/modules/client/shared/store/file-upload-st
 import { TGetUserFilesControllerOutput } from "@/modules/server/filenest/interface-adapters/controllers/filenest";
 import { listFileTableColumn } from "./listFileTableColumn";
 import { useSearchParams } from "next/navigation";
+import ListFileCard from "./ListFileCard";
 
 interface IListFileTableProps {
   filesData?: TGetUserFilesControllerOutput | null;
@@ -28,6 +29,7 @@ function ListFileTable({
   const searchParams = useSearchParams();
   const appSlug = searchParams?.get("app") as string;
   const openModal = useFileUploadStore((state) => state.onOpen);
+  const filterBy = searchParams?.get("filterBy");
 
   if (error) {
     return (
@@ -67,6 +69,8 @@ function ListFileTable({
     <DataTable
       isLoading={isLoading}
       columns={listFileTableColumn()}
+      cardRender={ListFileCard}
+      defaultView="card"
       data={filesData ?? []}
       dataSize={filesData?.length ?? 0}
       label={"Your Files"}
@@ -74,6 +78,7 @@ function ListFileTable({
       addLabelName="Upload Files"
       filterField="fileEntityLabel"
       filterFieldLabel="File category"
+      customFilterValue={!!filterBy ? filterBy : null}
       filterValues={filterData}
       fallbackText={(filesData?.length === 0 && "No Files Found") || "No Files"}
       openModal={() => {

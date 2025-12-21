@@ -38,27 +38,6 @@ export const listFileTableColumn = (): ColumnDef<
       );
     },
   },
-  //   {
-  //     header: ({ column }) => {
-  //       const isSorted = column.getIsSorted();
-
-  //       return (
-  //         <TanstackTableColumnSorting
-  //           label="Name"
-  //           column={column}
-  //           isSorted={isSorted}
-  //         />
-  //       );
-  //     },
-  //     id: "appData",
-  //     accessorKey: "appData",
-  //     cell({ row }) {
-  //       const appData = appDatas?.find(
-  //         (appData) => appData.id === row.original.appId
-  //       );
-  //       return <span className="truncate">{appData?.name}</span>;
-  //     },
-  //   },
   {
     header: "File Size",
     accessorKey: "fileSize",
@@ -138,17 +117,17 @@ export const listFileTableColumn = (): ColumnDef<
                 Download
               </div>
             </DropdownMenuItem>
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               className="cursor-pointer space-x-2"
-              //   onClick={() =>
-              //     openModal()
-              //   }
+                onClick={() =>
+                  openModal()
+                }
             >
               <div className="flex items-center gap-2">
                 <Edit />
                 Edit
               </div>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="cursor-pointer space-x-2 text-rose-600 hover:!text-rose-600 dark:text-rose-500 dark:hover:!text-rose-500"
