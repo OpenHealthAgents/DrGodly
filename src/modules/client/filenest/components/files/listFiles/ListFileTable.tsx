@@ -11,6 +11,8 @@ import { TGetUserFilesControllerOutput } from "@/modules/server/filenest/interfa
 import { listFileTableColumn } from "./listFileTableColumn";
 import { useSearchParams } from "next/navigation";
 import ListFileCard from "./ListFileCard";
+import { MEDICAL_MIME_FILTER_TYPES } from "../../../types/mimeTypes";
+import { fileNestUserStore } from "@/modules/client/shared/store/filenest-user-store";
 
 interface IListFileTableProps {
   filesData?: TGetUserFilesControllerOutput | null;
@@ -29,6 +31,7 @@ function ListFileTable({
   const searchParams = useSearchParams();
   const appSlug = searchParams?.get("app") as string;
   const openModal = useFileUploadStore((state) => state.onOpen);
+  const openFilenestUserModal = fileNestUserStore((state) => state.onOpen);
   const filterBy = searchParams?.get("filterBy");
 
   if (error) {
@@ -63,23 +66,26 @@ function ListFileTable({
     );
   }
 
-  const filterData = fileUploadData?.fileEntities.map((entity) => entity.label);
-
   return (
     <DataTable
       isLoading={isLoading}
       columns={listFileTableColumn()}
-      cardRender={ListFileCard}
+      cardRender={(row) => (
+        <ListFileCard row={row} openModal={openFilenestUserModal} />
+      )}
+      cardColsClassName="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
       defaultView="card"
       data={filesData ?? []}
       dataSize={filesData?.length ?? 0}
       label={"Your Files"}
+      searchField="fileName"
       AddButtonIcon={<Upload />}
       addLabelName="Upload Files"
-      filterField="fileEntityLabel"
-      filterFieldLabel="File category"
+      filterField="fileType"
+      filterFieldLabel="File Type"
+      customFilterField="fileEntityLabel"
       customFilterValue={!!filterBy ? filterBy : null}
-      filterValues={filterData}
+      filterValues={MEDICAL_MIME_FILTER_TYPES}
       fallbackText={(filesData?.length === 0 && "No Files Found") || "No Files"}
       openModal={() => {
         openModal({

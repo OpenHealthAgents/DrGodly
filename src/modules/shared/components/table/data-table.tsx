@@ -92,6 +92,7 @@ type DataTableAdditionalType<TData> = {
   filterField?: string;
   filterFieldLabel?: string;
   filterValues?: any[];
+  customFilterField?: string | null;
   customFilterValue?: string | null;
   isLoading?: boolean;
   error?: string | null;
@@ -122,6 +123,7 @@ export function DataTable<TData, TValue>({
   searchField = "",
   filterField = "",
   filterFieldLabel = "",
+  customFilterField = null,
   customFilterValue = null,
   filterValues = [],
   isLoading = false,
@@ -166,12 +168,12 @@ export function DataTable<TData, TValue>({
   useEffect(() => {
     if (!filterField) return;
 
-    const column = table.getColumn(filterField);
+    const column = table.getColumn(customFilterField || filterField);
     if (!column) return;
 
     column.setFilterValue(customFilterValue ?? undefined);
     table.setPageIndex(0);
-  }, [customFilterValue, filterField, table]);
+  }, [customFilterField, customFilterValue, filterField, table]);
 
   if (!isMounted) return null;
 
