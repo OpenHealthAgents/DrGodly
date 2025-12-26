@@ -93,6 +93,22 @@ export class UserFilePermissionRepository
             orgId: data.orgId,
           },
         },
+        include: {
+          userFile: {
+            select: {
+              id: true,
+              fileName: true,
+              fileType: true,
+              fileSize: true,
+              storageType: true,
+              fileId: true,
+              filePath: true,
+              fileEntityId: true,
+              appSlug: true,
+              appId: true,
+            },
+          },
+        },
       });
 
       const parsed = await UserFilePermissionsSchema.parseAsync(records);
@@ -143,6 +159,22 @@ export class UserFilePermissionRepository
           sharedUserId: data.userId,
           userFile: {
             appSlug: data.appSlug,
+          },
+        },
+        include: {
+          userFile: {
+            select: {
+              id: true,
+              fileName: true,
+              fileType: true,
+              fileSize: true,
+              storageType: true,
+              fileId: true,
+              filePath: true,
+              fileEntityId: true,
+              appSlug: true,
+              appId: true,
+            },
           },
         },
       });

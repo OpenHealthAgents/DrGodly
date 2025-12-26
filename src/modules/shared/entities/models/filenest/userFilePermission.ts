@@ -1,4 +1,5 @@
 import z from "zod";
+import { ZodEStorageType } from "../../enums/filenest/storage";
 
 /* -------------------------------------------------------------------------- */
 /*                                  Base IDs                                  */
@@ -20,6 +21,21 @@ const RequiredFieldsSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 });
+
+export const UserFileSchema = z.object({
+  id: z.bigint(),
+  appId: z.string().nullable(),
+  appSlug: z.string().nullable(),
+  fileId: z.string(),
+  fileName: z.string(),
+  fileType: z.string(),
+  fileSize: z.bigint(),
+  storageType: ZodEStorageType,
+  filePath: z.string(),
+  fileEntityId: z.bigint(),
+});
+
+export type TUserFile = z.infer<typeof UserFileSchema>;
 
 /* -------------------------------------------------------------------------- */
 /*                         UserFilePermission Schema                           */
@@ -45,7 +61,13 @@ export type TUserFilePermissionSchema = z.infer<
   typeof UserFilePermissionSchema
 >;
 
-export const UserFilePermissionsSchema = z.array(UserFilePermissionSchema);
+export const UserFilePermissionsSchema = z.array(
+  UserFilePermissionSchema.and(
+    z.object({
+      userFile: UserFileSchema,
+    })
+  )
+);
 
 export type TUserFilePermissionsSchema = z.infer<
   typeof UserFilePermissionsSchema
