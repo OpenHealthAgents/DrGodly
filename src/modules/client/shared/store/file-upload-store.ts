@@ -1,10 +1,10 @@
-import { TGetFileUploadRequiredDataControllerOutput } from "@/modules/server/filenest/interface-adapters/controllers/fileUpload";
+import { TGetFileUploadRequiredDataControllerOutput } from "@/modules/server/filenest/interface-adapters/controllers/localFileOperation";
 import { ZSAError } from "zsa";
 import { create } from "zustand";
 
 export type ModalType = "fileUpload";
 
-interface AdminStoreModal {
+interface FileUploadStoreModal {
   type: ModalType | null;
   isOpen: boolean;
   trigger: number;
@@ -12,6 +12,8 @@ interface AdminStoreModal {
   title?: string | null;
   description?: string | null;
   error?: ZSAError | null;
+  revalidatePath?: string | null;
+  queryKey?: (string | number | null | undefined)[] | null;
   fileUploadData?: TGetFileUploadRequiredDataControllerOutput | null;
   incrementTrigger: () => void;
   incrementInModalTrigger: () => void;
@@ -20,12 +22,14 @@ interface AdminStoreModal {
     title?: string;
     description?: string;
     error?: ZSAError | null;
+    revalidatePath?: string | null;
     fileUploadData?: TGetFileUploadRequiredDataControllerOutput | null;
+    queryKey?: (string | number | null | undefined)[] | null;
   }) => void;
   onClose: () => void;
 }
 
-const _useFileUploadStore = create<AdminStoreModal>((set) => ({
+const _useFileUploadStore = create<FileUploadStoreModal>((set) => ({
   type: null,
   isOpen: false,
   trigger: 0,
@@ -36,6 +40,8 @@ const _useFileUploadStore = create<AdminStoreModal>((set) => ({
     description = null,
     error = null,
     fileUploadData = null,
+    revalidatePath = null,
+    queryKey = null,
   }) =>
     set({
       isOpen: true,
@@ -44,6 +50,8 @@ const _useFileUploadStore = create<AdminStoreModal>((set) => ({
       description,
       error,
       fileUploadData,
+      revalidatePath,
+      queryKey,
     }),
   onClose: () =>
     set({
@@ -53,6 +61,8 @@ const _useFileUploadStore = create<AdminStoreModal>((set) => ({
       description: null,
       error: null,
       fileUploadData: null,
+      revalidatePath: null,
+      queryKey: null,
       trigger: 0,
       triggerInModal: 0,
     }),

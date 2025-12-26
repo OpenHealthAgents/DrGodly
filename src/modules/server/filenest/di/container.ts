@@ -5,8 +5,10 @@ import {
   AppStorageSettingModule,
   CloudStorageModule,
   FileEntityModule,
-  FileUploadModule,
+  FilenestModule,
+  LocalFileOperationModule,
   LocalStorageModule,
+  UserFilePermissionModule,
 } from "./modules";
 
 const FilenestContainer = new Container({ defaultScope: "Singleton" });
@@ -16,7 +18,9 @@ const initializeContainer = () => {
   FilenestContainer.load(LocalStorageModule);
   FilenestContainer.load(AppStorageSettingModule);
   FilenestContainer.load(FileEntityModule);
-  FilenestContainer.load(FileUploadModule);
+  FilenestContainer.load(FilenestModule);
+  FilenestContainer.load(LocalFileOperationModule);
+  FilenestContainer.load(UserFilePermissionModule);
 };
 
 initializeContainer();

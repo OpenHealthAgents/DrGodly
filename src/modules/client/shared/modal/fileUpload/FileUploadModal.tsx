@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Upload, X, File, CheckCircle2 } from "lucide-react";
+import { Upload, X, File, CheckCircle2, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -22,14 +22,13 @@ import { FormSelect } from "@/modules/shared/custom-form-fields";
 import ActionTooltipProvider from "@/modules/shared/providers/action-tooltip-provider";
 import { formatStorage } from "@/modules/shared/helper";
 import { useServerAction } from "zsa-react";
-import { localUploadUserFile } from "../../server-actions/file-upload-action";
+import { uploadLocalUserFile } from "../../server-actions/file-upload-action";
 import { handleInputParseError } from "@/modules/shared/utils/handleInputParseError";
 import { usePathname } from "@/i18n/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 const uploadSchema = z.object({
   fileEntityId: z.bigint(),
-  // referenceId: z.string().nullable(),
-  // referenceType: z.string().nullable(),
 });
 
 type UploadFormData = z.infer<typeof uploadSchema>;
@@ -54,6 +53,10 @@ export function UploadModal() {
   const description = useFileUploadStore((state) => state.description);
   const fileUploadData = useFileUploadStore((state) => state.fileUploadData);
   const modalError = useFileUploadStore((state) => state.error);
+  const revalidatePath = useFileUploadStore((state) => state.revalidatePath);
+  const queryKey = useFileUploadStore((state) => state.queryKey);
+
+  const queryClient = useQueryClient();
 
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
@@ -71,22 +74,17 @@ export function UploadModal() {
     },
   });
 
-  useEffect(() => {
-    if (
-      fileUploadData?.fileEntities &&
-      fileUploadData.fileEntities.length >= 1
-    ) {
-      form.reset({
-        fileEntityId: fileUploadData.fileEntities[0].id,
-      });
-    }
-  }, [fileUploadData?.fileEntities, form]);
-
   const { execute: localFileUpload, isPending: isLocalFileUploadPending } =
-    useServerAction(localUploadUserFile, {
+    useServerAction(uploadLocalUserFile, {
       onSuccess({ data }) {
         if (data?.success) {
-          toast.success("Files uploaded successfully");
+          toast.success("File uploaded successfully.");
+          if (queryKey) {
+            queryClient.invalidateQueries({
+              queryKey: queryKey,
+            });
+          }
+          handleClose();
           return;
         }
         toast.error("An unexpected error occurred.", {
@@ -117,7 +115,9 @@ export function UploadModal() {
         progress: 0,
         status: "uploading",
         isDeleting: false,
-        objectUrl: URL.createObjectURL(file),
+        objectUrl: file.type.includes("image/")
+          ? URL.createObjectURL(file)
+          : undefined,
       }));
 
       setUploadedFiles((prev) => [...prev, ...newFiles]);
@@ -128,35 +128,38 @@ export function UploadModal() {
     }
   }, []);
 
-  const onDropRejected = useCallback((fileRejections: FileRejection[]) => {
-    if (fileRejections.length > 0) {
-      const tooManyFiles = fileRejections.find(
-        (rejection) => rejection.errors[0].code === "too-many-files"
-      );
+  const onDropRejected = useCallback(
+    (fileRejections: FileRejection[]) => {
+      if (fileRejections.length > 0) {
+        const tooManyFiles = fileRejections.find(
+          (rejection) => rejection.errors[0].code === "too-many-files"
+        );
 
-      const fileTooLarge = fileRejections.find(
-        (rejection) => rejection.errors[0].code === "file-too-large"
-      );
+        const fileTooLarge = fileRejections.find(
+          (rejection) => rejection.errors[0].code === "file-too-large"
+        );
 
-      if (tooManyFiles) {
-        toast.error("You can only upload up to 5 files at a time");
+        if (tooManyFiles) {
+          toast.error("You can only upload up to 5 files at a time");
+        }
+
+        if (fileTooLarge) {
+          toast.error(
+            `File size must be less than ${
+              fileUploadData?.maxFileSize ?? "100"
+            }MB`
+          );
+        }
       }
-
-      if (fileTooLarge) {
-        toast.error("File size must be less than 5MB");
-      }
-    }
-  }, []);
+    },
+    [fileUploadData]
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     onDropRejected,
     maxFiles: 5,
-    maxSize: 1024 * 1024 * 5, // 5MB
-    accept: {
-      "image/*": [],
-      "application/pdf": [".pdf"],
-    },
+    maxSize: 1024 * 1024 * (fileUploadData?.maxFileSize ?? 100),
   });
 
   const simulateUpload = (id: string) => {
@@ -197,6 +200,7 @@ export function UploadModal() {
     const appSlug = pathname.split("/").filter(Boolean)?.[1];
 
     const uploadData = {
+      revalidatePath,
       userId: session.data.user.id,
       orgId: session.data.user.currentOrgId,
       appSlug: appSlug,
@@ -215,12 +219,7 @@ export function UploadModal() {
       return;
     }
 
-    console.log(uploadData);
-
     await localFileUpload(uploadData);
-
-    // setUploadedFiles([]);
-    // form.reset();
   };
 
   const handleClose = () => {
@@ -322,6 +321,7 @@ export function UploadModal() {
                         <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center overflow-hidden">
                           {uploadedFile.status === "complete" ? (
                             uploadedFile?.objectUrl ? (
+                              // eslint-disable-next-line @next/next/no-img-element
                               <img
                                 src={uploadedFile.objectUrl}
                                 alt={uploadedFile.id}
@@ -367,8 +367,12 @@ export function UploadModal() {
                 control={form.control}
                 name="fileEntityId"
                 label="File Category"
-                placeholder="Select a category"
-                customValue={form.watch().fileEntityId?.toString()}
+                placeholder={
+                  !fileEntitiesSelect || fileEntitiesSelect.length === 0
+                    ? "No category to select"
+                    : "Select a category"
+                }
+                customValue={form.watch().fileEntityId?.toString() || undefined}
                 onCustomChange={(value) => {
                   form.setValue("fileEntityId", BigInt(value));
                 }}
@@ -382,21 +386,6 @@ export function UploadModal() {
                   </SelectItem>
                 ))}
               </FormSelect>
-
-              {/* <div className="grid sm:grid-cols-2 gap-2">
-                <FormInput
-                  control={form.control}
-                  name="referenceId"
-                  label="Reference ID (optional)"
-                  placeholder="Enter reference id"
-                />
-                <FormInput
-                  control={form.control}
-                  name="referenceType"
-                  label="Reference Type (optional)"
-                  placeholder="Enter reference type"
-                />
-              </div> */}
 
               <div className="flex gap-3 justify-end">
                 <Button
@@ -415,7 +404,17 @@ export function UploadModal() {
                     isLocalFileUploadPending
                   }
                 >
-                  Upload Files
+                  {isLocalFileUploadPending ? (
+                    <>
+                      <Loader2 className="animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-4 h-4" />
+                      Upload Files
+                    </>
+                  )}
                 </Button>
               </div>
             </form>

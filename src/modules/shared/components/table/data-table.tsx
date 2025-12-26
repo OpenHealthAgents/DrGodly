@@ -87,9 +87,13 @@ type DataTableAdditionalType<TData> = {
   addLabelName?: string;
   fallbackText?: string;
   searchField?: string;
+  AddButtonIcon?: React.ReactNode;
   isAddButton?: boolean;
   filterField?: string;
+  filterFieldLabel?: string;
   filterValues?: any[];
+  customFilterField?: string | null;
+  customFilterValue?: string | null;
   isLoading?: boolean;
   error?: string | null;
   openModal?: () => void;
@@ -113,10 +117,14 @@ export function DataTable<TData, TValue>({
   label,
   dataSize = 0,
   isAddButton = true,
+  AddButtonIcon = <Plus />,
   addLabelName = "Add LabelName",
   fallbackText = "No results",
   searchField = "",
   filterField = "",
+  filterFieldLabel = "",
+  customFilterField = null,
+  customFilterValue = null,
   filterValues = [],
   isLoading = false,
   error = null,
@@ -156,6 +164,16 @@ export function DataTable<TData, TValue>({
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!filterField) return;
+
+    const column = table.getColumn(customFilterField || filterField);
+    if (!column) return;
+
+    column.setFilterValue(customFilterValue ?? undefined);
+    table.setPageIndex(0);
+  }, [customFilterField, customFilterValue, filterField, table]);
 
   if (!isMounted) return null;
 
@@ -212,7 +230,9 @@ export function DataTable<TData, TValue>({
                 <ListFilter className="mr-2 h-4 w-4" /> Filter
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Filter by {filterField}</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  Filter by {filterFieldLabel || filterField}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {filterValues.map((value, index) => {
                   const isActive =
@@ -248,7 +268,8 @@ export function DataTable<TData, TValue>({
           {/* Add */}
           {isAddButton && (
             <Button size="sm" className="cursor-pointer" onClick={openModal}>
-              <Plus className="mr-2 h-4 w-4" /> {addLabelName}
+              <span className="mr-2 h-4 w-4 inline-flex">{AddButtonIcon}</span>{" "}
+              {addLabelName}
             </Button>
           )}
 
