@@ -15,6 +15,7 @@ import {
 } from "better-auth/plugins";
 import { decodeJwt } from "jose";
 import { getRBAC } from "../utils/getRBAC";
+import { mapNewUserToOrg } from "../utils/mapNewUserToOrg";
 
 export const auth = betterAuth({
   database: prismaAdapter(prismaMain, {
@@ -185,11 +186,11 @@ export const auth = betterAuth({
       skipVerificationOnEnable: true,
     }),
     admin({
-      defaultRole: "guest",
+      defaultRole: "patient",
       adminRoles: ["admin"],
     }),
     organization({
-      allowUserToCreateOrganization: async (user) => {
+      allowUserToCreateOrganization: async (user: any) => {
         const adminUser = await prismaMain.user.findFirst({
           where: {
             id: user.id,
@@ -295,6 +296,8 @@ export const auth = betterAuth({
         };
       }
         */
+
+      await mapNewUserToOrg(user.id);
 
       const { roles, organizations, userRBAC } = await getRBAC(user.id);
 

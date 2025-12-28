@@ -3,6 +3,7 @@ import { getPatientAppointments } from "@/modules/client/telemedicine/server-act
 import AppointmentsTable from "@/modules/client/telemedicine/components/patient/appointments/listAppointments/AppointmentsTable";
 import { redirect } from "@/i18n/navigation";
 import { getLocale } from "next-intl/server";
+import { prismaTelemedicine } from "@/modules/server/prisma/prisma";
 
 async function AppointmentsPage() {
   const session = await getServerSession();
@@ -20,6 +21,20 @@ async function AppointmentsPage() {
     email: session.user.email,
     orgId: session.user?.currentOrgId,
   };
+
+  const patient = await prismaTelemedicine.patient.findUnique({
+    where: {
+      orgId_userId: {
+        orgId: user.orgId,
+        userId: user.id,
+      },
+    },
+  });
+
+  if (!patient) {
+    redirect({ href: "/bezs/telemedicine/patient/profile", locale });
+    return;
+  }
 
   const [appointments, error] = await getPatientAppointments({
     userId: user.id,

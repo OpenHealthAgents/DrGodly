@@ -19,6 +19,8 @@ interface IListFileTableProps {
   filesData?: TGetUserFilesControllerOutput | null;
   error?: ZSAError | null;
   isLoading: boolean;
+  queryKey?: string[];
+  revalidatePath?: string;
 }
 
 function ListFileTable({
@@ -28,6 +30,8 @@ function ListFileTable({
   filesData,
   error,
   isLoading,
+  queryKey,
+  revalidatePath,
 }: IListFileTableProps & IFileUploadProps) {
   const searchParams = useSearchParams();
   const appSlug = searchParams?.get("app") as string;
@@ -98,7 +102,8 @@ function ListFileTable({
           type: "fileUpload",
           error: modalError,
           fileUploadData,
-          queryKey: ["filesData", user.orgId, appSlug],
+          queryKey,
+          revalidatePath,
         });
       }}
     />

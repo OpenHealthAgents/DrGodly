@@ -5,11 +5,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TAppointments } from "@/modules/shared/entities/models/telemedicine/dashboard";
 
 interface TableProps {
   columns: { header: string; key: string; className?: string }[];
   renderRow: (item: any) => React.ReactNode;
-  data: any[];
+  data: TAppointments;
 }
 
 export const TableComp = ({ columns, renderRow, data }: TableProps) => {

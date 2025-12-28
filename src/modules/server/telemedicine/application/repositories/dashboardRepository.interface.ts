@@ -1,10 +1,10 @@
 import {
   TAppointments,
-  TGetDashboardDataPayload,
+  TGetDashboardAppointmentsDataPayload,
 } from "../../../../shared/entities/models/telemedicine/dashboard";
 
 export interface IDashboardRepository {
   getDashboardAppointmentsData(
-    payload: TGetDashboardDataPayload
+    payload: TGetDashboardAppointmentsDataPayload
   ): Promise<TAppointments>;
 }

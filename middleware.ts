@@ -90,6 +90,10 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  if (pathname === "/") {
+    return NextResponse.next();
+  }
+
   const session = await getMiddlewareSession(req);
 
   // Auth routes (accessible only if not logged in)

@@ -215,7 +215,7 @@ function FileUpload({ user }: IFileUploadProps) {
       fileEntityId: data.fileEntityId,
       files: uploadedFiles
         .filter((fileData) => fileData.status === "complete")
-        .map((fileData) => fileData.file),
+        .map((fileData) => ({ file: fileData.file })),
     };
 
     if (

@@ -18,41 +18,42 @@ export async function signOutController(
 
   const { isKeycloak } = getAuthProvider();
 
-  let data;
+  // let data;
 
-  if (isKeycloak) {
-    const {
-      success,
-      data: refreshTokenData,
-      error,
-    } = await SignOutWithKeycloakGenericOAuthSchema.safeParseAsync({
-      refreshToken,
-    });
+  // if (isKeycloak) {
+  //   const {
+  //     success,
+  //     data: refreshTokenData,
+  //     error,
+  //   } = await SignOutWithKeycloakGenericOAuthSchema.safeParseAsync({
+  //     refreshToken,
+  //   });
 
-    if (error && !success) {
-      throw new InputParseError(error.name, { cause: error });
-    }
+  //   if (error && !success) {
+  //     throw new InputParseError(error.name, { cause: error });
+  //   }
 
-    const [keycloakRes, betterauthRes] = await Promise.all([
-      await keyCloakAuthenticationService.signOutWithKeycloakGenericOAuth(
-        refreshTokenData.refreshToken
-      ),
-      await betterAuthAuthenticationService.signOut(),
-    ]);
+  //   const [keycloakRes, betterauthRes] = await Promise.all([
+  //     await keyCloakAuthenticationService.signOutWithKeycloakGenericOAuth(
+  //       refreshTokenData.refreshToken
+  //     ),
+  //     await betterAuthAuthenticationService.signOut(),
+  //   ]);
 
-    if (
-      !keycloakRes ||
-      !betterauthRes ||
-      !keycloakRes.success ||
-      !betterauthRes.success
-    ) {
-      throw new Error("Failed to logout, please try again!");
-    }
+  //   if (
+  //     !keycloakRes ||
+  //     !betterauthRes ||
+  //     !keycloakRes.success ||
+  //     !betterauthRes.success
+  //   ) {
+  //     throw new Error("Failed to logout, please try again!");
+  //   }
 
-    data = keycloakRes || betterauthRes;
-  } else {
-    data = await betterAuthAuthenticationService.signOut();
-  }
+  //   data = keycloakRes || betterauthRes;
+  // } else {
+  //   data = await betterAuthAuthenticationService.signOut();
+  // }
+  const data = await betterAuthAuthenticationService.signOut();
 
   return data;
 }

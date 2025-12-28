@@ -30,7 +30,7 @@ function PatientDashboard({
   const { appointmentCounts, last5Records, monthlyData, totalAppointments } =
     dashboardData;
 
-  const patientData = last5Records[0].patient;
+  const patientData = last5Records?.[0]?.patient;
 
   const cardData = [
     {
@@ -98,13 +98,13 @@ function PatientDashboard({
           <AppoinmentChart data={monthlyData} />
         </div>
 
-        {/* <div className="rounded-xl mt-8">
-            <RecentAppointmentsTable data={last5Records} />
-          </div> */}
+        <div className="rounded-xl mt-8">
+          <RecentAppointmentsTable data={last5Records} />
+        </div>
       </div>
       {/* Right */}
       <div className="w-full">
-        <Card className="w-full xxs:h-[450px] mb-8 p-4">
+        <Card className="w-full xxs:h-[420px] mb-8 p-4">
           <StatSummaryChart
             data={appointmentCounts}
             total={totalAppointments}

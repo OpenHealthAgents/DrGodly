@@ -50,7 +50,7 @@ export async function uploadLocalUserFileUseCase(
   }
 
   files.forEach((file) => {
-    if (file.size > appStorage.maxFileSize * 1024 * 1024) {
+    if (file.file.size > appStorage.maxFileSize * 1024 * 1024) {
       throw new Error("File size exceeds " + appStorage.maxFileSize);
     }
   });
@@ -58,7 +58,7 @@ export async function uploadLocalUserFileUseCase(
   const fileDatas = await Promise.all(
     files.map(async (file) => {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", file.file);
       formData.append(
         "basePath",
         appStorage.localStorageConfig?.basePath || ""
@@ -89,6 +89,8 @@ export async function uploadLocalUserFileUseCase(
         appId: app.id,
         appSlug,
         fileEntityId,
+        referenceId: file.referenceId,
+        referenceType: file.referenceType,
         storageType: appStorage.type,
         appStorageSettingId: appStorage.id,
         createdBy: userId,

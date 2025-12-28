@@ -2,6 +2,7 @@ import { redirect } from "@/i18n/navigation";
 import PatientDashboard from "@/modules/client/telemedicine/components/patient/dashboard/PatientDashboard";
 import { getDashboardAppointmentsDataAction } from "@/modules/client/telemedicine/server-actions/dashboard-actions";
 import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
+import { prismaTelemedicine } from "@/modules/server/prisma/prisma";
 import { getLocale } from "next-intl/server";
 
 async function PatientDashboardPage() {
@@ -20,6 +21,22 @@ async function PatientDashboardPage() {
     email: session.user.email,
     orgId: session.user.currentOrgId,
   };
+
+  const patient = await prismaTelemedicine.patient.findUnique({
+    where: {
+      orgId_userId: {
+        orgId: user.orgId,
+        userId: user.id,
+      },
+    },
+  });
+
+  console.log(patient);
+
+  if (!patient) {
+    redirect({ href: "/bezs/telemedicine/patient/profile", locale });
+    return;
+  }
 
   const [data, error] = await getDashboardAppointmentsDataAction({
     orgId: user.orgId,

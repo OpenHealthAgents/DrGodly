@@ -38,6 +38,8 @@ export const FileDataSchema = z.object({
   orgId: z.string(),
   appId: z.string(),
   appSlug: z.string(),
+  referenceId: z.string().nullish(),
+  referenceType: z.string().nullish(),
   fileEntityId: z.bigint(),
   storageType: z.enum(["LOCAL", "CLOUD"]),
   appStorageSettingId: z.bigint(),

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/command";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "@/i18n/navigation";
+import { useSession } from "@/modules/client/auth/betterauth/auth-client";
 import { SearchIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -21,11 +22,11 @@ const appsList = [
     logo: "/app-icons/admin.svg",
     href: "/bezs/admin",
   },
-  {
-    name: "AiHub",
-    logo: "/app-icons/aihub.svg",
-    href: "/bezs/aihub",
-  },
+  // {
+  //   name: "AiHub",
+  //   logo: "/app-icons/aihub.svg",
+  //   href: "/bezs/aihub",
+  // },
   {
     name: "File Nest",
     logo: "/app-icons/file-nest.svg",
@@ -39,6 +40,7 @@ const appsList = [
 ];
 
 export function CommandSearch() {
+  const session = useSession();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -51,6 +53,8 @@ export function CommandSearch() {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
+
+  const role = session?.data?.user?.role;
 
   return (
     <>
@@ -79,9 +83,20 @@ export function CommandSearch() {
             <CommandGroup heading="Apps">
               <div>
                 {appsList.map((app) => {
+                  if (app.href === "/bezs/admin" && role !== "admin") {
+                    return null;
+                  }
+
+                  let h = app.href;
+
+                  if (role === "patient" && app.href === "/bezs/telemedicine")
+                    h = "/bezs/telemedicine/patient";
+                  if (role === "doctor" && app.href === "/bezs/telemedicine")
+                    h = "/bezs/telemedicine/doctor";
+
                   return (
                     <CommandItem asChild key={app.href}>
-                      <Link href={app.href} onClick={() => setOpen(false)}>
+                      <Link href={h} onClick={() => setOpen(false)}>
                         <Image
                           src={app.logo}
                           alt={app.name}

@@ -16,7 +16,6 @@ import { homeSidebarData } from "./menu-datas";
 import { useSession } from "@/modules/client/auth/betterauth/auth-client";
 import { useEffect, useState } from "react";
 import { getRolewiseAppMenuItems } from "./utils";
-import { Loader2 } from "lucide-react";
 
 type TUser = {
   name: string;

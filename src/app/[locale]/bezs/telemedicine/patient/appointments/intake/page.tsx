@@ -1,11 +1,15 @@
 import AiIntake from "@/modules/client/telemedicine/components/patient/AiIntake";
 import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
 import { preIntakeAppointmentPrompt } from "../../../data/prompt";
+import { prismaTelemedicine } from "@/modules/server/prisma/prisma";
+import { getLocale } from "next-intl/server";
+import { redirect } from "@/i18n/navigation";
 
 async function PatintAskAIPage() {
   const session = await getServerSession();
+  const locale = await getLocale();
 
-  if (!session) {
+  if (!session || !session.user.currentOrgId) {
     throw new Error("UNAUTHORIZED");
   }
 
@@ -14,7 +18,22 @@ async function PatintAskAIPage() {
     name: session.user.name,
     email: session.user.email,
     image: session.user.image,
+    orgId: session.user?.currentOrgId,
   };
+
+  const patient = await prismaTelemedicine.patient.findUnique({
+    where: {
+      orgId_userId: {
+        orgId: user.orgId,
+        userId: user.id,
+      },
+    },
+  });
+
+  if (!patient) {
+    redirect({ href: "/bezs/telemedicine/patient/profile", locale });
+    return;
+  }
 
   const appointmentData = {
     assistant: {

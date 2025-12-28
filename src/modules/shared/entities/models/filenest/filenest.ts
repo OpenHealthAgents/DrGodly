@@ -8,6 +8,23 @@ export type TGetUserFilesPayload = {
   appSlug: string;
 };
 
+export type TGetUserFilesByEntityPayload = {
+  userId: string;
+  orgId: string;
+  appId: string;
+  appSlug: string;
+  type: string;
+  name?: string | null;
+};
+
+export type TGetUserFilesByEntityIdPayload = {
+  userId: string;
+  orgId: string;
+  appId: string;
+  appSlug: string;
+  id: bigint;
+};
+
 /* FileEntity schema */
 export const FileEntitySchema = z.object({
   id: z.bigint(),

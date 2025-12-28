@@ -1,4 +1,8 @@
-import { TGetUserFilesPayload } from "../../../../shared/entities/models/filenest/filenest";
+import {
+  TGetUserFilesByEntityIdPayload,
+  TGetUserFilesByEntityPayload,
+  TGetUserFilesPayload,
+} from "../../../../shared/entities/models/filenest/filenest";
 import { TUserFiles } from "../../../../shared/entities/models/filenest/filenest";
 
 export interface IFilenestRepository {
@@ -8,4 +12,12 @@ export interface IFilenestRepository {
     orgId: string,
     userFileId: bigint
   ): Promise<boolean>;
+
+  getUserFilesByEntity(
+    payload: TGetUserFilesByEntityPayload
+  ): Promise<TUserFiles>;
+
+  getUserFilesByEntityId(
+    payload: TGetUserFilesByEntityIdPayload
+  ): Promise<TUserFiles>;
 }

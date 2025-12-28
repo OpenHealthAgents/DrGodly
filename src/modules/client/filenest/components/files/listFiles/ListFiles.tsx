@@ -91,6 +91,7 @@ function ListFiles({ user }: IListFilesProps) {
         filesData={filesData?.[0]}
         isLoading={filesDataIsPending || filesDataIsFetching}
         error={filesDataError}
+        queryKey={["filesData", user.orgId, appSlug]}
       />
     </div>
   );

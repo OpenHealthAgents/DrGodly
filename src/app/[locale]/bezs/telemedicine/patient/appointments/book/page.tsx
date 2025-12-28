@@ -1,10 +1,13 @@
+import { redirect } from "@/i18n/navigation";
 import { BookAppointment } from "@/modules/client/telemedicine/components/patient/appointments/bookAppointment/book-appointment";
 import { getDoctorsByOrg } from "@/modules/client/telemedicine/server-actions/doctor-action";
 import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
-import React from "react";
+import { prismaTelemedicine } from "@/modules/server/prisma/prisma";
+import { getLocale } from "next-intl/server";
 
 async function BookAppointmentPage() {
   const session = await getServerSession();
+  const locale = await getLocale();
 
   if (!session || !session.user.currentOrgId) {
     throw new Error("UNAUTHORIZED");
@@ -17,6 +20,20 @@ async function BookAppointmentPage() {
     email: session.user.email,
     orgId: session.user?.currentOrgId,
   };
+
+  const patient = await prismaTelemedicine.patient.findUnique({
+    where: {
+      orgId_userId: {
+        orgId: user.orgId,
+        userId: user.id,
+      },
+    },
+  });
+
+  if (!patient) {
+    redirect({ href: "/bezs/telemedicine/patient/profile", locale });
+    return;
+  }
 
   const [data, error] = await getDoctorsByOrg({ orgId: user.orgId });
 

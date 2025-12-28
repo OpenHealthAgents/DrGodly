@@ -1,7 +1,6 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-
 import {
   ResponsiveContainer,
   BarChart,
@@ -25,44 +24,67 @@ interface DataProps {
 
 export const AppoinmentChart = ({ data }: DataProps) => {
   return (
-    <Card className="rounded-xl p-4 h-full gap-0">
-      <div className="flex justify-between items-center">
+    <Card className="rounded-xl p-4 h-full">
+      <div className="flex justify-between items-center mb-2">
         <h1 className="text-lg font-semibold">Appointments</h1>
       </div>
 
       <ResponsiveContainer width="100%" height="90%">
-        <BarChart width={100} height={300} data={data} barSize={25}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ddd" />
+        <BarChart data={data} barSize={24}>
+          <CartesianGrid
+            strokeDasharray="3 3"
+            vertical={false}
+            stroke="var(--border)"
+          />
+
           <XAxis
             dataKey="name"
             axisLine={false}
-            tick={{ fill: "#9ca3af" }}
             tickLine={false}
+            tick={{ fill: "var(--muted-foreground)" }}
           />
-          <YAxis axisLine={false} tick={{ fill: "#9ca3af" }} tickLine={false} />
+
+          <YAxis
+            allowDecimals={false}
+            // tickCount={5}
+            tickFormatter={(value) => value.toString()}
+            axisLine={false}
+            tickLine={false}
+            tick={{ fill: "var(--muted-foreground)" }}
+          />
+
           <Tooltip
-            contentStyle={{ borderRadius: "10px", borderColor: "#fff" }}
+            contentStyle={{
+              borderRadius: "0.5rem",
+              backgroundColor: "var(--popover)",
+              border: "1px solid var(--border)",
+              color: "var(--popover-foreground)",
+            }}
           />
+
           <Legend
             align="left"
             verticalAlign="top"
             wrapperStyle={{
-              paddingTop: "20px",
-              paddingBottom: "40px",
+              paddingTop: "16px",
+              paddingBottom: "32px",
               textTransform: "capitalize",
+              color: "var(--foreground)",
             }}
           />
+
           <Bar
             dataKey="appointment"
-            fill="#000000"
+            fill="var(--muted-foreground)"
             legendType="circle"
-            radius={[10, 10, 0, 0]}
+            radius={[8, 8, 0, 0]}
           />
+
           <Bar
             dataKey="completed"
-            fill="#2563eb"
+            fill="var(--primary)"
             legendType="circle"
-            radius={[10, 10, 0, 0]}
+            radius={[8, 8, 0, 0]}
           />
         </BarChart>
       </ResponsiveContainer>

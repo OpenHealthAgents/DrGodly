@@ -1,4 +1,5 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { FilenestUserModalProvider } from "@/modules/client/filenest/providers/FilenestUserModalProvider";
 import { FileUploadModalProvider } from "@/modules/client/shared/provider/FileUploadModalProvider";
 import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
 import BreadCrumb from "@/modules/shared/components/breadcrumb";
@@ -39,6 +40,7 @@ const AppListingLayout = async ({
           <BreadCrumb />
           <div className="w-full">
             <FileUploadModalProvider />
+            <FilenestUserModalProvider />
             {children}
           </div>
         </main>

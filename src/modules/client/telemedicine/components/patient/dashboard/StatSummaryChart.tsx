@@ -17,17 +17,17 @@ export const StatSummaryChart = ({
     {
       name: "Total",
       count: total || 0,
-      fill: "white",
+      fill: "var(--card)",
     },
     {
-      name: "Appointments",
-      count: data?.PENDING + data?.SCHEDULED || 0,
-      fill: "#000",
+      name: "Pending",
+      count: data?.PENDING + data?.SCHEDULED + data?.RESCHEDULED || 0,
+      fill: "var(--foreground)",
     },
     {
-      name: "Consultations",
+      name: "Completed",
       count: data?.COMPLETED || 0,
-      fill: "#2563eb",
+      fill: "var(--primary)",
     },
   ];
 
@@ -37,7 +37,7 @@ export const StatSummaryChart = ({
   return (
     <div className="rounded-xl w-full h-full">
       <div className="flex flex-wrap gap-2 justify-between items-center">
-        <h1 className="text-lg font-semibold">Summary</h1>
+        <h1 className="text-lg font-semibold">Appointments Summary</h1>
 
         <Button
           asChild
@@ -45,7 +45,7 @@ export const StatSummaryChart = ({
           variant="outline"
           className="font-normal text-xs bg-transparent p-2 h-0 hover:underline border-0 shadow-none hover:bg-transparent"
         >
-          <Link href="/bezs/tele-medicine/patient/appointments">
+          <Link href="/bezs/telemedicine/patient/appointments">
             See details
           </Link>
         </Button>
@@ -61,37 +61,48 @@ export const StatSummaryChart = ({
             barSize={32}
             data={dataInfo}
           >
-            <RadialBar background dataKey="count" />
+            <RadialBar
+              background={{ fill: "var(--border)" }}
+              dataKey="count"
+              cornerRadius={999}
+              isAnimationActive
+            />
           </RadialBarChart>
         </ResponsiveContainer>
 
         <Users
-          size={30}
-          className="absolute size-[16px] xxs:size-[30px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-400"
+          size={40}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={{ color: "var(--muted-foreground)" }}
         />
       </div>
 
       <div className="flex justify-center flex-wrap md:flex-nowrap gap-4 xs:gap-16">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-[#000000] rounded-xl" />
+            <div
+              className="w-4 h-4 rounded-full"
+              style={{ backgroundColor: "var(--foreground)" }}
+            />
             <h1 className="font-bold">{formatNumber(appointment)}</h1>
           </div>
-          <h2 className="text-xs text-gray-400">
-            {dataInfo[1].name}(
-            {((appointment / (appointment + consultation)) * 100).toFixed(0)})
+          <h2 className="text-xs text-muted-foreground">
+            {dataInfo[1].name} (
+            {((appointment / (appointment + consultation)) * 100).toFixed(0)}%)
           </h2>
         </div>
 
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-[#2563eb] rounded-xl" />
+            <div
+              className="w-4 h-4 rounded-full"
+              style={{ backgroundColor: "var(--primary)" }}
+            />
             <h1 className="font-bold">{formatNumber(consultation)}</h1>
           </div>
-
-          <h2 className="text-xs text-gray-400">
-            {dataInfo[2].name}(
-            {((consultation / (appointment + consultation)) * 100).toFixed(0)})
+          <h2 className="text-xs text-muted-foreground">
+            {dataInfo[2].name} (
+            {((consultation / (appointment + consultation)) * 100).toFixed(0)}%)
           </h2>
         </div>
       </div>

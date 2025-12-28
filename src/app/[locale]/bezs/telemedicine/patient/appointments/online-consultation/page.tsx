@@ -4,6 +4,7 @@ import { redirect } from "@/i18n/navigation";
 import { getAppointmentForOnlineConsultation } from "@/modules/client/telemedicine/server-actions/appointment-action";
 import { getLocale } from "next-intl/server";
 import Consult from "@/modules/client/telemedicine/components/patient/online-consultation/Consult";
+import { prismaTelemedicine } from "@/modules/server/prisma/prisma";
 
 const PatientOnlineConsultationPage = async (
   props: PageProps<"/[locale]/bezs/telemedicine/patient/appointments/online-consultation">
@@ -16,6 +17,20 @@ const PatientOnlineConsultationPage = async (
 
   if (!session || !session.user.currentOrgId) {
     redirect({ href: "/", locale });
+    return;
+  }
+
+  const patient = await prismaTelemedicine.patient.findUnique({
+    where: {
+      orgId_userId: {
+        orgId: session.user.currentOrgId,
+        userId: session.user.id,
+      },
+    },
+  });
+
+  if (!patient) {
+    redirect({ href: "/bezs/telemedicine/patient/profile", locale });
     return;
   }
 
