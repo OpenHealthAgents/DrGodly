@@ -3,6 +3,7 @@ import { Doctor } from "./types";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { usePatientModalStore } from "@/modules/client/telemedicine/stores/patient-modal-store";
+import { getProfileInitials } from "@/modules/shared/helper";
 
 export const DoctorCard = ({
   doctor,
@@ -32,11 +33,9 @@ export const DoctorCard = ({
       <div className="flex flex-col md:flex-row gap-4 flex-1">
         {/* Avatar */}
         <div className="flex-shrink-0">
-          <img
-            src={doctor.image || "https://picsum.photos/seed/jane/200/200"}
-            alt={doctor.name}
-            className="w-20 h-20 rounded-full object-cover border"
-          />
+          <p className="w-18 h-18 rounded-full border flex items-center justify-center text-3xl font-semibold uppercase bg-muted text-foreground">
+            {getProfileInitials(doctor.name)}
+          </p>
         </div>
 
         {/* Content */}

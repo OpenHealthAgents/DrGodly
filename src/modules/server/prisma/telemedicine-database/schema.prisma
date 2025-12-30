@@ -52,7 +52,7 @@ enum AppointmentStatus {
 enum AppointmentMode {
     VIRTUAL
     INPERSON
-    IN_TAKE
+    INTAKE
 }
 
 enum DayOfWeek {
@@ -73,6 +73,11 @@ enum ReviewStatus {
     DELETED // soft-deleted (kept for audit)
 }
 
+enum DoctorType {
+    HUMAN
+    INTAKE
+}
+
 // ───────────────────────────
 // ROOT DOCTOR
 // ───────────────────────────
@@ -87,8 +92,9 @@ model Doctor {
     registrationNumber   String?
     registrationProvider String?
 
-    isCompleted         Boolean @default(false)
-    isABDMDoctorProfile Boolean @default(false)
+    doctorType          DoctorType @default(HUMAN)
+    isCompleted         Boolean    @default(false)
+    isABDMDoctorProfile Boolean    @default(false)
 
     personal             DoctorPersonalDetail?
     qualification        DoctorQualification?
@@ -597,39 +603,55 @@ enum CancelledBy {
 }
 
 model PreAppointmentMap {
-    id                    BigInt @id @default(autoincrement())
-    previsitAppointmentId String
+    id BigInt @id @default(autoincrement())
+
+    intakeAppointmentId   String
     followUpAppointmentId String
+
+    intakeAppointment   Appointment @relation("Intake", fields: [intakeAppointmentId], references: [id], onDelete: Cascade)
+    followUpAppointment Appointment @relation("FollowUp", fields: [followUpAppointmentId], references: [id], onDelete: Cascade)
 
     createdBy String?
     updatedBy String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@unique([intakeAppointmentId])
+    @@unique([followUpAppointmentId])
 }
 
 model Appointment {
-    id              String            @id @default(uuid())
-    patientId       String
-    doctorId        String
-    orgId           String
+    id    String @id @default(uuid())
+    orgId String
+
+    patientId String
+    doctorId  String?
+
+    appointmentMode AppointmentMode
+
     appointmentDate DateTime
     time            String
-    status          AppointmentStatus @default(PENDING)
-    type            String
-    price           Float?
-    priceCurrency   String?
-    note            String?
-    appointmentMode AppointmentMode
-    virtualRoomId   String?           @unique
-    cancelReason    String?
-    cancelledBy     CancelledBy?
+
+    status        AppointmentStatus @default(PENDING)
+    type          String
+    price         Float?
+    priceCurrency String?
+    note          String?
+
+    virtualRoomId String?      @unique
+    cancelReason  String?
+    cancelledBy   CancelledBy?
 
     // per-participant visibility
     isPatientDeleted Boolean @default(false)
     isDoctorDeleted  Boolean @default(false)
 
     patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
-    doctor  Doctor  @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+    doctor  Doctor? @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+    // mapping relations
+    intakeMapping   PreAppointmentMap? @relation("Intake")
+    followUpMapping PreAppointmentMap? @relation("FollowUp")
 
     review            Review?
     appointmentAudits AppointmentAudit[]

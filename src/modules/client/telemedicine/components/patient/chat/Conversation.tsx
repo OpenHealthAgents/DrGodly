@@ -12,7 +12,8 @@ import {
   MessageResponse,
 } from "@/components/ai-elements/message";
 import { Avatar } from "@/components/ui/avatar";
-import { Brain, MessageSquareIcon } from "lucide-react";
+import { TSharedUser } from "@/modules/shared/types";
+import { Brain, MessageSquareIcon, User } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type TMessageItem = {
@@ -28,13 +29,6 @@ type TMessageItem = {
   }[];
 };
 
-type TUser = {
-  id: string;
-  name: string;
-  email: string;
-  image: string | null | undefined;
-};
-
 const ConversationChat = ({
   messages,
   liveTranscript,
@@ -44,7 +38,7 @@ const ConversationChat = ({
   messages: TMessageItem[];
   liveTranscript: string;
   liveRole: "user" | "assistant" | null;
-  user: TUser;
+  user: TSharedUser;
 }) => {
   const [visibleMessages, setVisibleMessages] = useState<TMessageItem[]>([]);
 
@@ -72,10 +66,8 @@ const ConversationChat = ({
                         <Brain className="size-6" />
                       </div>
                     ) : (
-                      <div className="bg-primary flex-1 w-fit rounded-full p-2">
-                        <p className="text-2xl size-6 text-secondary">
-                          {user.name[0]}
-                        </p>
+                      <div className="bg-primary/50 flex-1 w-fit rounded-full p-2">
+                        <User className="size-6" />
                       </div>
                     )}
                     <MessageResponse>{message.content}</MessageResponse>

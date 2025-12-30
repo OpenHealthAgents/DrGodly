@@ -36,7 +36,8 @@ const OauthButton = ({
         await authClient.signIn.social(
           {
             provider: oauthName,
-            callbackURL: "/bezs",
+            callbackURL: `${process.env.NEXT_PUBLIC_APP_URL}/api/rolebased-redirect`,
+            newUserCallbackURL: "/set-username",
           },
           {
             onError(ctx) {

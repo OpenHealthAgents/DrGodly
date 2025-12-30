@@ -43,17 +43,13 @@ function matchRoute(pathname: string, route: string): boolean {
   return pathname === route || pathname.startsWith(`${route}`);
 }
 
-const authRoutes = [
-  "/sign",
-  "/email-verification",
-  "/reset-password",
-  "/2fa-verification",
-];
+const authRoutes = ["/sign", "/email-verification", "/reset-password"];
 const routesRoleNotRequiredMatch = ["/", "/bezs"];
 const routesRoleNotRequiredStartWith = [
   "/bezs/dashboard",
   "/bezs/apps",
   "/bezs/calendar",
+  "/2fa-verification",
 ];
 
 // if (

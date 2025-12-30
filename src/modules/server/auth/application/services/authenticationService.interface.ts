@@ -1,5 +1,4 @@
 import {
-  TEmailAuthRes,
   TResetPassword,
   TSignInWithEmail,
   TSignInWithUsername,
@@ -7,7 +6,6 @@ import {
   T2Fa,
   TUpdatePassword,
   TSuccessRes,
-  TUsernameAuthRes,
   TSignInKeycloak,
   TSignIn,
   TSignOutKeycloak,
@@ -22,7 +20,7 @@ export interface IAuthenticationService {
   signInWithUsername(
     data: TSignInWithUsername
   ): Promise<TAuthUsernameSuccessRes | null>;
-  signUp(data: TSignUp): Promise<void>;
+  signUp(data: TSignUp): Promise<{ success: boolean }>;
   signOut(): Promise<TSuccessRes>;
   resetPassword(data: TResetPassword): Promise<void>;
   requestPasswordReset(data: TResetPassword): Promise<void>;

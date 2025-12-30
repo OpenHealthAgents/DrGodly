@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
@@ -40,6 +41,8 @@ import { useServerAction } from "zsa-react";
 import { bookAppointment } from "@/modules/client/telemedicine/server-actions/appointment-action";
 import { TBookAppointmentValidation } from "@/modules/shared/schemas/telemedicine/appointment/appointmentValidationSchema";
 import { DateScroller } from "../../../DateScroll";
+import { useSearchParams } from "next/navigation";
+import { getProfileInitials } from "@/modules/shared/helper";
 
 type TProps = {
   doctorsData: TGetDoctorsByOrgOutput | null;
@@ -50,6 +53,8 @@ type TProps = {
 export function BookAppointment({ doctorsData, error, user }: TProps) {
   const openModal = usePatientModalStore((state) => state.onOpen);
   const closeModal = usePatientModalStore((state) => state.onClose);
+  const searchParams = useSearchParams();
+  const intakeId = searchParams?.get("id") as string;
 
   // State
   const [step, setStep] = useState(1);
@@ -225,6 +230,7 @@ export function BookAppointment({ doctorsData, error, user }: TProps) {
       serviceId: selectedService.id,
       appointmentMode: selectedService.selectedMode,
       note: null,
+      intakeId,
     };
 
     const [, bookAppointmentError] = await execute(data);
@@ -455,14 +461,9 @@ export function BookAppointment({ doctorsData, error, user }: TProps) {
             <Card className="p-0">
               {/* Header of Card */}
               <div className="p-6 border-b flex items-center gap-4">
-                <img
-                  src={
-                    selectedDoctor.image ||
-                    "https://picsum.photos/seed/jane/200/200"
-                  }
-                  className="w-16 h-16 rounded-full object-cover border-2 border-zinc-700"
-                  alt={selectedDoctor.name}
-                />
+                <p className="w-16 h-16 rounded-full border flex items-center justify-center text-3xl font-semibold uppercase bg-muted text-foreground">
+                  {getProfileInitials(selectedDoctor.name)}
+                </p>
                 <div>
                   <h3 className="text-xl font-bold">{selectedDoctor.name}</h3>
                   <p className="text-muted-foreground">

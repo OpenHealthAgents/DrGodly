@@ -10,7 +10,7 @@ export const OrganizationMemberAndUserSchema = z.object({
   user: z.object({
     id: z.string(),
     name: z.string(),
-    username: z.string(),
+    username: z.string().nullable(),
     email: z.string().email(),
   }),
 });

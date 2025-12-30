@@ -6,7 +6,8 @@ import BreadCrumb from "@/modules/shared/components/breadcrumb";
 import { AppSidebar } from "@/modules/shared/components/menubar/app-sidebar";
 import AppNavbar from "@/modules/shared/components/navbar/app-navbar";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { redirect } from "@/i18n/navigation";
+import { getLocale } from "next-intl/server";
 
 const AppListingLayout = async ({
   children,
@@ -14,11 +15,12 @@ const AppListingLayout = async ({
   children: React.ReactNode;
 }) => {
   const session = await getServerSession();
+  const locale = await getLocale();
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
   if (!session) {
-    redirect("/signin");
+    redirect({ href: "/signin", locale });
   }
 
   const user = {
@@ -29,7 +31,7 @@ const AppListingLayout = async ({
     currentOrgId: session?.user.currentOrgId,
   };
 
-  const orgs = session.organizations;
+  const orgs = session?.organizations;
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>

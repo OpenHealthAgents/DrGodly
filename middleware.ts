@@ -54,6 +54,8 @@ const routesRoleNotRequiredStartWith = [
   "/bezs/dashboard",
   "/bezs/apps",
   "/bezs/calendar",
+  "/2fa-verification",
+  "/set-username",
 ];
 
 // if (

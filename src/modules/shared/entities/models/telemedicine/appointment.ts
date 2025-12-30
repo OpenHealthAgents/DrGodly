@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ZodEAppointmentMode } from "../../enums/telemedicine/appointment";
 
 // --- Enums ---
 export const AppointmentStatusEnum = z.enum([
@@ -8,8 +9,6 @@ export const AppointmentStatusEnum = z.enum([
   "COMPLETED",
   "RESCHEDULED",
 ]);
-
-export const AppointmentModeEnum = z.enum(["VIRTUAL", "INPERSON"]);
 
 export const GenderEnum = z.enum(["MALE", "FEMALE", "OTHER"]);
 
@@ -59,7 +58,7 @@ export const AppointmentSchema = z.object({
   time: z.string(),
   note: z.string().nullable(),
   appointmentDate: z.date(),
-  appointmentMode: AppointmentModeEnum,
+  appointmentMode: ZodEAppointmentMode,
   price: z.number().positive().nullable(),
   priceCurrency: z.string().nullable(),
   virtualRoomId: z.string().nullable(),
@@ -88,11 +87,12 @@ export const BookAppointmentSchema = z.object({
   type: z.string(),
   price: z.number().positive().nullable(),
   priceCurrency: z.string().nullable(),
-  appointmentMode: AppointmentModeEnum,
+  appointmentMode: ZodEAppointmentMode,
   virtualRoomId: z.string().nullable(),
   // conversation: z.any().nullable(),
   // report: z.any().nullable(),
   note: z.string().nullable(),
+  intakeId: z.string().nullable(),
 });
 export type TBookAppointment = z.infer<typeof BookAppointmentSchema>;
 
@@ -114,6 +114,34 @@ export const BookAppointmentUseCaseSchema = BookAppointmentSchema.omit({
 );
 export type TBookAppointmentUseCase = z.infer<
   typeof BookAppointmentUseCaseSchema
+>;
+
+export const IntakeAppointmentSchema = z.object({
+  id: z.string(),
+});
+export type TIntakeAppointment = z.infer<typeof IntakeAppointmentSchema>;
+
+export const BookIntakeAppointmentSchema = BookAppointmentSchema.omit({
+  virtualRoomId: true,
+  intakeId: true,
+}).extend(
+  z.object({
+    intakeConversation: z.any().nullable(),
+    intakeReport: z.any().nullable(),
+  }).shape
+);
+export type TBookIntakeAppointment = z.infer<
+  typeof BookIntakeAppointmentSchema
+>;
+
+export const BookIntakeAppointmentUseCase = z.object({
+  orgId: z.string(),
+  patientUserId: z.string(),
+  intakeConversation: z.any().nullable(),
+  intakeReport: z.any().nullable(),
+});
+export type TBookIntakeAppointmentUseCase = z.infer<
+  typeof BookIntakeAppointmentUseCase
 >;
 
 export const RescheduleAppointmentSchema = BookAppointmentSchema.pick({

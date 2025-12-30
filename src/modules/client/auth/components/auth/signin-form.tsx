@@ -58,11 +58,7 @@ const signInFormSchema = z.object({
 
 type SignInForm = z.infer<typeof signInFormSchema>;
 
-export function SignInForm({
-  isAuthCheckPending,
-}: {
-  isAuthCheckPending: boolean;
-}) {
+export function SignInForm() {
   const t = useTranslations("auth.signin");
 
   const [isForgetClick, setIsForgetClick] = useState(false);
@@ -81,6 +77,11 @@ export function SignInForm({
   } = form;
 
   const { execute, isPending } = useServerAction(signIn, {
+    onSuccess({ data }) {
+      if (data.redirect) {
+        window.location.href = "/api/rolebased-redirect";
+      }
+    },
     onError({ err }) {
       toast.error("Error!", {
         description: err.message,
@@ -165,7 +166,9 @@ export function SignInForm({
                         variant="link"
                         type="button"
                         className="cursor-pointer text-zinc-500 dark:text-white/70 p-0 h-fit pr-1"
-                        onClick={() => setIsForgetClick(true)}
+                        onClick={() => {
+                          setIsForgetClick(true);
+                        }}
                       >
                         {t("form.fields.password.forget")}
                       </Button>
@@ -175,18 +178,13 @@ export function SignInForm({
               />
               <Button
                 type="submit"
-                disabled={isSubmitting || isPending || isAuthCheckPending}
+                disabled={isSubmitting || isPending}
                 className="w-full text-md cursor-pointer"
               >
-                {isSubmitting || isPending || !isAuthCheckPending ? (
+                {isSubmitting || isPending ? (
                   <>
                     <Loader2 className="animate-spin" />{" "}
                     {t("form.button.loading")}
-                  </>
-                ) : isAuthCheckPending ? (
-                  <>
-                    <Loader2 className="animate-spin" />
-                    {t("form.button.checking")}
                   </>
                 ) : (
                   t("form.button.default")
@@ -206,16 +204,12 @@ export function SignInForm({
               <OauthButton
                 oauthName="google"
                 label={t("oauth.google")}
-                isFormSubmitting={
-                  isSubmitting || isPending || isAuthCheckPending
-                }
+                isFormSubmitting={isSubmitting || isPending}
               />
               <OauthButton
                 oauthName="github"
                 label={t("oauth.github")}
-                isFormSubmitting={
-                  isSubmitting || isPending || isAuthCheckPending
-                }
+                isFormSubmitting={isSubmitting || isPending}
               />
             </div>
           </div>
@@ -279,6 +273,7 @@ export function ForgetPasswordAlert({
           toast("Success!", {
             description: "Check your mail to change password.",
           });
+          form.reset();
           setIsForgetClick(false);
         },
         onError(ctx) {

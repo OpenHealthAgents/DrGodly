@@ -25,10 +25,10 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import OauthButton from "./oauth-button";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { authClient } from "@/modules/client/auth/betterauth/auth-client";
 import { useTranslations } from "next-intl";
+import { signUp } from "../../server-actions/auth-actions";
+import { useServerAction } from "zsa-react";
 
 const signUpFormSchema = z.object({
   username: z
@@ -48,13 +48,8 @@ const signUpFormSchema = z.object({
 
 type SignUpForm = z.infer<typeof signUpFormSchema>;
 
-export function SignUpForm({
-  isAuthCheckPending,
-}: {
-  isAuthCheckPending: boolean;
-}) {
+export function SignUpForm() {
   const t = useTranslations("auth.signup");
-  const router = useRouter();
   const [inputType, setInputType] = useState("password");
 
   const form = useForm<SignUpForm>({
@@ -67,33 +62,25 @@ export function SignUpForm({
     },
   });
 
+  const { execute } = useServerAction(signUp, {
+    onSuccess({ data }) {
+      if (data.success) {
+        window.location.href = "/api/rolebased-redirect";
+      }
+    },
+    onError({ err }) {
+      toast.error("Error!", {
+        description: err.message,
+      });
+    },
+  });
+
   const {
     formState: { isSubmitting },
   } = form;
 
   async function onSubmit(values: SignUpForm) {
-    const { email, name, password, username } = values;
-
-    await authClient.signUp.email(
-      {
-        username,
-        email,
-        name,
-        password,
-        callbackURL: "/bezs",
-      },
-      {
-        onSuccess() {
-          toast("Success!");
-          router.push(`/email-verification?email=${email}`);
-        },
-        onError(ctx) {
-          toast("Error!", {
-            description: ctx.error.message,
-          });
-        },
-      }
-    );
+    await execute(values);
   }
 
   function handleInputTypeChange() {
@@ -196,7 +183,7 @@ export function SignUpForm({
             <Button
               type="submit"
               className="w-full text-md cursor-pointer"
-              disabled={isSubmitting || isAuthCheckPending}
+              disabled={isSubmitting}
             >
               {isSubmitting ? (
                 <>
@@ -220,12 +207,12 @@ export function SignUpForm({
             <OauthButton
               oauthName="google"
               label={t("oauth.google")}
-              isFormSubmitting={isSubmitting || isAuthCheckPending}
+              isFormSubmitting={isSubmitting}
             />
             <OauthButton
               oauthName="github"
               label={t("oauth.github")}
-              isFormSubmitting={isSubmitting || isAuthCheckPending}
+              isFormSubmitting={isSubmitting}
             />
           </div>
         </div>

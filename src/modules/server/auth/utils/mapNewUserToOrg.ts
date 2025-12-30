@@ -51,6 +51,7 @@ export async function mapNewUserToOrg(userId: string) {
         userId,
         roleId: defaultRole.id,
         organizationId: defaultOrg.id,
+        defaultRedirectUrl: "/bezs/telemedicine/patient/appointments/intake",
       },
     });
   });

@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 export async function POST(req: NextRequest) {
+  return NextResponse.json({ message: "How dare you to call this API." });
+
   const body = await req.json();
 
   const res = await fetch(
-    "http://localhost:3000/api/auth/keycloakProvider/signin",
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/keycloakProvider/signin`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -26,7 +28,7 @@ export async function POST(req: NextRequest) {
   // 👇 Forward all cookies (both session_token + session_data)
 
   if (setCookie?.length) {
-    response.headers.append("set-cookie", setCookie);
+    // response.headers.append("set-cookie", setCookie);
   }
 
   // CORS if needed

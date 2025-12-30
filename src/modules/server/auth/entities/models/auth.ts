@@ -34,17 +34,7 @@ export type TUpdatePassword = z.infer<typeof UpdatePasswordSchema>;
 
 export type TAuthEmailSuccessRes = {
   redirect: boolean;
-  // token: string;
   url: string | undefined;
-  user: {
-    id: string;
-    email: string;
-    name: string;
-    image: string | null | undefined;
-    emailVerified: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-  };
 };
 type TAuth2FARes = {
   type: "2fa";
@@ -54,19 +44,7 @@ export type TEmailAuthRes = TAuthEmailSuccessRes | TAuth2FARes;
 
 export type TAuthUsernameSuccessRes = {
   redirect: boolean;
-  // token: string;
   url: string | undefined;
-  user: {
-    id: string;
-    email: string;
-    emailVerified: boolean;
-    username: string;
-    displayUsername: string;
-    name: string;
-    image: string | null | undefined;
-    createdAt: Date;
-    updatedAt: Date;
-  };
 };
 export type TUsernameAuthRes =
   | TAuthUsernameSuccessRes

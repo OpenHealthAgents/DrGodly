@@ -30,3 +30,4 @@ export {
   type TGetAppointmentForOnlineConsultationControllerOutput,
   getAppointmentForOnlineConsultationController,
 } from "./getAppointmentForOnlineConsultation.controller";
+export * from "./bookIntakeAppointment.controller";

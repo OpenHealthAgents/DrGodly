@@ -2,6 +2,7 @@
 
 import {
   bookAppointmentController,
+  bookIntakeAppointmentController,
   cancelAppointmentController,
   confirmAppointmentController,
   deleteAppointmentController,
@@ -10,6 +11,7 @@ import {
   getAppointmentsForPatientController,
   rescheduleAppointmentController,
   TBookAppointmentControllerOutput,
+  TBookIntakeAppointmentControllerOutput,
   TCancelAppointmentControllerOutput,
   TConfirmAppointmentControllerOutput,
   TDeleteAppointmentControllerOutput,
@@ -20,6 +22,7 @@ import {
 } from "@/modules/server/telemedicine/interface-adapters/controllers/appointment";
 import {
   BookAppointmentValidationSchema,
+  BookIntakeAppointmentValidationSchema,
   CancelAppointmentValidationSchema,
   DeleteAppointmentValidationSchema,
   GetAppointmentValidationSchema,
@@ -36,6 +39,18 @@ export const bookAppointment = createServerAction()
       () => bookAppointmentController(input),
       {
         operationErrorMessage: "Failed to book appointment.",
+      }
+    );
+  });
+
+export const bookIntakeAppointment = createServerAction()
+  .input(BookIntakeAppointmentValidationSchema, { skipInputParsing: true })
+  .handler(async ({ input }) => {
+    return await withMonitoring<TBookIntakeAppointmentControllerOutput>(
+      "bookAppointment",
+      () => bookIntakeAppointmentController(input),
+      {
+        operationErrorMessage: "Failed to book intake appointment.",
       }
     );
   });

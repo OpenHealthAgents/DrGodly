@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import {
 import { Star, User } from "lucide-react";
 import { useSession } from "@/modules/client/auth/betterauth/auth-client";
 import { usePatientModalStore } from "../../stores/patient-modal-store";
+import { getProfileInitials } from "@/modules/shared/helper";
 
 const DoctorReviewModal = () => {
   const session = useSession();
@@ -35,13 +37,9 @@ const DoctorReviewModal = () => {
           {/* Header */}
           <DialogHeader>
             <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-2 pr-8">
-              <img
-                src={
-                  doctorData.image || "https://picsum.photos/seed/jane/200/200"
-                }
-                alt={doctorData.name}
-                className="w-12 h-12 rounded-full object-cover border"
-              />
+              <p className="w-12 h-12 rounded-full border flex items-center justify-center text-2xl font-semibold uppercase bg-muted text-foreground">
+                {getProfileInitials(doctorData.name)}
+              </p>
               <div>
                 <DialogTitle asChild>
                   <h3 className="text-lg font-bold mb-1 text-left">

@@ -70,7 +70,8 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
       // }
 
       return {
-        ...response,
+        redirect: response.redirect,
+        url: response.url,
       };
     } catch (error) {
       if (error instanceof Error) {
@@ -111,7 +112,6 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
         return {
           redirect: true,
           url: "/bezs",
-          ...response,
         };
       }
 
@@ -128,7 +128,12 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
     }
   }
 
-  async signUp({ email, name, password, username }: TSignUp): Promise<void> {
+  async signUp({
+    email,
+    name,
+    password,
+    username,
+  }: TSignUp): Promise<{ success: boolean }> {
     try {
       await auth.api.signUpEmail({
         body: {
@@ -139,6 +144,8 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
           callbackURL: "/bezs",
         },
       });
+
+      return { success: true };
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new UnauthenticatedError(error.message, { cause: error });

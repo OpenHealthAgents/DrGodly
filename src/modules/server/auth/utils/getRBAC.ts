@@ -55,14 +55,17 @@ export async function getRBAC(userId: string) {
       id: string;
       description: string;
     }[];
+    roleBasedRedirectUrls: Record<string, string>;
   };
 
   const data = rbac.reduce(
     (acc: TData, rbacData) => {
       const { appOrganization, ...org } = rbacData.organization;
       const { menuPermission, ...role } = rbacData.role;
-      const orgApp = rbacData.organization.appOrganization.map((app) => app);
-      const roleAppMenuItems = rbacData.role.menuPermission;
+      // const orgApp = rbacData.organization.appOrganization.map((app) => app);
+      // const roleAppMenuItems = rbacData.role.menuPermission;
+      const roleName = rbacData.role.name;
+      const url = rbacData.defaultRedirectUrl;
 
       return {
         ...acc,
@@ -80,11 +83,16 @@ export async function getRBAC(userId: string) {
             description: role.description,
           },
         ],
+        roleBasedRedirectUrls: {
+          ...acc.roleBasedRedirectUrls,
+          [roleName]: url,
+        },
       };
     },
     {
       organizations: [],
       roles: [],
+      roleBasedRedirectUrls: {} as Record<string, string>,
     }
   );
 
@@ -92,5 +100,6 @@ export async function getRBAC(userId: string) {
     userRBAC: rbac,
     roles: data.roles,
     organizations: data.organizations,
+    roleBasedRedirectUrls: data.roleBasedRedirectUrls,
   };
 }

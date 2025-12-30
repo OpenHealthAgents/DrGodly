@@ -12,6 +12,7 @@ import {
   twoFactor,
   username,
   organization,
+  createAuthMiddleware,
 } from "better-auth/plugins";
 import { decodeJwt } from "jose";
 import { getRBAC } from "../utils/getRBAC";
@@ -37,18 +38,11 @@ export const auth = betterAuth({
     requireEmailVerification: false,
     sendResetPassword: async ({ user, url }) => {
       try {
-        await axios.post(
-          `${
-            (process.env.NODE_ENV === "development" &&
-              process.env.DEV_APP_URL) ||
-            (process.env.NODE_ENV === "production" && process.env.PROD_APP_URL)
-          }/api/send-email`,
-          {
-            to: user.email,
-            subject: "Reset your password",
-            text: `Click the link to reset your password: ${url}`,
-          }
-        );
+        void axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/send-email`, {
+          to: user.email,
+          subject: "Reset your password",
+          text: `Click the link to reset your password: ${url}`,
+        });
       } catch (error: any) {
         throw new error(error);
       }
@@ -67,21 +61,14 @@ export const auth = betterAuth({
 
   emailVerification: {
     autoSignInAfterVerification: true,
-    sendOnSignUp: true,
+    sendOnSignUp: false,
     sendVerificationEmail: async ({ user, url }) => {
       try {
-        await axios.post(
-          `${
-            (process.env.NODE_ENV === "development" &&
-              process.env.DEV_APP_URL) ||
-            (process.env.NODE_ENV === "production" && process.env.PROD_APP_URL)
-          }/api/send-email`,
-          {
-            to: user.email,
-            subject: "Verify your email address",
-            text: `Click the link to verify your email: ${url}`,
-          }
-        );
+        await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/send-email`, {
+          to: user.email,
+          subject: "Verify your email address",
+          text: `Click the link to verify your email: ${url}`,
+        });
       } catch (error: any) {
         throw new error(error);
       }
@@ -94,12 +81,7 @@ export const auth = betterAuth({
       sendChangeEmailVerification: async ({ user, url }) => {
         try {
           await axios.post(
-            `${
-              (process.env.NODE_ENV === "development" &&
-                process.env.DEV_APP_URL) ||
-              (process.env.NODE_ENV === "production" &&
-                process.env.PROD_APP_URL)
-            }/api/send-email`,
+            `${process.env.NEXT_PUBLIC_APP_URL}/api/send-email`,
             {
               to: user.email,
               subject: "Approve email change",
@@ -116,12 +98,7 @@ export const auth = betterAuth({
       sendDeleteAccountVerification: async ({ user, url }) => {
         try {
           await axios.post(
-            `${
-              (process.env.NODE_ENV === "development" &&
-                process.env.DEV_APP_URL) ||
-              (process.env.NODE_ENV === "production" &&
-                process.env.PROD_APP_URL)
-            }/api/send-email`,
+            `${process.env.NEXT_PUBLIC_APP_URL}/api/send-email`,
             {
               to: user.email,
               subject: "Confirm your account delection",
@@ -144,16 +121,22 @@ export const auth = betterAuth({
       },
     },
   },
+  hooks: {
+    after: createAuthMiddleware(async (ctx) => {
+      const path = ctx.path;
+      if (path.startsWith("/sign-in")) {
+        const newSession = ctx.context.session;
+        console.log({ newSession });
+      }
+    }),
+  },
 
   appName: "Bezs",
 
   plugins: [
     openAPI(),
     // keycloakProvider({
-    //   appUrl:
-    //     process.env.NODE_ENV === "production"
-    //       ? process.env.PROD_APP_URL!
-    //       : process.env.DEV_APP_URL!,
+    //   appUrl: process.env.NEXT_PUBLIC_APP_URL
     //   baseUrl: process.env.KEYCLOAK_BASE_URL!,
     //   clientId: process.env.KEYCLOAK_CLIENT_ID!,
     //   clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
@@ -166,12 +149,7 @@ export const auth = betterAuth({
         async sendOTP({ user, otp }) {
           try {
             await axios.post(
-              `${
-                (process.env.NODE_ENV === "development" &&
-                  process.env.DEV_APP_URL) ||
-                (process.env.NODE_ENV === "production" &&
-                  process.env.PROD_APP_URL)
-              }/api/send-email`,
+              `${process.env.NEXT_PUBLIC_APP_URL}/api/send-email`,
               {
                 to: user.email,
                 subject: "2 FA OTP",
@@ -205,15 +183,15 @@ export const auth = betterAuth({
     }),
     customSession(async ({ session, user }) => {
       const userId = user.id;
-      const providers = await prismaMain.account.findFirst({
-        where: { userId, providerId: "keycloak" },
-        select: {
-          providerId: true,
-          accountId: true,
-          accessToken: true,
-          refreshToken: true,
-        },
-      });
+      // const providers = await prismaMain.account.findFirst({
+      //   where: { userId, providerId: "keycloak" },
+      //   select: {
+      //     providerId: true,
+      //     accountId: true,
+      //     accessToken: true,
+      //     refreshToken: true,
+      //   },
+      // });
 
       const userData = await prismaMain.user.findUnique({
         where: {
@@ -265,41 +243,10 @@ export const auth = betterAuth({
         }
       }
 
-      /*
-      const userDetails = await prismaMain.user.findUnique({
-        where: { id: userId },
-        select: {
-          role: true,
-          username: true,
-        },
-      });
-
-      let keycloakSession: unknown = null;
-
-      if (
-        providers?.accessToken &&
-        providers?.refreshToken &&
-        providers.providerId === "keycloak"
-      ) {
-        const claims: any = decodeJwt(providers?.accessToken);
-
-        keycloakSession = {
-          id: claims?.sub,
-          name: claims?.name,
-          email: claims?.email,
-          username: claims?.preferred_username,
-          emailVerified: claims.email_verified,
-          roles: {
-            realmAccess: claims?.realm_access?.roles ?? [],
-            resourceAccess: claims?.resource_access?.account?.roles ?? [],
-          },
-        };
-      }
-        */
-
       await mapNewUserToOrg(user.id);
 
-      const { roles, organizations, userRBAC } = await getRBAC(user.id);
+      const { roles, organizations, userRBAC, roleBasedRedirectUrls } =
+        await getRBAC(user.id);
 
       const updatedUser = userData;
       if (
@@ -336,10 +283,11 @@ export const auth = betterAuth({
           ...user,
           ...updatedUser,
         },
-        keycloak: {
-          refreshToken: providers?.refreshToken ?? null,
-          accessToken: providers?.accessToken ?? null,
-        },
+        // keycloak: {
+        //   refreshToken: providers?.refreshToken ?? null,
+        //   accessToken: providers?.accessToken ?? null,
+        // },
+        roleBasedRedirectUrls,
         userPreferences,
         roles,
         userRBAC,
@@ -356,6 +304,7 @@ export const auth = betterAuth({
           discoveryUrl: `${process.env.KEYCLOAK_BASE_URL}/realms/${process.env.KEYCLOAK_REALM}/.well-known/openid-configuration`,
           scopes: ["openid", "email", "profile", "roles"],
           pkce: true,
+          overrideUserInfo: true,
           async getUserInfo(tokens): Promise<any> {
             console.log("----------- getUserInfo executing ----------");
             let keycloakSession = null;

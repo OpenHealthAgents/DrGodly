@@ -32,11 +32,13 @@ import { getOrganizationMembersData } from "../../server-actions/organizationMem
 import { TOrganizationMemberAndUser } from "@/modules/shared/entities/models/admin/organizationMember";
 import { mapRbacUserOrganizationRole } from "../../server-actions/rbac-actions";
 import { useTranslations } from "next-intl";
+import { FormInput } from "@/modules/shared/custom-form-fields";
 
 const formSchema = z.object({
   orgId: z.string().min(1, "Organization is required"),
   userId: z.string().min(1, "User is required"),
   roleId: z.string().min(1, "Role is required"),
+  defaultRedirectUrl: z.string().min(1, "Default redirect URL is required"),
 });
 
 type FormDataType = z.infer<typeof formSchema>;
@@ -58,6 +60,7 @@ export function RBACOrgUserRoleMap({ allOrgs = [], allRoles = [] }: Props) {
       orgId: "",
       userId: "",
       roleId: "",
+      defaultRedirectUrl: "/bezs",
     },
   });
 
@@ -101,6 +104,7 @@ export function RBACOrgUserRoleMap({ allOrgs = [], allRoles = [] }: Props) {
       organizationId: values.orgId,
       roleId: values.roleId,
       userId: values.userId,
+      defaultRedirectUrl: values.defaultRedirectUrl,
     });
   };
 
@@ -211,6 +215,13 @@ export function RBACOrgUserRoleMap({ allOrgs = [], allRoles = [] }: Props) {
                   <FormMessage />
                 </FormItem>
               )}
+            />
+
+            <FormInput
+              control={form.control}
+              name="defaultRedirectUrl"
+              label="Default Login Redirect URL"
+              placeholder="e.g - /bezs/telemedicine/patient"
             />
           </div>
 

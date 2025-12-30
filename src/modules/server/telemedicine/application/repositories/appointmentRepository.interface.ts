@@ -2,8 +2,10 @@ import {
   TAppointment,
   TAppointments,
   TBookAppointment,
+  TBookIntakeAppointment,
   TCancelAppointment,
   TGetAppointmentByIds,
+  TIntakeAppointment,
   TRescheduleAppointment,
 } from "../../../../shared/entities/models/telemedicine/appointment";
 
@@ -21,6 +23,9 @@ export interface IAppointmentRepository {
     orgId: string
   ): Promise<TAppointment | null>;
   bookAppointment(appointmentData: TBookAppointment): Promise<TAppointment>;
+  bookIntakeAppointment(
+    appointmentData: TBookIntakeAppointment
+  ): Promise<TIntakeAppointment>;
   rescheduleAppointment(
     rescheduleData: TRescheduleAppointment,
     status: "RESCHEDULED" | "PENDING"

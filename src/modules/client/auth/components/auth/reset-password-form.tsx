@@ -29,7 +29,9 @@ export function ResetPassForm() {
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    setToken(searchParams.get("token"));
+    if (searchParams) {
+      setToken(searchParams.get("token"));
+    }
   }, [searchParams]);
 
   const resetPassFormSchema = z.object({

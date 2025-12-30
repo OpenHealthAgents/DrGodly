@@ -8,7 +8,8 @@ export type ModalType =
   | "rescheduleAppointment"
   | "cancelAppointment"
   | "viewAppointment"
-  | "deleteAppointment";
+  | "deleteAppointment"
+  | "intakeComplete";
 
 interface PatientStore {
   type: ModalType | null;
@@ -16,6 +17,7 @@ interface PatientStore {
   doctorProfileId?: string;
   doctorData?: any;
   appointmentData?: TAppointment | null;
+  intakeAppointmentId?: string | null;
   trigger: number;
   triggerInModal: number;
   incrementTrigger: () => void;
@@ -25,6 +27,7 @@ interface PatientStore {
     doctorProfileId?: string;
     doctorData?: any;
     appointmentData?: TAppointment;
+    intakeAppointmentId?: string | null;
   }) => void;
   onClose: () => void;
 }
@@ -39,6 +42,7 @@ const _usePatientModalStore = create<PatientStore>((set) => ({
     doctorProfileId = "",
     doctorData = null,
     appointmentData = null,
+    intakeAppointmentId = null,
   }) =>
     set({
       isOpen: true,
@@ -46,6 +50,7 @@ const _usePatientModalStore = create<PatientStore>((set) => ({
       doctorProfileId,
       doctorData,
       appointmentData,
+      intakeAppointmentId,
     }),
   onClose: () =>
     set({
@@ -56,6 +61,7 @@ const _usePatientModalStore = create<PatientStore>((set) => ({
       doctorProfileId: "",
       doctorData: null,
       appointmentData: null,
+      intakeAppointmentId: null,
     }),
   incrementTrigger: () => set((state) => ({ trigger: state.trigger + 1 })),
   incrementInModalTrigger: () =>

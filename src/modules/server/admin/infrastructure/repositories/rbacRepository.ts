@@ -51,6 +51,7 @@ export class RbacRepository implements IrbacRepository {
         total,
       });
     } catch (error) {
+      console.log(error);
       if (error instanceof Error) {
         throw new OperationError(error.message, { cause: error });
       }

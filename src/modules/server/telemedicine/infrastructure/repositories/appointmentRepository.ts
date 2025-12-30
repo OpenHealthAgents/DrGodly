@@ -8,11 +8,14 @@ import {
   AppointmentSchema,
   AppointmentsSchema,
   GetAppointmentByIdsSchema,
+  IntakeAppointmentSchema,
   TAppointment,
   TAppointments,
   TBookAppointment,
+  TBookIntakeAppointment,
   TCancelAppointment,
   TGetAppointmentByIds,
+  TIntakeAppointment,
   TRescheduleAppointment,
 } from "../../../../shared/entities/models/telemedicine/appointment";
 
@@ -164,10 +167,11 @@ export class AppointmentRepository implements IAppointmentRepository {
           patientId,
           orgId,
           isPatientDeleted: false,
+          appointmentMode: {
+            not: "INTAKE",
+          },
         },
-        orderBy: {
-          appointmentDate: "asc",
-        },
+        orderBy: [{ appointmentDate: "asc" }, { time: "asc" }],
         omit: {
           doctorId: true,
           patientId: true,
@@ -281,69 +285,82 @@ export class AppointmentRepository implements IAppointmentRepository {
       },
     });
 
-    const { userId, ...rest } = appointmentData;
+    const { userId, intakeId, ...rest } = appointmentData;
 
     try {
-      const appointment = await prismaTelemedicine.appointment.create({
-        data: {
-          ...rest,
-          createdBy: userId,
-          updatedBy: userId,
-        },
-        include: {
-          appointmentActual: {
-            omit: {
-              createdAt: true,
-              createdBy: true,
-              updatedAt: true,
-              updatedBy: true,
-              intakeConversation: true,
-              virtualConversation: true,
-            },
+      const appointment = await prismaTelemedicine.$transaction(async (tx) => {
+        const doctorAppointment = await tx.appointment.create({
+          data: {
+            ...rest,
+            createdBy: userId,
+            updatedBy: userId,
           },
-          patient: {
-            omit: {
-              createdAt: true,
-              updatedAt: true,
-              updatedBy: true,
-              createdBy: true,
+          include: {
+            appointmentActual: {
+              omit: {
+                createdAt: true,
+                createdBy: true,
+                updatedAt: true,
+                updatedBy: true,
+                intakeConversation: true,
+                virtualConversation: true,
+              },
             },
-            include: {
-              personal: {
-                select: {
-                  name: true,
-                  orgId: true,
-                  id: true,
-                  gender: true,
+            patient: {
+              omit: {
+                createdAt: true,
+                updatedAt: true,
+                updatedBy: true,
+                createdBy: true,
+              },
+              include: {
+                personal: {
+                  select: {
+                    name: true,
+                    orgId: true,
+                    id: true,
+                    gender: true,
+                  },
+                },
+              },
+            },
+            doctor: {
+              omit: {
+                doctorId: true,
+                id: true,
+                isABDMDoctorProfile: true,
+                registrationNumber: true,
+                registrationProvider: true,
+                isCompleted: true,
+                createdAt: true,
+                updatedAt: true,
+                updatedBy: true,
+                createdBy: true,
+              },
+              include: {
+                personal: {
+                  select: {
+                    fullName: true,
+                    orgId: true,
+                    id: true,
+                    gender: true,
+                  },
                 },
               },
             },
           },
-          doctor: {
-            omit: {
-              doctorId: true,
-              id: true,
-              isABDMDoctorProfile: true,
-              registrationNumber: true,
-              registrationProvider: true,
-              isCompleted: true,
-              createdAt: true,
-              updatedAt: true,
-              updatedBy: true,
-              createdBy: true,
+        });
+
+        if (intakeId) {
+          await tx.preAppointmentMap.create({
+            data: {
+              intakeAppointmentId: intakeId,
+              followUpAppointmentId: doctorAppointment.id,
             },
-            include: {
-              personal: {
-                select: {
-                  fullName: true,
-                  orgId: true,
-                  id: true,
-                  gender: true,
-                },
-              },
-            },
-          },
-        },
+          });
+        }
+
+        return doctorAppointment;
       });
 
       const data = await AppointmentSchema.parseAsync(appointment);
@@ -362,6 +379,78 @@ export class AppointmentRepository implements IAppointmentRepository {
       // Error log
       logOperation("error", {
         name: "bookAppointmentRepository",
+        startTimeMs,
+        err: error,
+        errName: "UnknownRepositoryError",
+        context: {
+          operationId,
+        },
+      });
+
+      if (error instanceof Error) {
+        throw new OperationError(error.message, { cause: error });
+      }
+
+      throw new OperationError("An unexpected error occurred", {
+        cause: error,
+      });
+    }
+  }
+
+  async bookIntakeAppointment(
+    appointmentData: TBookIntakeAppointment
+  ): Promise<TIntakeAppointment> {
+    const startTimeMs = Date.now();
+    const operationId = randomUUID();
+
+    // Start log
+    logOperation("start", {
+      name: "bookIntakeAppointment",
+      startTimeMs,
+      context: {
+        operationId,
+      },
+    });
+
+    const { userId, orgId, intakeConversation, intakeReport, ...rest } =
+      appointmentData;
+
+    try {
+      const appointment = await prismaTelemedicine.appointment.create({
+        data: {
+          ...rest,
+          orgId,
+          createdBy: userId,
+          updatedBy: userId,
+          appointmentActual: {
+            create: {
+              orgId,
+              intakeConversation,
+              intakeReport,
+            },
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      const data = await IntakeAppointmentSchema.parseAsync(appointment);
+
+      // Success log
+      logOperation("success", {
+        name: "bookIntakeAppointment",
+        startTimeMs,
+        context: {
+          operationId,
+        },
+      });
+
+      return data;
+    } catch (error) {
+      // Error log
+      logOperation("error", {
+        name: "bookIntakeAppointment",
         startTimeMs,
         err: error,
         errName: "UnknownRepositoryError",

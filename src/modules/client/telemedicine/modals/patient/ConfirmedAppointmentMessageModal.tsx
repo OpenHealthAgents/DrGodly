@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,10 @@ const formatFullDate = (date: Date) => {
     day: "numeric",
   }).format(date);
 };
+
+function randNumGenTo100() {
+  return Math.floor(Math.random() * 100) + 1;
+}
 
 const ConfirmedAppointmentMessageModal = ({
   data,
@@ -66,7 +71,7 @@ const ConfirmedAppointmentMessageModal = ({
           {/* 3D-ish Illustration Placeholder */}
           <div className="relative w-40 h-40 mx-auto mb-2">
             <img
-              src={`https://api.dicebear.com/7.x/bottts/svg?seed=${data.selectedDoctor?.id}&backgroundColor=transparent`}
+              src={`https://api.dicebear.com/7.x/bottts/svg?seed=${randNumGenTo100()}&backgroundColor=transparent`}
               alt="Robot Assistant"
               className="w-full h-full drop-shadow-[0_10px_20px_rgba(249,115,22,0.2)]"
             />

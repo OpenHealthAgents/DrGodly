@@ -3,21 +3,20 @@
 import { Button } from "@/components/ui/button";
 import ConversationChat from "./chat/Conversation";
 import UserPromptInput from "./chat/PromptInput";
-import { Brain } from "lucide-react";
+import { Brain, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Vapi from "@vapi-ai/web";
 import { toast } from "sonner";
 import { nanoid } from "nanoid";
-import { useIntakeStore } from "../../stores/intake-store";
+// import { useIntakeStore } from "../../stores/intake-store";
+import { useServerAction } from "zsa-react";
+import { bookIntakeAppointment } from "../../server-actions/appointment-action";
+import { TSharedUser } from "@/modules/shared/types";
+import { usePatientModalStore } from "../../stores/patient-modal-store";
 
 interface TProps {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    image: string | null | undefined;
-  };
+  user: TSharedUser;
   appointmentData: {
     assistant: {
       voiceId: string;
@@ -44,7 +43,8 @@ type TMessageItem = {
 };
 
 function AiIntake({ user, appointmentData }: TProps) {
-  const setConversation = useIntakeStore((state) => state.setConversation);
+  // const setConversation = useIntakeStore((state) => state.setConversation);
+  const openModal = usePatientModalStore((state) => state.onOpen);
 
   const [callStarted, setCallStarted] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -68,6 +68,20 @@ function AiIntake({ user, appointmentData }: TProps) {
   const addMessage = useCallback((m: TMessageItem) => {
     setMessages((prev) => [...prev, m]);
   }, []);
+
+  const { execute, isPending } = useServerAction(bookIntakeAppointment, {
+    onSuccess({ data }) {
+      toast.success("Intake session is completed.", {
+        description: "You want to book appointment with doctor!",
+      });
+      openModal({ type: "intakeComplete", intakeAppointmentId: data.id });
+    },
+    onError() {
+      toast.error("Something went wrong!", {
+        description: "Please try again later.",
+      });
+    },
+  });
 
   const startCall = async () => {
     if (
@@ -210,9 +224,14 @@ function AiIntake({ user, appointmentData }: TProps) {
 
       // optionally: generate report or save messages here
       toast.success("Call ended");
-      setConversation(messages);
+      // setConversation(messages);
 
-      console.log({ messages });
+      // console.log({ messages });
+      await execute({
+        orgId: user.orgId,
+        patientUserId: user.id,
+        intakeConversation: messages,
+      });
     } catch (err) {
       console.error("endCall error", err);
       toast.error("Error ending call");
@@ -222,30 +241,30 @@ function AiIntake({ user, appointmentData }: TProps) {
   };
 
   // send text to vapi and add user message locally
-  const sendTextToAgent = async (text: string) => {
-    if (!text?.trim()) return;
+  // const sendTextToAgent = async (text: string) => {
+  //   if (!text?.trim()) return;
 
-    // optimistic add user message
-    const userMsg: TMessageItem = {
-      key: nanoid(),
-      from: "user",
-      content: text,
-    };
-    addMessage(userMsg);
+  //   // optimistic add user message
+  //   const userMsg: TMessageItem = {
+  //     key: nanoid(),
+  //     from: "user",
+  //     content: text,
+  //   };
+  //   addMessage(userMsg);
 
-    if (vapiInstance) {
-      try {
-        // @ts-expect-error -- third-party Vapi types are incompatible with start signature
-        vapiInstance.send({ type: "add-message", text });
-      } catch (err) {
-        console.error("sendTextToAgent error", err);
-        toast.error("Failed to send message to assistant");
-      }
-    } else {
-      // if vapi not running, you might want to queue or inform user
-      toast.error("Assistant is not connected. Start the call first.");
-    }
-  };
+  //   if (vapiInstance) {
+  //     try {
+  //       // @ts-expect-error -- third-party Vapi types are incompatible with start signature
+  //       vapiInstance.send({ type: "add-message", text });
+  //     } catch (err) {
+  //       console.error("sendTextToAgent error", err);
+  //       toast.error("Failed to send message to assistant");
+  //     }
+  //   } else {
+  //     // if vapi not running, you might want to queue or inform user
+  //     toast.error("Assistant is not connected. Start the call first.");
+  //   }
+  // };
 
   // cleanup on unmount
   useEffect(() => {
@@ -260,6 +279,7 @@ function AiIntake({ user, appointmentData }: TProps) {
           vapiInstance.off("speech-end", h.onSpeechEnd as any);
           vapiInstance.off("error", h.onError as any);
           vapiInstance.stop();
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (err) {
           // ignore
         }
@@ -309,7 +329,16 @@ function AiIntake({ user, appointmentData }: TProps) {
         liveRole={currentRole}
         user={user}
       />
-      {callStarted ? (
+      {isPending ? (
+        <Button
+          className="w-fit self-center px-6 h-7 rounded-2xl"
+          size="sm"
+          disabled
+        >
+          <Loader2 className="animate-spin" />
+          Loading...
+        </Button>
+      ) : callStarted ? (
         <Button
           className="w-fit self-center px-6 h-7 rounded-2xl"
           size="sm"
@@ -329,7 +358,7 @@ function AiIntake({ user, appointmentData }: TProps) {
           Start Call
         </Button>
       )}
-      <UserPromptInput onSend={sendTextToAgent} />
+      {/* <UserPromptInput onSend={sendTextToAgent} /> */}
     </div>
   );
 }

@@ -22,6 +22,10 @@ export async function bookAppointmentUseCase(
 
   const { patientUserId, doctorUserId, serviceId, ...rest } = createData;
 
+  if (rest.appointmentMode === "INTAKE") {
+    throw new Error("Intake appointments are not supported");
+  }
+
   if (!rest.orgId) throw new Error("Organization is required");
 
   const [doctorId, patientId] = await Promise.all([

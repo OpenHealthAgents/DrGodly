@@ -5,6 +5,14 @@ import { redirect } from "@/i18n/navigation";
 import { getLocale } from "next-intl/server";
 import { prismaTelemedicine } from "@/modules/server/prisma/prisma";
 
+const statusPriority: Record<string, number> = {
+  SCHEDULED: 1,
+  RESCHEDULED: 1,
+  PENDING: 3,
+  COMPLETED: 4,
+  CANCELLED: 5,
+};
+
 async function AppointmentsPage() {
   const session = await getServerSession();
   const locale = await getLocale();
@@ -39,6 +47,10 @@ async function AppointmentsPage() {
   const [appointments, error] = await getPatientAppointments({
     userId: user.id,
     orgId: user.orgId,
+  });
+
+  appointments?.sort((a, b) => {
+    return statusPriority[a.status] - statusPriority[b.status];
   });
 
   return (

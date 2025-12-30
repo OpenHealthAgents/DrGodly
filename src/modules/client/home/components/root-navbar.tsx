@@ -82,12 +82,12 @@ const RootNavBarPage = ({
               <ThemeSwitcher />
               {!session ? (
                 <>
-                  <Link href="/signin">
+                  <Link href={`/signin`}>
                     <Button variant="ghost" size="sm" className="font-semibold">
                       Sign In
                     </Button>
                   </Link>
-                  <Link href="/signup">
+                  <Link href={`/signup`}>
                     <Button
                       size="sm"
                       className="rounded-full px-6 shadow-md hover:shadow-lg transition-all"
@@ -95,6 +95,26 @@ const RootNavBarPage = ({
                       Sign Up
                     </Button>
                   </Link>
+                  {/* <Button
+                    variant="ghost"
+                    size="sm"
+                    className="font-semibold"
+                    onClick={() =>
+                      (window.location.href = "/api/auth-gateway?mode=signin")
+                    }
+                  >
+                    Sign In
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    className="rounded-full px-6 shadow-md hover:shadow-lg transition-all"
+                    onClick={() =>
+                      (window.location.href = "/api/auth-gateway?mode=signup")
+                    }
+                  >
+                    Sign Up
+                  </Button> */}
                 </>
               ) : (
                 <Link href="/bezs">

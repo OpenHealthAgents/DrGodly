@@ -370,9 +370,10 @@ model ActionPermission {
 model RBAC {
   id String @id @default(uuid())
 
-  organizationId String
-  userId         String
-  roleId         String
+  organizationId     String
+  userId             String
+  roleId             String
+  defaultRedirectUrl String @default("/bezs")
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)

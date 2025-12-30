@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   Form,
@@ -49,7 +49,10 @@ import {
 import { TPatientWithPersonalProfile } from "@/modules/shared/entities/models/telemedicine/patientProfile";
 import { toast } from "sonner";
 import { useServerAction } from "zsa-react";
-import { createorUpdatePatientPersonalDetails } from "../../server-actions/patientProfile-actions";
+import {
+  createorUpdatePatientPersonalDetails,
+  createPatientInitialProfile,
+} from "../../server-actions/patientProfile-actions";
 
 type TUser = {
   id: string;
@@ -60,16 +63,39 @@ type TUser = {
 
 interface PersonalDetailsStepProps {
   data: TPatientWithPersonalProfile | null;
-  errorMessage?: string;
   user: TUser;
 }
 
 export function PatientProfilePersonalDetails({
   data,
-  errorMessage,
   user,
 }: PersonalDetailsStepProps) {
   const [open, setOpen] = useState(false);
+  const hasTriggeredRef = useRef(false);
+
+  const {
+    execute: createInitialProfile,
+    isPending: createInitialProfileIsPending,
+  } = useServerAction(createPatientInitialProfile, {
+    onSuccess() {
+      toast.success("Profile initialized");
+    },
+    onError({ err }) {
+      toast.error(err.message || "Failed to create initial patient profile");
+    },
+  });
+
+  useEffect(() => {
+    if (!data && !hasTriggeredRef.current) {
+      hasTriggeredRef.current = true;
+      createInitialProfile({
+        orgId: user.currentOrgId!,
+        userId: user.id,
+        isABHAPatientProfile: false,
+        createdBy: user.id,
+      });
+    }
+  }, [data]);
 
   const { execute, isPending } = useServerAction(
     createorUpdatePatientPersonalDetails,
@@ -110,6 +136,17 @@ export function PatientProfilePersonalDetails({
     },
   });
 
+  if (!data) {
+    return (
+      <div className="flex items-center justify-center mt-18">
+        <p className="text-muted-foreground flex items-center gap-2 text-lg">
+          <Loader2 className="animate-spin size-5" />
+          Setting up your profile...
+        </p>
+      </div>
+    );
+  }
+
   const handleSubmit = async (values: TPatientPersonalDetails) => {
     if (!data?.id) return;
 
@@ -129,14 +166,6 @@ export function PatientProfilePersonalDetails({
       ...values,
     });
   };
-
-  useEffect(() => {
-    if (errorMessage) {
-      toast.error("Error!", {
-        description: errorMessage,
-      });
-    }
-  }, [errorMessage]);
 
   return (
     <Form {...form}>
@@ -450,7 +479,7 @@ export function PatientProfilePersonalDetails({
         <Button
           size="sm"
           className="w-fit self-end"
-          disabled={isPending || !!errorMessage}
+          disabled={isPending || createInitialProfileIsPending}
         >
           {isPending && <Loader2 className="animate-spin" />}
           {data?.personal ? "Update" : "Create"} Profile

@@ -1,15 +1,11 @@
 import { InputParseError } from "@/modules/shared/entities/errors/commonError";
 import { SignInSchema, TSignIn } from "../../../entities/models/auth";
 import { getAuthInjection } from "../../../di/container";
-import { getAuthProvider } from "@/modules/server/auth/utils/getAuthProvider";
-import { auth } from "@/modules/server/auth/betterauth/auth";
+import z from "zod";
 
 export async function signInController(input: TSignIn) {
   const betterAuthAuthenticationService = getAuthInjection(
     "IBetterauthAuthenticationService"
-  );
-  const keycloakAuthenticationService = getAuthInjection(
-    "IKeycloakAuthenticationService"
   );
 
   const parsed = await SignInSchema.safeParseAsync(input);
@@ -18,31 +14,21 @@ export async function signInController(input: TSignIn) {
     throw new InputParseError(parsed.error.name, { cause: parsed.error });
   }
 
-  const { isKeycloak } = getAuthProvider();
+  const { usernameorEmail, password } = parsed.data;
 
-  if (isKeycloak) {
-    const data = await keycloakAuthenticationService.signIn({
-      ...parsed.data,
+  const isEmailLogin = z.string().email().safeParse(usernameorEmail).success;
+
+  if (isEmailLogin) {
+    const data = await betterAuthAuthenticationService.signInWithEmail({
+      email: usernameorEmail,
+      password: password,
     });
-
     return data;
   } else {
-    const isEmailLogin = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-      parsed.data.usernameorEmail
-    );
-
-    if (isEmailLogin) {
-      const data = await betterAuthAuthenticationService.signInWithEmail({
-        email: parsed.data.usernameorEmail,
-        password: parsed.data.password,
-      });
-      return data;
-    } else {
-      const data = await betterAuthAuthenticationService.signInWithUsername({
-        username: parsed.data.usernameorEmail,
-        password: parsed.data.password,
-      });
-      return data;
-    }
+    const data = await betterAuthAuthenticationService.signInWithUsername({
+      username: usernameorEmail,
+      password: password,
+    });
+    return data;
   }
 }

@@ -1,3 +1,4 @@
+import { ZodEAppointmentMode } from "@/modules/shared/entities/enums/telemedicine/appointment";
 import z from "zod";
 
 const IdSchema = z.object({
@@ -12,10 +13,6 @@ const IdSchema = z.object({
     .min(1, "Organization ID is required"),
 });
 
-export const AppointmentModeEnum = z.enum(["VIRTUAL", "INPERSON"], {
-  required_error: "Appointment mode is required.",
-});
-
 export const BookAppointmentValidationSchema = z.object({
   patientUserId: z.string({ required_error: "Patient user ID is required." }),
   doctorUserId: z.string({ required_error: "Doctor user ID is required." }),
@@ -23,11 +20,22 @@ export const BookAppointmentValidationSchema = z.object({
   appointmentDate: z.date({ required_error: "Appointment date is required." }),
   time: z.string({ required_error: "Appointment time is required." }),
   serviceId: z.string({ required_error: "Service ID is required." }),
-  appointmentMode: AppointmentModeEnum,
+  appointmentMode: ZodEAppointmentMode,
   note: z.string().nullable(),
+  intakeId: z.string().nullable(),
 });
 export type TBookAppointmentValidation = z.infer<
   typeof BookAppointmentValidationSchema
+>;
+
+export const BookIntakeAppointmentValidationSchema = z.object({
+  orgId: z.string({ required_error: "Organization ID is required." }),
+  patientUserId: z.string({ required_error: "Patient user ID is required." }),
+  intakeConversation: z.any().nullable(),
+  intakeReport: z.any().nullable(),
+});
+export type TBookIntakeAppointmentValidation = z.infer<
+  typeof BookIntakeAppointmentValidationSchema
 >;
 
 export const GetAppointmentValidationSchema = IdSchema.pick({

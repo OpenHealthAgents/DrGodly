@@ -38,7 +38,7 @@ export class KeyCloakAuthenticationService
 
     try {
       const res = await axios.post<TSignInKeycloakRes>(
-        "http://localhost:3000/api/auth/keycloakProvider/signin",
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/keycloakProvider/signin`,
         {
           usernameorEmail,
           password,
@@ -119,7 +119,7 @@ export class KeyCloakAuthenticationService
       const data = await auth.api.signInWithOAuth2({
         body: {
           providerId: "keycloak",
-          callbackURL: "http://localhost:3000/bezs",
+          callbackURL: `${process.env.NEXT_PUBLIC_APP_URL}/api/rolebased-redirect`,
         },
       });
 
@@ -151,7 +151,7 @@ export class KeyCloakAuthenticationService
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/auth/keycloakProvider/signup",
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/keycloakProvider/signup`,
         {
           username,
           password,
@@ -185,7 +185,7 @@ export class KeyCloakAuthenticationService
   async signOut(refreshToken: string): Promise<TSignOutKeycloak> {
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/auth/keycloakProvider/logout",
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/keycloakProvider/logout`,
         {
           refreshToken,
           callbackURL: "/",
@@ -219,7 +219,7 @@ export class KeyCloakAuthenticationService
       });
 
       const res = await axios.post(
-        "http://localhost:8080/realms/bezs/protocol/openid-connect/logout",
+        `${process.env.KEYCLOAK_BASE_URL}/realms/${process.env.KEYCLOAK_REALM}/protocol/openid-connect/logout`,
         data,
         {
           headers: {

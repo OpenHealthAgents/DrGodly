@@ -81,6 +81,23 @@ export const RbacListColumn = (
 
       return (
         <TanstackTableColumnSorting
+          label={"Login Redirect URL"}
+          column={column}
+          isSorted={isSorted}
+        />
+      );
+    },
+    accessorKey: "defaultRedirectUrl",
+    cell: ({ row }) => {
+      return <p className="truncate">{row.getValue("defaultRedirectUrl")}</p>;
+    },
+  },
+  {
+    header: ({ column }) => {
+      const isSorted = column.getIsSorted();
+
+      return (
+        <TanstackTableColumnSorting
           label={t("columns.createdAt")}
           column={column}
           isSorted={isSorted}
