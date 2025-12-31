@@ -6,7 +6,6 @@ import { useState } from "react";
 import PatientProfile from "./tabs/profile/Profile";
 import PatientMedicalRecords from "./tabs/medicalRecords/MedicalRecords";
 import { TGetFileUploadRequiredDataControllerOutput } from "@/modules/server/filenest/interface-adapters/controllers/localFileOperation";
-import { TGetUserFilesByEntityControllerOutput } from "@/modules/server/filenest/interface-adapters/controllers/filenest";
 import { ZSAError } from "zsa";
 
 interface IPatientFileUploadProps {

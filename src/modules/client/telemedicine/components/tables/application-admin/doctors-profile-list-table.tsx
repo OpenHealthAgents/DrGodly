@@ -53,7 +53,7 @@ export const DoctorsProfileListTable = ({
 
   if (isSuccess) {
     return (
-      <div className="w-full grid place-content-center">
+      <div className="w-full grid place-content-center mt-10">
         <div className="flex items-center gap-2">
           <Loader2 className="animate-spin size-6" />{" "}
           <span>Redirecting to doctor profile creation...</span>
@@ -82,7 +82,7 @@ export const DoctorsProfileListTable = ({
           </Button>
         </div>
         <DataTable
-          columns={doctorsProfileListTableColumn(t)}
+          columns={doctorsProfileListTableColumn(t, user.currentOrgId)}
           data={doctorDatas?.doctorDatas ?? []}
           dataSize={doctorDatas?.total}
           label="All Doctor Profiles"

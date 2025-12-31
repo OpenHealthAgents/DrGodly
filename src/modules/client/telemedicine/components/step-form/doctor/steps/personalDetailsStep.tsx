@@ -71,6 +71,7 @@ export function PersonalDetailsStep({
       nationality: "Indian",
       languagesSpoken: [],
       gender: profileData?.gender ?? "",
+      speciality: "",
       // fatherName: "",
       kycAddress: {
         careOf: "",
@@ -156,6 +157,7 @@ export function PersonalDetailsStep({
         communicationAddress,
         mobileNumber: profileData.mobileNumber,
         email: profileData.email,
+        speciality: profileData.speciality ?? "",
         alternativeEmail: profileData.alternativeEmail ?? "",
         alternativeMobileNumber: profileData.alternativeMobileNumber ?? "",
       });
@@ -285,19 +287,16 @@ export function PersonalDetailsStep({
             placeholder="Enter nationality"
           />
 
-          {/* <FormField
+          <FormInput
             control={form.control}
-            name="fatherName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Father&apos;s Name *</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter father's name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
+            name="speciality"
+            label={
+              <p>
+                Speciality <span className="text-red-500">*</span>
+              </p>
+            }
+            placeholder="Enter speciality"
+          />
         </FieldGroup>
 
         {/* Languages Spoken */}

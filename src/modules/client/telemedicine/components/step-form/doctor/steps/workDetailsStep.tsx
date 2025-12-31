@@ -197,7 +197,7 @@ export function WorkDetailsStep({
               <FormInput
                 control={form.control}
                 name="experience"
-                label="Work Experence (Years) *"
+                label="Work Experience (Years) *"
                 placeholder="10"
                 className="max-w-24"
               />

@@ -102,13 +102,13 @@ export function BookAppointment({ doctorsData, error, user }: TProps) {
         services,
         weeklyAvailabilities,
         gender,
+        speciality,
       } = doctor;
       const newDoctor: Doctor = {
         id,
         name: fullName,
         gender,
-        specialty: null,
-        subSpecialty: null,
+        speciality,
         ratingCount,
         ratingAverage,
         location: null,
@@ -133,10 +133,10 @@ export function BookAppointment({ doctorsData, error, user }: TProps) {
     return computedDoctors?.filter((doc: Doctor) => {
       const matchesSearch =
         doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.subSpecialty?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        doc.speciality?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         doc.description?.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesSpecialty =
-        selectedSpecialty === "All" || doc.specialty === selectedSpecialty;
+        selectedSpecialty === "All" || doc.speciality === selectedSpecialty;
       return matchesSearch && matchesSpecialty;
     });
   }, [searchQuery, selectedSpecialty]);
@@ -467,7 +467,7 @@ export function BookAppointment({ doctorsData, error, user }: TProps) {
                 <div>
                   <h3 className="text-xl font-bold">{selectedDoctor.name}</h3>
                   <p className="text-muted-foreground">
-                    {selectedDoctor.subSpecialty || selectedDoctor.specialty}
+                    {selectedDoctor.speciality}
                   </p>
                 </div>
               </div>

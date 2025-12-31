@@ -38,6 +38,7 @@ export const DoctorListItemSchema = z.object({
   mobileNumber: z.string().optional().nullable(),
   ratingAverage: z.number().nullable(),
   ratingCount: z.number().nullable(),
+  speciality: z.string(),
   services: z.array(DoctorServiceLiteSchema),
   weeklyAvailabilities: z.array(WeeklyAvailabilityLiteSchema),
 });

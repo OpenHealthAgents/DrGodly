@@ -34,6 +34,13 @@ export type ModalType =
   | "editPreferenceTemplate"
   | "deletePreferenceTemplate";
 
+type TUser = {
+  id: string;
+  name: string;
+  username: string;
+  role: string;
+};
+
 interface AdminStore {
   type: ModalType | null;
   isOpen: boolean;
@@ -41,6 +48,7 @@ interface AdminStore {
   organizationId?: string;
   roleId?: string;
   appId?: string;
+  user?: TUser | null;
   appMenuItemId?: string;
   appActionId?: string;
   appData?: App;
@@ -63,6 +71,7 @@ interface AdminStore {
     appMenuItemData?: AppMenuItem;
     organizationData?: Organization;
     roleData?: Role;
+    user?: TUser | null;
   }) => void;
   onClose: () => void;
 }
@@ -84,6 +93,7 @@ const _useAdminModalStore = create<AdminStore>((set) => ({
     appMenuItemData = undefined,
     organizationData = undefined,
     roleData = undefined,
+    user = null,
   }) =>
     set({
       isOpen: true,
@@ -98,6 +108,7 @@ const _useAdminModalStore = create<AdminStore>((set) => ({
       appMenuItemData,
       organizationData,
       roleData,
+      user,
     }),
   onClose: () =>
     set({
@@ -115,6 +126,7 @@ const _useAdminModalStore = create<AdminStore>((set) => ({
       appMenuItemData: undefined,
       organizationData: undefined,
       roleData: undefined,
+      user: null,
     }),
   incrementTrigger: () => set((state) => ({ trigger: state.trigger + 1 })),
   incrementInModalTrigger: () =>

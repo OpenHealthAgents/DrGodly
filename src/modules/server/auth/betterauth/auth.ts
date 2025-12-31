@@ -121,15 +121,6 @@ export const auth = betterAuth({
       },
     },
   },
-  hooks: {
-    after: createAuthMiddleware(async (ctx) => {
-      const path = ctx.path;
-      if (path.startsWith("/sign-in")) {
-        const newSession = ctx.context.session;
-        console.log({ newSession });
-      }
-    }),
-  },
 
   appName: "Bezs",
 

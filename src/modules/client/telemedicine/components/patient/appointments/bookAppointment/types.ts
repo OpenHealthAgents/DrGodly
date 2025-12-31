@@ -38,8 +38,7 @@ export interface weeklyAvailability {
 export interface Doctor {
   id: string;
   name: string;
-  specialty: string | null;
-  subSpecialty: string | null;
+  speciality: string;
   ratingCount: number | null;
   gender?: string | null;
   ratingAverage: number | null;

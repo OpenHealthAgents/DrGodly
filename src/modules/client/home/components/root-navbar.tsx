@@ -83,7 +83,11 @@ const RootNavBarPage = ({
               {!session ? (
                 <>
                   <Link href={`/signin`}>
-                    <Button variant="ghost" size="sm" className="font-semibold">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="font-semibold rounded-full"
+                    >
                       Sign In
                     </Button>
                   </Link>
@@ -117,14 +121,17 @@ const RootNavBarPage = ({
                   </Button> */}
                 </>
               ) : (
-                <Link href="/bezs">
-                  <Button
-                    size="sm"
-                    className="rounded-full px-6 shadow-md hover:shadow-lg transition-all"
-                  >
-                    Open App
-                  </Button>
-                </Link>
+                // <Link href="/bezs">
+                <Button
+                  size="sm"
+                  className="rounded-full px-6 shadow-md hover:shadow-lg transition-all"
+                  onClick={() =>
+                    (window.location.href = "/api/rolebased-redirect")
+                  }
+                >
+                  Open App
+                </Button>
+                // </Link>
               )}
             </div>
           </div>

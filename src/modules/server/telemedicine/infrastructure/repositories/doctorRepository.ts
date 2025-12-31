@@ -48,6 +48,7 @@ export class DoctorRepository /* implements IDoctorRepository */ {
               fullName: true,
               mobileNumber: true,
               gender: true,
+              speciality: true,
             },
           },
           services: {
@@ -83,6 +84,7 @@ export class DoctorRepository /* implements IDoctorRepository */ {
         ratingAverage: d.ratingAverage ?? 0,
         ratingCount: d.ratingCount ?? 0,
         mobileNumber: d.personal?.mobileNumber,
+        speciality: d.personal?.speciality ?? "unknown",
         services:
           d.services?.map((s) => ({
             id: s.id,

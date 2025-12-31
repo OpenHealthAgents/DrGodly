@@ -93,6 +93,7 @@ function DoctorProfileAndRegister({
             gender: personal.gender ?? "",
             mobileNumber: personal.mobileNumber ?? "",
             email: personal.email ?? "",
+            speciality: personal.speciality ?? "",
             alternativeMobileNumber: personal.alternativeMobileNumber ?? null,
             alternativeEmail: personal.alternativeEmail ?? null,
             kycAddress: {
@@ -227,41 +228,47 @@ function DoctorProfileAndRegister({
 
   const {
     execute: executePersonalDetails,
-    error: errorPersonalDetails,
     isPending: isPendingPersonalDetails,
   } = useServerAction(createOrUpdateDoctorPersonalDetails, {
     onSuccess() {
       toast.success("Personal details updated successfully");
     },
+    onError({ err }) {
+      toast.error(err.message ?? "Failed to create personal details");
+    },
   });
 
   const {
     execute: executeQualificationDetails,
-    error: errorQualificationDetails,
     isPending: isPendingQualificationDetails,
   } = useServerAction(createOrUpdateDoctorQualificationDetails, {
     onSuccess() {
       toast.success("Qualification details updated successfully");
     },
-  });
-
-  const {
-    execute: executeWorkDetails,
-    error: errorWorkDetails,
-    isPending: isPendingWorkDetails,
-  } = useServerAction(createOrUpdateDoctorWorkDetails, {
-    onSuccess() {
-      toast.success("Work details updated successfully");
+    onError({ err }) {
+      toast.error(err.message ?? "Failed to create qualification details");
     },
   });
 
+  const { execute: executeWorkDetails, isPending: isPendingWorkDetails } =
+    useServerAction(createOrUpdateDoctorWorkDetails, {
+      onSuccess() {
+        toast.success("Work details updated successfully");
+      },
+      onError({ err }) {
+        toast.error(err.message ?? "Failed to create work details");
+      },
+    });
+
   const {
     execute: executeDoctorFullProfile,
-    error: errorDoctorFullProfile,
     isPending: isPendingDoctorFullProfile,
   } = useServerAction(submitDoctorFullProfile, {
     onSuccess() {
       toast.success("Profile submitted successfully!");
+    },
+    onError({ err }) {
+      toast.error(err.message ?? "Failed to submit profile");
     },
   });
 

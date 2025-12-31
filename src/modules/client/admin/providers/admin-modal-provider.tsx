@@ -19,6 +19,9 @@ import {
   ManageOrgMembersModal,
   ManageRoleAppMenusModal,
 } from "../modals";
+import { CreateUserModal } from "../modals/create-user-modal";
+import { UpdateUserModal } from "../modals/update-user-modal";
+import { DeleteUserModal } from "../modals/delete-user-modal";
 
 export const AdminModalProvider = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -47,6 +50,9 @@ export const AdminModalProvider = () => {
       <ManageOrgAppsModal />
       <ManageRoleAppMenusModal />
       <CreatePreferenceTemplateModal />
+      <CreateUserModal />
+      <UpdateUserModal />
+      <DeleteUserModal />
     </>
   );
 };

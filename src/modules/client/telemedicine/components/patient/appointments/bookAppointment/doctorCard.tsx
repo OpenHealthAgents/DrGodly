@@ -44,7 +44,7 @@ export const DoctorCard = ({
             <div>
               <h3 className="text-lg font-semibold">{doctor.name}</h3>
               <p className="text-muted-foreground font-medium text-sm">
-                {doctor.subSpecialty || doctor.specialty || "Dentist"}
+                {doctor.speciality}
               </p>
             </div>
           </div>

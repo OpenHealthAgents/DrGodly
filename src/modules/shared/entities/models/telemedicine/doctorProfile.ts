@@ -44,6 +44,7 @@ export const DoctorPersonalDetailsSchema = z
     gender: z.string(),
     mobileNumber: z.string(),
     email: z.string().email(),
+    speciality: z.string(),
     alternativeMobileNumber: z.string().nullable(),
     alternativeEmail: z.string().nullable(),
     doctorId: z.string(),

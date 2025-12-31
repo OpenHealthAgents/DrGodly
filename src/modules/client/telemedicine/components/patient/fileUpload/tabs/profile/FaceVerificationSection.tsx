@@ -174,7 +174,12 @@ function FaceVerificationSection({
       </div>
       {!faceVerificationPhotoData && isLoading ? (
         <FacialAngleCardLoaderSkeleton count={5} />
-      ) : isError || !entityId ? (
+      ) : !entityId ? (
+        <p className="text-center text-muted-foreground">
+          Something went wrong. Please{" "}
+          <span className="font-bold cursor-pointer">Try Again!</span> later
+        </p>
+      ) : isError ? (
         <p className="text-center text-muted-foreground">
           Failed to load profile photo
         </p>

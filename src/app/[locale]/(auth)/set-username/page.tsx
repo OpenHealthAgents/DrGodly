@@ -45,7 +45,7 @@ const SetUsername = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(session);
+
     if (!session.data) {
       router.push("/signin");
       return;
@@ -66,7 +66,7 @@ const SetUsername = () => {
         username,
       });
 
-      if (response?.available) {
+      if (!response?.available) {
         toast.warning("Username is already taken", {
           description: "Please choose a different username",
         });

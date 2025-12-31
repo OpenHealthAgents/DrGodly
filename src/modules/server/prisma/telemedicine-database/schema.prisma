@@ -163,6 +163,7 @@ model DoctorPersonalDetail {
     alternativeMobileNumber String?
     alternativeEmail        String?
     email                   String
+    speciality              String   @default("unknown")
 
     doctorId String @unique
     doctor   Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)

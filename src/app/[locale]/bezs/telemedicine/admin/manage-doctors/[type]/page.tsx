@@ -1,4 +1,3 @@
-import { Link } from "@/i18n/navigation";
 import DoctorProfileAndRegister from "@/modules/client/telemedicine/components/step-form/doctor/step-form";
 import { getDoctorDataById } from "@/modules/client/telemedicine/server-actions/doctorProfile-actions";
 import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
@@ -39,6 +38,10 @@ async function TelemedicineAdminCreateDoctorPage(
   };
 
   const [data, error] = await getDoctorDataById({ id });
+
+  if (error) {
+    throw new Error(error.message);
+  }
 
   return (
     <div>

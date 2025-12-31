@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import Suggestion from "./Suggestion";
 import ConsultationNotes from "./ConsultationNotes";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "@/i18n/navigation";
 
 type Transcript = {
   name: string;
@@ -35,6 +36,7 @@ export default function Consult({
   participant: { name?: string };
   details: Details;
 }) {
+  const router = useRouter();
   const [token, setToken] = useState("");
   const [isEnded, setIsEnded] = useState(false);
   const [transcripts, setTranscripts] = useState<Transcript[]>([]);
@@ -68,6 +70,9 @@ export default function Consult({
 
   const onLeave = () => {
     setIsEnded(true);
+    setTranscripts([]);
+    toast.success("Consultation ended");
+    router.push("/bezs/telemedicine/doctor");
   };
 
   function captureTranscript(transcript: Transcript) {
@@ -121,11 +126,13 @@ export default function Consult({
 
               {/* Transcript panel (fills remaining space, scrolls) */}
               <div className="flex-1 min-h-0 overflow-auto">
-                <TranscriptPanel
-                  roomId={roomId}
-                  transcripts={transcripts}
-                  setTranscripts={captureTranscript}
-                />
+                {!isEnded && (
+                  <TranscriptPanel
+                    roomId={roomId}
+                    transcripts={transcripts}
+                    setTranscripts={captureTranscript}
+                  />
+                )}
               </div>
             </aside>
           </div>

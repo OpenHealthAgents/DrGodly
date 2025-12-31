@@ -43,7 +43,9 @@ export const StatCard = ({
           variant="outline"
           className="font-normal text-xs bg-transparent p-2 h-0 hover:underline border-0 shadow-none hover:bg-transparent"
         >
-          <Link href={link || ""}>See details</Link>
+          <Link href={link || "/bezs/telemedicine/patient/appointments"}>
+            See details
+          </Link>
         </Button>
       </CardHeader>
 

@@ -20,22 +20,21 @@ const appsList = [
   {
     name: "Admin",
     logo: "/app-icons/admin.svg",
-    href: "/bezs/admin",
+    admin: "/bezs/admin",
   },
-  // {
-  //   name: "AiHub",
-  //   logo: "/app-icons/aihub.svg",
-  //   href: "/bezs/aihub",
-  // },
   {
     name: "File Nest",
     logo: "/app-icons/file-nest.svg",
-    href: "/bezs/filenest",
+    patient: "/bezs/filenest",
+    doctor: "/bezs/filenest",
+    ["application-admin"]: "/bezs/filenest/admin",
   },
   {
     name: "Tele Medicine",
     logo: "/app-icons/tele-medicine.svg",
-    href: "/bezs/telemedicine",
+    patient: "/bezs/telemedicine/patient/appointments/intake",
+    doctor: "/bezs/telemedicine/doctor",
+    ["application-admin"]: "/bezs/telemedicine/admin",
   },
 ];
 
@@ -83,19 +82,12 @@ export function CommandSearch() {
             <CommandGroup heading="Apps">
               <div>
                 {appsList.map((app) => {
-                  if (app.href === "/bezs/admin" && role !== "admin") {
-                    return null;
-                  }
+                  const h = app[role as keyof typeof app];
 
-                  let h = app.href;
-
-                  if (role === "patient" && app.href === "/bezs/telemedicine")
-                    h = "/bezs/telemedicine/patient";
-                  if (role === "doctor" && app.href === "/bezs/telemedicine")
-                    h = "/bezs/telemedicine/doctor";
+                  if (!h) return null;
 
                   return (
-                    <CommandItem asChild key={app.href}>
+                    <CommandItem asChild key={app.name}>
                       <Link href={h} onClick={() => setOpen(false)}>
                         <Image
                           src={app.logo}

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
   CreateDoctorByHPRIdModal,
   DeleteDoctorProfileModal,
+  MapDoctorProfileModal,
 } from "../modals/admin";
 
 export const AdminModalProvider = () => {
@@ -19,6 +20,7 @@ export const AdminModalProvider = () => {
     <>
       <DeleteDoctorProfileModal />
       <CreateDoctorByHPRIdModal />
+      <MapDoctorProfileModal />
     </>
   );
 };

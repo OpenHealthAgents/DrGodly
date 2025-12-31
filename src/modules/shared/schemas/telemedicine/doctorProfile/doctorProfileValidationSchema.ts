@@ -54,7 +54,7 @@ export const DoctorPersonalDetailsSchema = z.object({
   languagesSpoken: z.array(z.string()).min(1, "Select at least one language"),
   dateOfBirth: z.date({ required_error: "Date of birth is required" }),
   gender: z.string().min(1, "Gender is required"),
-  // fatherName: z.string().min(1, "Father's name is required"),
+  speciality: z.string().min(1, "speciality is required"),
   socialAccounts: z.array(socialSchema).optional(),
   kycAddress: z.object({
     careOf: z.string().min(1, "Care of is required"),

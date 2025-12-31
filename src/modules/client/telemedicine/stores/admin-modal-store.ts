@@ -1,16 +1,21 @@
 import { create } from "zustand";
 
-export type ModalType = "deleteDoctorProfile" | "addDoctorByHPR";
+export type ModalType = "deleteDoctorProfile" | "addDoctorByHPR" | "mapDoctor";
 
 interface AdminStore {
   type: ModalType | null;
   isOpen: boolean;
   doctorProfileId?: string;
+  orgId?: string | null;
   trigger: number;
   triggerInModal: number;
   incrementTrigger: () => void;
   incrementInModalTrigger: () => void;
-  onOpen: (props: { type: ModalType; doctorProfileId?: string }) => void;
+  onOpen: (props: {
+    type: ModalType;
+    doctorProfileId?: string;
+    orgId?: string | null;
+  }) => void;
   onClose: () => void;
 }
 
@@ -19,7 +24,7 @@ const _useAdminModalStore = create<AdminStore>((set) => ({
   isOpen: false,
   trigger: 0,
   triggerInModal: 0,
-  onOpen: ({ type, doctorProfileId = "" }) =>
+  onOpen: ({ type, doctorProfileId = undefined, orgId = null }) =>
     set({
       isOpen: true,
       type,
@@ -31,7 +36,8 @@ const _useAdminModalStore = create<AdminStore>((set) => ({
       isOpen: false,
       trigger: 0,
       triggerInModal: 0,
-      doctorProfileId: "",
+      doctorProfileId: undefined,
+      orgId: null,
     }),
   incrementTrigger: () => set((state) => ({ trigger: state.trigger + 1 })),
   incrementInModalTrigger: () =>
