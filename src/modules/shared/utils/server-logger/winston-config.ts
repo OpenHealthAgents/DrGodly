@@ -5,7 +5,8 @@ import winston from "winston";
 import "winston-daily-rotate-file";
 import moment from "moment-timezone";
 
-const LOG_DIR = path.resolve(process.cwd(), "../server-logs");
+// const LOG_DIR = path.resolve(process.cwd(), "../server-logs");
+const LOG_DIR = process.env.LOG_DIR || "/app/logs";
 
 // Ensure external log directory exists
 if (!fs.existsSync(LOG_DIR)) {

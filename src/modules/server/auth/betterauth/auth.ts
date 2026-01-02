@@ -119,8 +119,35 @@ export const auth = betterAuth({
         type: "string",
         required: false,
       },
+      roleBasedRedirectUrls: {
+        type: "string",
+        required: false,
+      },
     },
   },
+  // hooks: {
+  //   after: createAuthMiddleware(async (ctx) => {
+  //     const session = ctx.context.newSession;
+
+  //     // Only run after a successful login/signup
+  //     if (!session) return;
+
+  //     const role = session.user.role;
+
+  //     if (role === "admin") {
+  //       console.log("redirectting...");
+  //       throw ctx.redirect("/bezs/admin");
+  //     }
+
+  //     if (role === "patient") {
+  //       throw ctx.redirect("/bezs/telemedicine/patient/appointments/intake");
+  //     }
+
+  //     if (role === "doctor") {
+  //       throw ctx.redirect("/bezs/telemedicine/doctor");
+  //     }
+  //   }),
+  // },
 
   appName: "Bezs",
 
@@ -193,6 +220,7 @@ export const auth = betterAuth({
           currentOrgId: true,
           keycloakUserid: true,
           role: true,
+          roleBasedRedirectUrls: true,
         },
       });
 
@@ -242,7 +270,7 @@ export const auth = betterAuth({
       const updatedUser = userData;
       if (
         userData &&
-        !userData?.currentOrgId &&
+        (!userData?.currentOrgId || !userData?.roleBasedRedirectUrls) &&
         organizations &&
         organizations.length > 0
       ) {
@@ -252,6 +280,9 @@ export const auth = betterAuth({
           },
           data: {
             currentOrgId: organizations[0].id,
+            roleBasedRedirectUrls: userData?.role
+              ? roleBasedRedirectUrls[userData.role]
+              : null,
           },
         });
 

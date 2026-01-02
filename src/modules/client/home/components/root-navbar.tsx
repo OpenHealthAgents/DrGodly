@@ -5,7 +5,7 @@ import { ThemeSwitcher } from "@/theme/theme-switcher";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { Activity } from "lucide-react";
 
 const RootNavBarPage = ({
@@ -16,6 +16,7 @@ const RootNavBarPage = ({
   isErrorRender?: boolean;
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -125,9 +126,11 @@ const RootNavBarPage = ({
                 <Button
                   size="sm"
                   className="rounded-full px-6 shadow-md hover:shadow-lg transition-all"
-                  onClick={() =>
-                    (window.location.href = "/api/rolebased-redirect")
-                  }
+                  onClick={() => {
+                    const role = session?.user.role;
+                    const url = session?.roleBasedRedirectUrls[role] ?? "/bezs";
+                    router.push(url);
+                  }}
                 >
                   Open App
                 </Button>

@@ -5,7 +5,7 @@ import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
 async function DoctorProfilePage() {
   const session = await getServerSession();
 
-  if (!session) {
+  if (!session || !session.user.currentOrgId) {
     throw new Error("UNAUTHORIZED");
   }
 
@@ -18,8 +18,10 @@ async function DoctorProfilePage() {
 
   const [data, error] = await getDoctorDataByUserId({
     userId: session.user.id,
-    orgId: session.user.currentOrgId || "",
+    orgId: session.user.currentOrgId,
   });
+
+  console.log(data, error);
 
   if (!data) {
     throw new Error("UNAUTHORIZED");

@@ -6,6 +6,7 @@ interface AdminStore {
   type: ModalType | null;
   isOpen: boolean;
   doctorProfileId?: string;
+  doctorMappedUserId?: string | null;
   orgId?: string | null;
   trigger: number;
   triggerInModal: number;
@@ -15,6 +16,7 @@ interface AdminStore {
     type: ModalType;
     doctorProfileId?: string;
     orgId?: string | null;
+    doctorMappedUserId?: string;
   }) => void;
   onClose: () => void;
 }
@@ -24,11 +26,18 @@ const _useAdminModalStore = create<AdminStore>((set) => ({
   isOpen: false,
   trigger: 0,
   triggerInModal: 0,
-  onOpen: ({ type, doctorProfileId = undefined, orgId = null }) =>
+  onOpen: ({
+    type,
+    doctorProfileId = undefined,
+    orgId = null,
+    doctorMappedUserId = null,
+  }) =>
     set({
       isOpen: true,
       type,
       doctorProfileId,
+      orgId,
+      doctorMappedUserId,
     }),
   onClose: () =>
     set({
@@ -37,6 +46,7 @@ const _useAdminModalStore = create<AdminStore>((set) => ({
       trigger: 0,
       triggerInModal: 0,
       doctorProfileId: undefined,
+      doctorMappedUserId: null,
       orgId: null,
     }),
   incrementTrigger: () => set((state) => ({ trigger: state.trigger + 1 })),

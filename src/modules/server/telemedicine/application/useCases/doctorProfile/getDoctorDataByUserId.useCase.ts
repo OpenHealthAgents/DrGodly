@@ -3,7 +3,7 @@ import { getTelemedicineInjection } from "../../../di/container";
 
 export async function getDoctorDataByUserIdUseCase(
   userId: string,
-  orgId?: string
+  orgId: string
 ): Promise<TDoctor | null> {
   const doctorProfileRepository = getTelemedicineInjection(
     "IDoctorProfileRepository"

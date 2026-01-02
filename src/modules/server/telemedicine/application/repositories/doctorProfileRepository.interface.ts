@@ -22,10 +22,7 @@ export interface IDoctorProfileRepository {
   ): Promise<TDoctorInitialProfile>;
   deleteDoctorProfile(id: string): Promise<TDoctorInitialProfile>;
   getDoctorDataById(id: string): Promise<TDoctor | null>;
-  getDoctorDataByUserId(
-    userId: string,
-    orgId?: string
-  ): Promise<TDoctor | null>;
+  getDoctorDataByUserId(userId: string, orgId: string): Promise<TDoctor | null>;
   getDoctorInitialProfileByUniqueFields(
     orgId: string,
     userId: string

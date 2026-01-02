@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +26,7 @@ import {
   mapDoctorProfile,
 } from "../../server-actions/admin-actions";
 import { useAdminModalStore } from "../../stores/admin-modal-store";
+import { useEffect, useState } from "react";
 
 type UserOption = {
   id: string;
@@ -41,31 +41,33 @@ export function MapDoctorProfileModal() {
 
   const isModalOpen = isOpen && type === "mapDoctor";
 
-  const [users, setUsers] = React.useState<UserOption[]>([]);
-  const [selectedUserId, setSelectedUserId] = React.useState<string | null>(
-    null
-  );
+  const [users, setUsers] = useState<UserOption[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   /* -------------------------------- Fetch users -------------------------------- */
 
-  const { execute: fetchUsers, isPending: isFetching } = useServerAction(
-    getUserForDoctorProfileMapping,
-    {
-      onSuccess({ data }) {
-        setUsers(data);
-      },
-      onError({ err }) {
-        toast.error("Failed to load users", {
-          description: err?.message,
-        });
-      },
-    }
-  );
+  const {
+    execute: fetchUsers,
+    isPending: isFetching,
+    isError,
+  } = useServerAction(getUserForDoctorProfileMapping, {
+    onSuccess({ data }) {
+      setUsers(data);
+    },
+    onError({ err }) {
+      toast.error("Failed to load users", {
+        description: err?.message,
+      });
+    },
+  });
 
-  React.useEffect(() => {
-    if (isModalOpen && orgId) {
-      fetchUsers({ orgId });
-    }
+  useEffect(() => {
+    (async () => {
+      if (isModalOpen && orgId) {
+        console.log("Executing", orgId);
+        await fetchUsers({ orgId });
+      }
+    })();
   }, [isModalOpen, orgId, fetchUsers]);
 
   /* -------------------------------- Map profile -------------------------------- */
@@ -147,6 +149,7 @@ export function MapDoctorProfileModal() {
               ))}
             </SelectContent>
           </Select>
+          {isError && <p className="pt-2">error</p>}
         </div>
 
         <DialogFooter>

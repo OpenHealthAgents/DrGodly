@@ -1,6 +1,7 @@
 "use server";
 
 import { prismaMain, prismaTelemedicine } from "@/modules/server/prisma/prisma";
+import { revalidatePath } from "next/cache";
 import z from "zod";
 import { createServerAction } from "zsa";
 
@@ -27,7 +28,7 @@ export const getUserForDoctorProfileMapping = createServerAction()
       // 2. Get users NOT in doctor table
       const users = await prismaMain.user.findMany({
         where: {
-          currentOrgId: orgId,
+          // currentOrgId: orgId,
           role: "doctor",
           id: {
             notIn: doctorUserIds.length ? doctorUserIds : undefined,
@@ -38,6 +39,9 @@ export const getUserForDoctorProfileMapping = createServerAction()
           name: true,
           email: true,
           username: true,
+        },
+        orderBy: {
+          id: "asc",
         },
       });
 
@@ -65,6 +69,7 @@ export const mapDoctorProfile = createServerAction()
           userId,
         },
       });
+      revalidatePath("/bezs/telemedicine/admin/manage-doctors");
     } catch (err) {
       throw new Error("Failed to map doctor profile");
     }

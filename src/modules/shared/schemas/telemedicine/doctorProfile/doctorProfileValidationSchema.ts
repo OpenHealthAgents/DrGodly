@@ -23,7 +23,7 @@ export const DeleteDoctorProfileSchema = IdSchema.pick({
 
 export const GetDoctorByUserIdSchema = z.object({
   userId: z.string(),
-  orgId: z.string().optional(),
+  orgId: z.string(),
 });
 
 /////////////////////////////////////////////////////////

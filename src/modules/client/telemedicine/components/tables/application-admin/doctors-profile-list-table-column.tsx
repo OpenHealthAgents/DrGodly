@@ -11,6 +11,7 @@ import { TanstackTableColumnSorting } from "@/modules/shared/components/table/ta
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import {
+  Edit,
   Ellipsis,
   PencilLine,
   Trash2,
@@ -69,8 +70,8 @@ export const doctorsProfileListTableColumn = (
     accessorKey: "userId",
     cell: ({ row, getValue }) => {
       const openModal = adminModalStore((state) => state.onOpen);
-
       const userId = getValue();
+
       return userId ? (
         <span>User Mapped</span>
       ) : (

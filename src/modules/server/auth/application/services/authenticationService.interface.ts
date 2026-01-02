@@ -20,7 +20,7 @@ export interface IAuthenticationService {
   signInWithUsername(
     data: TSignInWithUsername
   ): Promise<TAuthUsernameSuccessRes | null>;
-  signUp(data: TSignUp): Promise<{ success: boolean }>;
+  signUp(data: TSignUp): Promise<{ success: boolean; redirectUrl: string }>;
   signOut(): Promise<TSuccessRes>;
   resetPassword(data: TResetPassword): Promise<void>;
   requestPasswordReset(data: TResetPassword): Promise<void>;

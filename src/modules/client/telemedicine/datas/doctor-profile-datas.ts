@@ -52,11 +52,11 @@ export const langSpoken: Option[] = [
 ];
 
 export const titles = [
-  { label: "Dr.", value: "Dr." },
-  { label: "Mr.", value: "Mr." },
-  { label: "Ms.", value: "Ms." },
-  { label: "Mrs.", value: "Mrs." },
-  { label: "Other.", value: "other." },
+  { label: "Dr.", value: "Dr" },
+  { label: "Mr.", value: "Mr" },
+  { label: "Ms.", value: "Ms" },
+  { label: "Mrs.", value: "Mrs" },
+  { label: "Other.", value: "other" },
 ];
 
 export const medicalCouncils = [

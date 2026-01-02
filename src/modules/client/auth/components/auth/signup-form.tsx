@@ -29,6 +29,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { signUp } from "../../server-actions/auth-actions";
 import { useServerAction } from "zsa-react";
+import { useRouter } from "@/i18n/navigation";
 
 const signUpFormSchema = z.object({
   username: z
@@ -49,6 +50,7 @@ const signUpFormSchema = z.object({
 type SignUpForm = z.infer<typeof signUpFormSchema>;
 
 export function SignUpForm() {
+  const router = useRouter();
   const t = useTranslations("auth.signup");
   const [inputType, setInputType] = useState("password");
 
@@ -65,7 +67,8 @@ export function SignUpForm() {
   const { execute } = useServerAction(signUp, {
     onSuccess({ data }) {
       if (data.success) {
-        window.location.href = "/api/rolebased-redirect";
+        toast.success("Signup success!");
+        router.push(data?.redirectUrl ?? "/bezs");
       }
     },
     onError({ err }) {

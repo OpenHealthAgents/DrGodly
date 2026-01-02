@@ -3,7 +3,6 @@ import { getServerSession } from "@/modules/server/auth/betterauth/auth-server";
 
 const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession();
-
   return (
     <>
       <main className="w-full min-h-screen">

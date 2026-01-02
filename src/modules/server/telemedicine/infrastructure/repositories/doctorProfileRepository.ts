@@ -47,6 +47,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
       const doctorDatas = await prismaTelemedicine.doctor.findMany({
         where: {
           orgId,
+          doctorType: "HUMAN",
         },
         include: {
           personal: {
@@ -312,7 +313,7 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
 
   async getDoctorDataByUserId(
     userId: string,
-    orgId?: string
+    orgId: string
   ): Promise<TDoctor | null> {
     const startTimeMs = Date.now();
     const operationId = randomUUID();
@@ -327,9 +328,12 @@ export class DoctorProfileRepository implements IDoctorProfileRepository {
     });
 
     try {
-      const doctorData = await prismaTelemedicine.doctor.findFirst({
+      const doctorData = await prismaTelemedicine.doctor.findUnique({
         where: {
-          OR: [{ userId }, { orgId }],
+          orgId_userId: {
+            orgId,
+            userId,
+          },
         },
         include: {
           personal: {

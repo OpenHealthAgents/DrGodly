@@ -41,11 +41,14 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${dmSans.className} antialiased`}>
+      <body
+        className={`${dmSans.className} antialiased`}
+        suppressHydrationWarning
+      >
         <NextIntlClientProvider>
           <ThemeProvider
             attribute="data-theme"
-            defaultTheme="blue-light"
+            defaultTheme="teal-light"
             enableSystem
             disableTransitionOnChange
           >

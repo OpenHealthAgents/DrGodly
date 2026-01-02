@@ -220,7 +220,7 @@ export function QualificationStep({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="modern">
+                      <SelectItem value="allopathy">
                         Modern Medicine (Allopathy)
                       </SelectItem>
                       <SelectItem value="ayurveda">Ayurveda</SelectItem>

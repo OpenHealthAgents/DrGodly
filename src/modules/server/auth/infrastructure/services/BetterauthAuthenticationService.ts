@@ -71,7 +71,7 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
 
       return {
         redirect: response.redirect,
-        url: response.url,
+        url: response.user.roleBasedRedirectUrls ?? response.url,
       };
     } catch (error) {
       if (error instanceof Error) {
@@ -133,9 +133,9 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
     name,
     password,
     username,
-  }: TSignUp): Promise<{ success: boolean }> {
+  }: TSignUp): Promise<{ success: boolean; redirectUrl: string }> {
     try {
-      await auth.api.signUpEmail({
+      const data = await auth.api.signUpEmail({
         body: {
           username,
           name,
@@ -145,7 +145,10 @@ export class BetterauthAuthenticationService implements IAuthenticationService {
         },
       });
 
-      return { success: true };
+      return {
+        success: true,
+        redirectUrl: data.user.roleBasedRedirectUrls ?? "/bezs",
+      };
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new UnauthenticatedError(error.message, { cause: error });

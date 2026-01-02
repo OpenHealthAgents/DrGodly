@@ -36,6 +36,7 @@ import { authClient } from "@/modules/client/auth/betterauth/auth-client";
 import { useServerAction } from "zsa-react";
 import { signIn } from "@/modules/client/auth/server-actions/auth-actions";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 
 const usernameOrEmailSchema = z.string().refine(
   (value) => {
@@ -59,6 +60,7 @@ const signInFormSchema = z.object({
 type SignInForm = z.infer<typeof signInFormSchema>;
 
 export function SignInForm() {
+  const router = useRouter();
   const t = useTranslations("auth.signin");
 
   const [isForgetClick, setIsForgetClick] = useState(false);
@@ -79,7 +81,8 @@ export function SignInForm() {
   const { execute, isPending } = useServerAction(signIn, {
     onSuccess({ data }) {
       if (data.redirect) {
-        window.location.href = "/api/rolebased-redirect";
+        toast.success("Signin Success!");
+        router.push(data?.url ?? "/bezs");
       }
     },
     onError({ err }) {

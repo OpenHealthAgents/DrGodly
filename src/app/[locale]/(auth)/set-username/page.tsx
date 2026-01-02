@@ -88,7 +88,9 @@ const SetUsername = () => {
         toast.success("Username set successfully!", {
           description: "Welcome to the app!",
         });
-        window.location.href = `${process.env.NEXT_PUBLIC_APP_URL}/api/rolebased-redirect`;
+
+        const url = session?.data?.user.roleBasedRedirectUrls ?? "/bezs";
+        router.push(url);
       }
     } catch (err) {
       setError("Failed to set username");

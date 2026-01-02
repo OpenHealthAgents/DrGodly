@@ -7,13 +7,17 @@ import {
   formattedRBACSessionData,
   matchDynamicRoute,
 } from "@/lib/format-session-data";
+import { getOrigin } from "@/lib/getOrigin";
 
 const intlMiddleware = createMiddleware(routing);
 
 async function getMiddlewareSession(
   req: NextRequest
 ): Promise<TSession | null> {
+  const origin = getOrigin(req);
+
   try {
+    // replace req.nextUrl.origin -> to origin;
     const response = await fetch(`${req.nextUrl.origin}/api/auth/get-session`, {
       method: "GET",
       headers: {
@@ -143,6 +147,7 @@ export async function middleware(req: NextRequest) {
   // Set the current URL as a custom header for use in server components
   const res = NextResponse.next();
   res.headers.set("x-pathname", pathname);
+  res.headers.set("x-next-intl-locale", locale);
 
   console.log("Middleware working");
   return res;
